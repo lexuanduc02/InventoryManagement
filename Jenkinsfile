@@ -20,7 +20,7 @@ node {
                 echo "Image im_image does not exist."
             } else {
                 stage('Remove Image') {
-                    echo "Removing Image: im_image
+                    echo "Removing Image: im_image"
                     sh "docker image rm im_image"
                     echo "Removed Image: im_image"
                 }
