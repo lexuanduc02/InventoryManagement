@@ -1,7 +1,7 @@
-﻿def image = "im_image"
-def containerName = "im_container"
+﻿image = "im_image"
+containerName = "im_container"
 
-node() {
+node {
     try {
         stage('Delete Docker Container if exists') {
             // stop and remove logs container
@@ -15,7 +15,7 @@ node() {
         }
 
         stage('Delete Docker image if exists') {
-            def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
+            imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
             if (imageExists == 0) {
                 echo "Image $image does not exist."
             } else {
