@@ -1,7 +1,4 @@
-﻿def image = "im_image"
-def containerName = "im_container"
-
-node {
+﻿node {
     try {
         stage('Delete Docker Container if exists') {
             // Stop and remove logs container
