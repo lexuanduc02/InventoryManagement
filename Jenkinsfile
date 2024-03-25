@@ -11,9 +11,9 @@ pipeline {
                     try {
                         sh "docker container stop $containerName"
                         sh "docker container rm $containerName"
-                        echo "Delete $containerName Done"
+                        echo "Deleted $containerName"
                     } catch (Exception e) {
-                        echo " $containerName not exists or not running"
+                        echo "$containerName does not exist or is not running"
                     }
                 }
             }
@@ -23,11 +23,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        echo "Remove Image"
+                        echo "Removing image: $image"
                         sh "docker image rm $image"
-                        echo "Remove Image Done"
+                        echo "Deleted $image"
                     } catch (Exception e) {
-                        echo " $image not exists or not running"
+                        echo "$image does not exist or is not running"
                     }
                 }
             }
@@ -35,22 +35,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Check SCM"
+                echo "Checking out SCM"
                 checkout scm
-                echo "Check SCM Done"
-                echo "Build Image start"
+                echo "Checked out SCM"
+                echo "Building image"
                 script {
-                    docker.build(image , "-f Dockerfile .")
+                    docker.build(image, "-f Dockerfile .")
                 }
-                echo "Build Image Done"
+                echo "Build Complete"
             }
         }
 
         stage('Run') {
             steps {
-                echo "Start Build Container"
-                sh "docker run -d -p 5040:8080  -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}"
-                echo "Build done !"
+                echo "Starting container"
+                sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}"
+                echo "Container started successfully"
             }
         }
     }
