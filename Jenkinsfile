@@ -1,57 +1,77 @@
 ﻿def image = "im_image"
 def containerName = "im_container"
 
-pipeline {
-    agent any
-
-    stages {
+node() {
+    try {
         stage('Delete Docker Container if exists') {
-            steps {
-                script {
-                    try {
-                        sh "docker container stop $containerName"
-                        sh "docker container rm $containerName"
-                        echo "Deleted $containerName"
-                    } catch (Exception e) {
-                        echo "$containerName does not exist or is not running"
-                    }
-                }
+            // stop and remove logs container
+            try {
+                sh "docker container stop $containerName"
+                sh "docker container rm $containerName"
+                echo "Delete $containerName Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running"
             }
         }
 
         stage('Delete Docker image if exists') {
-            steps {
-                script {
-                    try {
-                        echo "Removing image: $image"
-                        sh "docker image rm $image"
-                        echo "Deleted $image"
-                    } catch (Exception e) {
-                        echo "$image does not exist or is not running"
-                    }
+            def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
+            if (imageExists == 0) {
+                echo "Image $image does not exist."
+            } else {
+                stage('Remove Image - ${image}') {
+                    echo "Remove Image"
+                    sh "docker image rm $image"
+                    echo "Remove Image Done"
+                }
+
+                stage('Remove Image None - ${image}') {
+                    echo "Remove Image None"
+                    sh "docker image prune -f"
+                    echo "Remove Image None Done"
                 }
             }
         }
 
         stage('Build') {
-            steps {
-                echo "Checking out SCM"
-                checkout scm
-                echo "Checked out SCM"
-                echo "Building image"
-                script {
-                    docker.build(image, "-f Dockerfile .")
-                }
-                echo "Build Complete"
-            }
+            echo "Check SCM"
+            checkout scm
+            echo "Check SCM Done"
+            echo "Build Image start"
+            docker.build(image + ":$BUILD_NUMBER", "-f Dockerfile .")
+            echo "Build Image Done"
         }
 
         stage('Run') {
-            steps {
-                echo "Starting container"
-                sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}"
-                echo "Container started successfully"
-            }
+            echo "Start Build Container"
+            sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}:${BUILD_NUMBER}"
+            echo "Build done !"
         }
+
+        stage('Clean'){
+            //clean the workspace after deployment ignoring node_modules directory
+            cleanWs(patterns: [[pattern: 'node_modules', type: 'EXCLUDE']])
+            deleteDir()
+            try{
+                echo "Clean success"
+                 dir("${env.WORKSPACE}@tmp") {
+                            deleteDir()
+                          }
+                          dir("${env.WORKSPACE}@script") {
+                            deleteDir()
+                          }
+                          dir("${env.WORKSPACE}@script@tmp") {
+                            deleteDir()
+                          }
+             }
+             catch(Exception e){
+                echo "Clean error"
+             }
+        }
+    } catch (Exception e) {
+        currentBuild.result = "FAILED"
+        throw e
+    } finally {
+        echo "Build Done"
     }
 }
