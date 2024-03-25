@@ -15,8 +15,7 @@ node {
         }
 
         stage('Delete Docker image if exists') {
-            def imageExists = sh(script: "docker images -q im_image", returnStatus: true)
-            if (imageExists == 0) {
+            if (sh(script: "docker images -q im_image", returnStatus: true) == 0) {
                 echo "Image im_image does not exist."
             } else {
                 stage('Remove Image') {
