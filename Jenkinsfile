@@ -1,76 +1,53 @@
 ﻿def image = "im_image"
 def containerName = "im_container"
 
-node ('master || built-in') {
+node ('build-in') {
     try {
+        // Kiểm tra xem container đã tồn tại hay chưa
         stage('Delete Docker Container if exists') {
-            // Stop and remove logs container
+            // stop and remove logs container
             try {
                 sh "docker container stop $containerName"
                 sh "docker container rm $containerName"
-                echo "Deleted $containerName"
+                echo "Delete $containerName Done"
             } catch (Exception e) {
-                echo "$containerName does not exist or is not running"
+                echo " $containerName not exists or not running"
             }
         }
-
         stage('Delete Docker image if exists') {
             def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
             if (imageExists == 0) {
                 echo "Image $image does not exist."
             } else {
-                stage('Remove Image') {
-                    echo "Removing Image: $image"
+                stage('Remove Image - ${image}') {
+                    echo "Remove Image"
                     sh "docker image rm $image"
-                    echo "Removed Image: $image"
+                    echo "Remove Image Done"
                 }
 
-                stage('Remove Image None') {
-                    echo "Removing Unused Images"
+                stage('Remove Image None - ${image}') {
+                    echo "Remove Image None"
                     sh "docker image prune -f"
-                    echo "Removed Unused Images"
+                    echo "Remove Image None Done"
                 }
             }
         }
 
         stage('Build') {
-            echo "Checking out SCM"
+            echo "Check SCM"
             checkout scm
-            echo "Checked out SCM"
-            echo "Building Image: $image"
-            docker.build("$image:${env.BUILD_NUMBER}", "-f Dockerfile .")
-            echo "Built Image: $image"
+            echo "Check SCM Done"
+            echo "Build Image start"
+            docker.build(image + ":$BUILD_NUMBER", "-f Dockerfile .")
+            echo "Build Image Done"
         }
 
         stage('Run') {
-            echo "Starting Container"
-            sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}:${env.BUILD_NUMBER}"
-            echo "Container Started"
+            echo "Start Build Container"
+            sh "docker run -d -p 7029:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}:${BUILD_NUMBER}"
+            echo "Build done !"
         }
-
-        stage('Clean') {
-            // Clean the workspace after deployment, ignoring node_modules directory
-            cleanWs(patterns: [[pattern: 'node_modules', type: 'EXCLUDE']])
-            deleteDir()
-
-            // Additional cleanup
-            try {
-                echo "Cleaning Workspace"
-                dir("${env.WORKSPACE}@tmp") {
-                    deleteDir()
-                }
-                dir("${env.WORKSPACE}@script") {
-                    deleteDir()
-                }
-                dir("${env.WORKSPACE}@script@tmp") {
-                    deleteDir()
-                }
-                echo "Workspace Cleaned"
-            } catch (Exception e) {
-                echo "Error Cleaning Workspace"
-            }
-        }
-    } catch (Exception e) {
+     } catch (Exception e) {
         currentBuild.result = "FAILED"
         throw e
     } finally {
