@@ -1,81 +1,79 @@
-﻿pipeline {
-    agent any
+﻿def image = "im_image"
+def containerName = "im_container"
 
-    environment {
-        image = "im_image"
-        containerName = "im_container"
-    }
-
-    stages {
+node ('master || built-in') {
+    try {
         stage('Delete Docker Container if exists') {
-            steps {
-                script {
-                    try {
-                        sh "docker container stop $containerName"
-                        sh "docker container rm $containerName"
-                        echo "Deleted $containerName"
-                    } catch (Exception e) {
-                        echo "$containerName does not exist or is not running"
-                    }
-                }
+            // Stop and remove logs container
+            try {
+                sh "docker container stop $containerName"
+                sh "docker container rm $containerName"
+                echo "Deleted $containerName"
+            } catch (Exception e) {
+                echo "$containerName does not exist or is not running"
             }
         }
 
         stage('Delete Docker image if exists') {
-            steps {
-                script {
-                    def imageExists = sh(script: "docker images -q ${env.image}", returnStatus: true)
-                    if (imageExists == 0) {
-                        echo "Image ${env.image} does not exist."
-                    } else {
-                        echo "Removing Image: ${env.image}"
-                        sh "docker image rm ${env.image}"
-                        echo "Removed Image: ${env.image}"
+            def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
+            if (imageExists == 0) {
+                echo "Image $image does not exist."
+            } else {
+                stage('Remove Image') {
+                    echo "Removing Image: $image"
+                    sh "docker image rm $image"
+                    echo "Removed Image: $image"
+                }
 
-                        echo "Removing Unused Images"
-                        sh "docker image prune -f"
-                        echo "Removed Unused Images"
-                    }
+                stage('Remove Image None') {
+                    echo "Removing Unused Images"
+                    sh "docker image prune -f"
+                    echo "Removed Unused Images"
                 }
             }
         }
 
         stage('Build') {
-            steps {
-                echo "Checking out SCM"
-                checkout scm
-                echo "Checked out SCM"
-
-                echo "Building Image: ${env.image}"
-                docker.build("${env.image}:${env.BUILD_NUMBER}", "-f Dockerfile .")
-                echo "Built Image: ${env.image}"
-            }
+            echo "Checking out SCM"
+            checkout scm
+            echo "Checked out SCM"
+            echo "Building Image: $image"
+            docker.build("$image:${env.BUILD_NUMBER}", "-f Dockerfile .")
+            echo "Built Image: $image"
         }
 
         stage('Run') {
-            steps {
-                echo "Starting Container"
-                sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${env.containerName} ${env.image}:${env.BUILD_NUMBER}"
-                echo "Container Started"
-            }
+            echo "Starting Container"
+            sh "docker run -d -p 5040:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}:${env.BUILD_NUMBER}"
+            echo "Container Started"
         }
 
         stage('Clean') {
-            steps {
-                echo "Cleaning Workspace"
-                cleanWs(deleteDirs: true)
+            // Clean the workspace after deployment, ignoring node_modules directory
+            cleanWs(patterns: [[pattern: 'node_modules', type: 'EXCLUDE']])
+            deleteDir()
 
+            // Additional cleanup
+            try {
+                echo "Cleaning Workspace"
+                dir("${env.WORKSPACE}@tmp") {
+                    deleteDir()
+                }
+                dir("${env.WORKSPACE}@script") {
+                    deleteDir()
+                }
+                dir("${env.WORKSPACE}@script@tmp") {
+                    deleteDir()
+                }
                 echo "Workspace Cleaned"
+            } catch (Exception e) {
+                echo "Error Cleaning Workspace"
             }
         }
-    }
-
-    post {
-        always {
-            echo "Build Done"
-        }
-        failure {
-            currentBuild.result = "FAILED"
-        }
+    } catch (Exception e) {
+        currentBuild.result = "FAILED"
+        throw e
+    } finally {
+        echo "Build Done"
     }
 }
