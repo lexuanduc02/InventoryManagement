@@ -4,6 +4,28 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>831a4136-7aec-49d0-8319-0c8b28cdb47c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Commons\" />
+    <Folder Include="Domains\EF\" />
+    <Folder Include="Domains\Entities\" />
+    <Folder Include="Domains\Extentions\" />
+    <Folder Include="Domains\Migrations\" />
+    <Folder Include="Models\Options\" />
+    <Folder Include="ModuleRegistrations\AutoMapperProfile\" />
+    <Folder Include="ModuleRegistrations\RepositoryCollection\" />
+    <Folder Include="ModuleRegistrations\ServiceCollection\" />
+    <Folder Include="ModuleRegistrations\OptionCollection\" />
+    <Folder Include="Repositories\Contractors\" />
+    <Folder Include="Services\Contractors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+  </ItemGroup>
 
 </Project>
