@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>
+        Login Administrator
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/css/login.css" rel="stylesheet" />
+    <link href="/iconcp/favicon.png" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+</head>
+<body class="login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="/iconcp/logo.png" style="height: 30px; vertical-align: middle; display: inline-block; float: left;" alt="" />
+            <span style="display: inline-block; float: left; margin: 5px 0 0 15px;">Administrator</span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="login-box-body">
+            <form method="post" action="/admin/login.aspx" id="form1">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="9ToBomLtIBYaXK59xdlH7uGpOB9Lt4JeBw/tf1DK0bOLEwfYJoJ5nqfCMRkKhhb4ItUXM+TiejBx5jlAZ643ze8GKK8=" />
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="82312306" />
+                    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="2ailBX2RJtiNsEwFuIdsTYNl129TZAUGCLKfaiC5ajb5UHtYOjq1MDWKS65qmgKOX2J5RVRcZHnRM2LrNRbvqyTNcCdWAkXhVgqiahqRKONh8buZFasQhRALJL3HDiytPTnACr7OALY823uavd8odA54GAAAa2Er4yQQ3CCyF3OHbg/mUvjRN4PPDxqdK4bcuK22OlbT4hfkxzUZdSozd1FjXis=" />
+                </div>
+                <div class="form-group">
+                    <input name="txtUserL" type="text" id="txtUserL" class="form-control" placeholder="Tên đăng nhập" />
+                </div>
+                <div class="form-group">
+                    <input name="txtPassL" type="password" id="txtPassL" class="form-control" placeholder="Mật khẩu" />
+                </div>
+                <div class="form-group" style="display: none;">
+                    <select name="drlL" id="drlL" class="form-control" style="width: 101%; padding-left: 2%;">
+                        <option value="1">Tiếng việt</option>
+                        <option value="2">Tiếng anh</option>
+                        <option value="3">Tiếng nhật</option>
+
+                    </select>
+                </div>
+                <div class="form-group" style="border-top: 1px solid #ddd; padding-top: 15px; text-align: right; margin-bottom: 5px;">
+                    <a href="#" style="color: #188dd9; display: inline-block; float: left;">Quên mật khẩu?</a>
+                    <input type="submit" name="Button1" value="Đăng nhập" id="Button1" class="btn" />
+                </div>
+            </form>
+            <span id="lblinvalid" style="color: red;"></span>
+        </div>
+    </div>
+</body>
+</html>
+
