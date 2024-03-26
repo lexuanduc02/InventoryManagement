@@ -1,0 +1,11 @@
+﻿.content-inner h1, .content-inner h2, .content-inner h3, .content-inner h4 {
+    margin-bottom: 20px;
+}
+
+.content-inner .thumb {
+    margin-bottom: 20px;
+}
+
+    .content-inner .thumb img {
+        max-width: 100%;
+    }

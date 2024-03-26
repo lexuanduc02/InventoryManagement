@@ -1,20 +1,17 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Danh mục kho hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="main-title"><span id="lblLink">Quản lý menu cấp 1</span></h1>
-<div></div>
 <table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
     <tbody>
         <tr class="tr-view">
             <td class="td-view-left">
-
                 <input type="submit" name="btnUpdate1" value="Cập nhật" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnUpdate1&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnUpdate1" class="button">
-
-
             </td>
             <td class="td-view-right">
-                <input type="submit" name="btnAdd1" value="Thêm mới" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnAdd1&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnAdd1" class="button">
+                <a asp-action="Create" class="button btn-add">Thêm mới</a>
                 <input type="reset" class="button" name="cmdReset" value="Mặc định">
             </td>
         </tr>
@@ -535,3 +532,4 @@
         </tr>
     </tbody>
 </table>
+
