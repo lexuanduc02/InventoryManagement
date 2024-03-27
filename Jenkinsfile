@@ -5,15 +5,23 @@ node {
     try {
         stage('Delete Docker Container if exists') {
             // stop and remove logs container
-            sh "docker container stop $containerName"
-            sh "docker container rm $containerName"
-            echo "Delete $containerName Done"
+            try {
+                sh "docker container stop $containerName"
+                sh "docker container rm $containerName"
+                echo "Delete $containerName Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running"
+            }
         }
 
         stage('Delete Docker image if exists') {
-            echo "Remove Image"
-            sh "docker image rm $image"
-            echo "Remove Image Done"
+            try {
+                echo "Remove Image"
+                sh "docker image rm $image"
+                echo "Remove Image Done"
+            } catch (Exception e) {
+                echo " $image not exists or not running" 
+            } 
         }
 
         stage('Build') {
@@ -21,7 +29,7 @@ node {
             checkout scm
             echo "Check SCM Done"
             echo "Build Image start"
-            sh "docker build -t $image -f Dockerfile ."
+            sh "docker build -t $image -f ."
             echo "Build Image Done"
         }
 
