@@ -1,77 +1,58 @@
-﻿pipeline {
-    agent any
+﻿def image = "im_image"
+def containerName = "im_container"
 
-    environment {
-        IMAGE_NAME = "im_image"
-        CONTAINER_NAME = "im_container"
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
+node ('build-in') {
+    try {
+        // Kiểm tra xem container đã tồn tại hay chưa
+        stage('Delete Docker Container if exists') {
+            // stop and remove logs container
+            try {
+                sh "docker container stop $containerName"
+                sh "docker container rm $containerName"
+                echo "Delete $containerName Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running"
             }
         }
 
-        stage('Build and Run Container') {
-            steps {
-                script {
-                    try {
-                        // Kiểm tra xem container đã tồn tại hay chưa
-                        sh "docker inspect --format '{{.Id}}' ${env.CONTAINER_NAME}"
-                        if (currentBuild.result != 'SUCCESS') {
-                            echo "Deleting existing container: ${env.CONTAINER_NAME}"
-                            sh "docker container stop ${env.CONTAINER_NAME}"
-                            sh "docker container rm ${env.CONTAINER_NAME}"
-                        }
-                    } catch (Exception e) {
-                        echo "Container ${env.CONTAINER_NAME} does not exist."
-                    }
+        stage('Delete Docker image if exists') {
+            def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
+            if (imageExists == 0) {
+                echo "Image $image does not exist."
+            } else {
+                stage('Remove Image - ${image}') {
+                    echo "Remove Image"
+                    sh "docker image rm $image"
+                    echo "Remove Image Done"
+                }
 
-                    try {
-                        // Kiểm tra xem image đã tồn tại hay chưa
-                        sh "docker images -q ${env.IMAGE_NAME}"
-                        if (currentBuild.result != 'SUCCESS') {
-                            echo "Image ${env.IMAGE_NAME} does not exist."
-                        } else {
-                            echo "Removing existing image: ${env.IMAGE_NAME}"
-                            sh "docker image rm ${env.IMAGE_NAME}"
-                        }
-                    } catch (Exception e) {
-                        echo "Error while checking image existence: $e"
-                    }
-
-                    echo "Building Docker image"
-                    docker.build("${env.IMAGE_NAME}:${BUILD_NUMBER}", "-f Dockerfile .")
-
-                    echo "Starting Docker container"
-                    sh "docker run -d -p 7029:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${env.CONTAINER_NAME} ${env.IMAGE_NAME}:${BUILD_NUMBER}"
+                stage('Remove Image None - ${image}') {
+                    echo "Remove Image None"
+                    sh "docker image prune -f"
+                    echo "Remove Image None Done"
                 }
             }
         }
-    }
 
-    post {
-        always {
-            // Xóa container nếu build hoặc bất kỳ stage nào bị lỗi
-            script {
-                try {
-                    echo "Deleting container: ${env.CONTAINER_NAME}"
-                    sh "docker container stop ${env.CONTAINER_NAME}"
-                    sh "docker container rm ${env.CONTAINER_NAME}"
-                    echo "Deleted container: ${env.CONTAINER_NAME}"
-                } catch (Exception e) {
-                    echo "Error while deleting container: $e"
-                }
-
-                try {
-                    echo "Removing image: ${env.IMAGE_NAME}:${BUILD_NUMBER}"
-                    sh "docker image rm ${env.IMAGE_NAME}:${BUILD_NUMBER}"
-                    echo "Removed image: ${env.IMAGE_NAME}:${BUILD_NUMBER}"
-                } catch (Exception e) {
-                    echo "Error while deleting image: $e"
-                }
-            }
+        stage('Build') {
+            echo "Check SCM"
+            checkout scm
+            echo "Check SCM Done"
+            echo "Build Image start"
+            docker.build(image + ":$BUILD_NUMBER", "-f Dockerfile .")
+            echo "Build Image Done"
         }
+
+        stage('Run') {
+            echo "Start Build Container"
+            sh "docker run -d -p 7029:8080 -e TZ=Asia/Ho_Chi_Minh --restart=always --name=${containerName} ${image}:${BUILD_NUMBER}"
+            echo "Build done !"
+        }
+     } catch (Exception e) {
+        currentBuild.result = "FAILED"
+        throw e
+    } finally {
+        echo "Build Done"
     }
 }
+
