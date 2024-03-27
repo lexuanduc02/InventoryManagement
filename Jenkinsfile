@@ -16,12 +16,13 @@ node {
 
         stage('Delete Docker image if exists') {
             try {
-                        echo "Remove Image"
-                        sh "docker image rm $image"
-                        echo "Remove Image Done"
-                    } catch (Exception e) {
-                        echo " $containerName not exists or not running"
-                    
+                echo "Remove Image"
+                sh "docker image em $image"
+                echo "Remove Image Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running" 
+                throw e
+            } 
         }
 
         stage('Build') {
@@ -38,27 +39,6 @@ node {
             sh "docker run -d -p 5040:80 --ip 172.18.0.4 -e TZ=Asia/Ho_Chi_Minh --network Ite-Network --restart=always --name=${containerName} ${image}:${BUILD_NUMBER}"
             echo "Build done !"
         }
-
-        stage('Clean'){
-        //clean the workspace after deployment ignoring node_modules directory
-        cleanWs(patterns: [[pattern: 'node_modules', type: 'EXCLUDE']])
-        deleteDir()
-        try{
-            echo "Clean success"
-             dir("${env.WORKSPACE}@tmp") {
-                        deleteDir()
-                      }
-                      dir("${env.WORKSPACE}@script") {
-                        deleteDir()
-                      }
-                      dir("${env.WORKSPACE}@script@tmp") {
-                        deleteDir()
-                      }
-         }
-         catch(Exception e){
-            echo "Clean error"
-         }
-      }
     } catch (Exception e) {
         currentBuild.result = "FAILED"
         throw e
