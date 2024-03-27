@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,7 +14,9 @@ namespace InventoryManagement.Domains.Entities
         public string? Address { get; set; }
         public string PhoneNumber { get; set; }
         public string? Email { get; set; }
-        public AccountEnum Status { get; set; }
+
+        [DefaultValue(ActiveEnum.Active)]
+        public ActiveEnum IsActive { get; set; }
 
         public ICollection<SaleInvoice> SaleInvoices { get; set; }
     }

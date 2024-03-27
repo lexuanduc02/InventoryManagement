@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +22,9 @@ namespace InventoryManagement.Domains.Entities
         public string? ShippingCarrier { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
+
+        [DefaultValue(ActiveEnum.Active)]
+        public ActiveEnum IsActive { get; set; }
 
         public ICollection<MerchandiseSaleInvoice> MerchandiseSaleInvoices { get; set; }
     }

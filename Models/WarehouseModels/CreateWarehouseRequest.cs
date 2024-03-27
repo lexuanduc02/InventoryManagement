@@ -1,4 +1,6 @@
-﻿namespace InventoryManagement.Models.WarehouseModels
+﻿using InventoryManagement.Commons.Enums;
+
+namespace InventoryManagement.Models.WarehouseModels
 {
     public class CreateWarehouseRequest
     {
@@ -7,5 +9,7 @@
         public float? Area { get; set; }
         public string Unit { get; set; }
         public string? Description { get; set; }
+
+        public ActiveEnum IsActive = ActiveEnum.Active;
     }
 }
