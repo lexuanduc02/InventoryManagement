@@ -21,7 +21,6 @@ node {
                 echo "Remove Image Done"
             } catch (Exception e) {
                 echo " $image not exists or not running" 
-                throw e
             } 
         }
 
