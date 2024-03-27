@@ -1,7 +1,7 @@
 def image = "im_image"
 def containerName = "im_container"
 
-node("lxduc") {
+node {
     try {
         stage('Delete Docker Container if exists') {
             // stop and remove logs container
@@ -35,7 +35,7 @@ node("lxduc") {
 
         stage('Run') {
             echo "Start Build Container"
-            sh "docker run -d -p 5040:80 --ip 172.18.0.4 -e TZ=Asia/Ho_Chi_Minh --network Ite-Network --restart=always --name=${containerName} ${image}"
+            sh "docker run -d -p 5040:80 -e TZ=Asia/Ho_Chi_Minh --network Ite-Network --restart=always --name=${containerName} ${image}"
             echo "Build done !"
         }
     } catch (Exception e) {
