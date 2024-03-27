@@ -35,13 +35,13 @@ node {
             checkout scm
             echo "Check SCM Done"
             echo "Build Image start"
-            docker.build(image + ":$BUILD_NUMBER", "-f Dockerfile .")
+            sh "docker build -t $image -f Dockerfile ."
             echo "Build Image Done"
         }
 
         stage('Run') {
             echo "Start Build Container"
-            sh "docker run -d -p 5040:80 --ip 172.18.0.4 -e TZ=Asia/Ho_Chi_Minh --network Ite-Network --restart=always --name=${containerName} ${image}:${BUILD_NUMBER}"
+            sh "docker run -d -p 5040:80 --ip 172.18.0.4 -e TZ=Asia/Ho_Chi_Minh --network Ite-Network --restart=always --name=${containerName} ${image}"
             echo "Build done !"
         }
     } catch (Exception e) {
