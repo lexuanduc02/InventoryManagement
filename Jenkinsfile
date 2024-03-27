@@ -17,7 +17,7 @@ node {
         stage('Delete Docker image if exists') {
             try {
                 echo "Remove Image"
-                sh "docker image rm $image"
+                sh "sudo docker image rm $image"
                 echo "Remove Image Done"
             } catch (Exception e) {
                 echo " $image not exists or not running" 
