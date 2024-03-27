@@ -29,7 +29,7 @@ node {
             checkout scm
             echo "Check SCM Done"
             echo "Build Image start"
-            sh "docker build -t $image -f ."
+            sh "docker build -t $image -f Dockerfile ."
             echo "Build Image Done"
         }
 
