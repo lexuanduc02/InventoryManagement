@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InventoryManagement.Commons.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagement.Domains.Entities
@@ -18,6 +20,9 @@ namespace InventoryManagement.Domains.Entities
         public float Quantity { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
+
+        [DefaultValue(ActiveEnum.Active)]
+        public ActiveEnum IsActive { get; set; }
 
         public ICollection<MerchandisePurchaseInvoice> MerchandisePurchaseInvoices { get; set; }
         public ICollection<MerchandiseSaleInvoice> MerchandiseSaleInvoices { get; set; }

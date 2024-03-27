@@ -7,8 +7,10 @@ namespace InventoryManagement.ModuleRegistrations
     {
         public static IServiceCollection AddServiceCollection(this IServiceCollection services)
         {
-            services.AddScoped<IWarehouseService, WarehouseService>()
-                ;
+            services
+                .AddScoped<IWarehouseService, WarehouseService>()
+                .AddScoped<ICategoryService, CategoryService>()
+            ;
 
             return services;
         }

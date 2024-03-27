@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using InventoryManagement.Commons.Enums;
 using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
+using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.WarehouseModels;
 using InventoryManagement.Services.Contractors;
@@ -10,38 +10,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Services
 {
-    public class WarehouseService : IWarehouseService
+    public class CategoryService : ICategoryService
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
 
-        public WarehouseService(IMapper mapper, DataContext context)
+        public CategoryService(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _context = context;
         }
 
-        public async Task<ServiceResponseModel<List<WarehouseViewModel>>> All()
+        public async Task<ServiceResponseModel<List<CategoryViewModel>>> All()
         {
-            var response = new ServiceResponseModel<List<WarehouseViewModel>> ()
+            var response = new ServiceResponseModel<List<CategoryViewModel>>()
             {
                 isSuccess = false,
             };
 
             try
             {
-                var warehouses = await _context.Warehouses
-                    .Where(x => x.IsActive == ActiveEnum.Active)
-                    .Select(x => new WarehouseViewModel()
-                    {
-                        Id = x.Id.ToString(),
-                        Name = x.Name,
-                        StorageCapacity = x.StorageCapacity,
-                        Area = x.Area,
-                        Unit = x.Unit,
-                        Description = x.Description,
-                    })
-                    .ToListAsync();
+                var warehouses = await _context.Categories
+                                    .Where(x => x.IsActive == ActiveEnum.Active)
+                                    .Select(x => new CategoryViewModel()
+                                    {
+                                        Id = x.Id.ToString(),
+                                        Name = x.Name,
+                                        Description = x.Description,
+                                    })
+                                    .ToListAsync();
 
                 response.isSuccess = true;
                 response.data = warehouses;
@@ -56,7 +53,7 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<bool>> Create(CreateWarehouseRequest request)
+        public async Task<ServiceResponseModel<bool>> Create(CreateCategoryRequest request)
         {
             var response = new ServiceResponseModel<bool>()
             {
@@ -65,11 +62,11 @@ namespace InventoryManagement.Services
 
             try
             {
-                var warehouse = new Warehouse();
+                var category = new Category();
 
-                _mapper.Map(request, warehouse);
+                _mapper.Map(request, category);
 
-                _context.Warehouses.Add(warehouse);
+                _context.Categories.Add(category);
 
                 var result = await _context.SaveChangesAsync();
 
@@ -96,20 +93,20 @@ namespace InventoryManagement.Services
 
             try
             {
-                var warehouse = await _context.Warehouses
+                var data = await _context.Categories
                     .FirstOrDefaultAsync(x => x.Id.ToString() == id && x.IsActive == ActiveEnum.Active);
 
-                if (warehouse == null)
+                if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin kho";
+                    response.Message = "Không tìm thấy thông tin ngành hàng!";
 
                     return response;
                 }
 
-                warehouse.IsActive = ActiveEnum.InActive;
+                data.IsActive = ActiveEnum.InActive;
 
-                _context.Warehouses.Update(warehouse);
+                _context.Categories.Update(data);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -124,30 +121,28 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<WarehouseViewModel>> Get(string id)
+        public async Task<ServiceResponseModel<CategoryViewModel>> Get(string id)
         {
-            var response = new ServiceResponseModel<WarehouseViewModel>()
+            var response = new ServiceResponseModel<CategoryViewModel>()
             {
                 isSuccess = false,
             };
 
             try
             {
-                var warehouse = await _context.Warehouses
+                var data = await _context.Categories
                     .FirstOrDefaultAsync(x => x.Id.ToString() == id && x.IsActive == ActiveEnum.Active);
 
-                if (warehouse == null)
+                if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin kho";
+                    response.Message = "Không tìm thấy thông tin ngành hàng!";
 
                     return response;
                 }
 
-                var data = _mapper.Map(warehouse, new WarehouseViewModel());
-
                 response.isSuccess = true;
-                response.data = data;
+                response.data = _mapper.Map(data, new CategoryViewModel());
 
                 return response;
             }
@@ -157,7 +152,7 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<bool>> Update(UpdateWarehouseRequest request)
+        public async Task<ServiceResponseModel<bool>> Update(UpdateCategoryRequest request)
         {
             var response = new ServiceResponseModel<bool>()
             {
@@ -166,23 +161,23 @@ namespace InventoryManagement.Services
 
             try
             {
-                var warehouse = await _context.Warehouses
-                    .FirstOrDefaultAsync(x => x.Id.ToString() == request.Id && x.IsActive == ActiveEnum.Active);
+                var data = await _context.Categories
+                    .FirstOrDefaultAsync(x => x.Id.ToString() == request.Id || x.IsActive == ActiveEnum.Active);
 
-                if(warehouse == null)
+                if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin kho";
+                    response.Message = "Không tìm thấy thông tin ngành hàng!";
 
                     return response;
                 }
 
-                _mapper.Map(request, warehouse);
+                _mapper.Map(request, data);
 
-                _context.Warehouses.Update(warehouse);
+                _context.Categories.Update(data);
                 var result = await _context.SaveChangesAsync();
 
-                if(result == 1)
+                if (result == 1)
                 {
                     response.isSuccess = true;
                     return response;
@@ -193,7 +188,7 @@ namespace InventoryManagement.Services
             catch (Exception)
             {
                 response.isSuccess = false;
-                response.Message = "Có lỗi trong chương trình!";
+                response.Message = "Có lỗi trong khi thực hiện chương trình!";
 
                 return response;
             }

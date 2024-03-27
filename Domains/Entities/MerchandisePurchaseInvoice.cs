@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InventoryManagement.Commons.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagement.Domains.Entities
@@ -11,6 +13,9 @@ namespace InventoryManagement.Domains.Entities
 
         public Guid MerchandiseId { get; set; }
         public Merchandise Merchandise { get; set; }
+
+        [DefaultValue(ActiveEnum.Active)]
+        public ActiveEnum IsActive { get; set; }
 
         public float MerchandisePrice { get; set; }
         public int Quantity { get; set; }
