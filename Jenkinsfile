@@ -3,6 +3,33 @@ def containerName = "im_container"
 
 node {
     try {
+         stage('Initialize'){
+            def dockerHome = tool 'myDocker'
+            env.PATH = "${dockerHome}/bin:${env.PATH}"
+        }
+        
+        stage('Delete Docker Container if exists') {
+            // stop and remove logs container
+            try {
+                sh "docker container stop $containerName"
+                sh "docker container rm $containerName"
+                echo "Delete $containerName Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running"
+            }
+        }
+
+        stage('Delete Docker image if exists') {
+            try {
+                echo "Remove Image"
+                sh "docker image rm $image"
+                echo "Remove Image Done"
+            } catch (Exception e) {
+                echo " $containerName not exists or not running" 
+                throw e
+            } 
+        }
+
         stage('Build') {
             echo "Check SCM"
             checkout scm
