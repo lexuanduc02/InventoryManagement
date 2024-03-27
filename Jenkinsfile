@@ -1,7 +1,7 @@
 def image = "im_image"
 def containerName = "im_container"
 
-node {
+node("lxduc") {
     try {
         stage('Delete Docker Container if exists') {
             // stop and remove logs container
