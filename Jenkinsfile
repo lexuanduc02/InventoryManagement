@@ -15,22 +15,13 @@ node {
         }
 
         stage('Delete Docker image if exists') {
-            def imageExists = sh(script: "docker images -q ${image}", returnStatus: true)
-            if (imageExists == 0) {
-                echo "Image $image does not exist."
-            } else {
-                stage('Remove Image - ${image}') {
-                    echo "Remove Image"
-                    sh "docker image rm $image"
-                    echo "Remove Image Done"
-                }
-
-                stage('Remove Image None - ${image}') {
-                    echo "Remove Image None"
-                    sh "docker image prune -f"
-                    echo "Remove Image None Done"
-                }
-            }
+            try {
+                        echo "Remove Image"
+                        sh "docker image rm $image"
+                        echo "Remove Image Done"
+                    } catch (Exception e) {
+                        echo " $containerName not exists or not running"
+                    
         }
 
         stage('Build') {
