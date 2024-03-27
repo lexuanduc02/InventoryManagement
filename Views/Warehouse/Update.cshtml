@@ -1,0 +1,47 @@
+﻿@model InventoryManagement.Models.WarehouseModels.WarehouseViewModel
+@{
+    ViewData["Title"] = "Cập nhật kho hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Update" asp-controller="Warehouse" method="post">
+    <input asp-for="Id" value="@Model.Id" hidden/>
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên kho:</div></td>
+                <td class="td2"><input value="@Model.Name" type="text" maxlength="150" asp-for="Name" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Khả năng lưu chữ:</td>
+                <td class="td2"><input value="@Model.StorageCapacity" type="text" asp-for="StorageCapacity" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Đơn vị tính:</td>
+                <td class="td2"><input value="@Model.Unit" type="text" maxlength="50" asp-for="Unit" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Diện tích:</td>
+                <td class="td2"><input value="@Model.Area" type="text" maxlength="50" asp-for="Area" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Mô tả ngắn:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="Description" class="textbox" style="width:98%;">@Model.Description</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" value="Ghi nhận" class="button" style="width:100px;">
+                    <input type="reset" class="button" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
