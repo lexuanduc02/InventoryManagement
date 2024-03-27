@@ -17,7 +17,8 @@ body {
     font-size: 12px;
 }
 
-form {
+form,
+#form1{
     padding: 0px;
     margin: 0px auto 0px auto;
     width: 100%;

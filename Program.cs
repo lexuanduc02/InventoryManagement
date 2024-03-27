@@ -20,7 +20,10 @@ if (string.IsNullOrWhiteSpace(connectionString))
 // Add services to the container.
 var services = builder.Services;
 
-services.AddControllersWithViews();
+services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation()
+; 
 
 services
     .AddDbContext<DataContext>(options =>
@@ -28,7 +31,9 @@ services
         options.UseSqlServer(connectionString);
     });
 
-services.AddServiceCollection()
+services
+    .AddServiceCollection()
+    .AddAutoMapper(typeof(Program))
     ;
 
 services
