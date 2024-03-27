@@ -3,11 +3,6 @@ def containerName = "im_container"
 
 node {
     try {
-         stage('Initialize'){
-            def dockerHome = tool 'myDocker'
-            env.PATH = "${dockerHome}/bin:${env.PATH}"
-        }
-        
         stage('Delete Docker Container if exists') {
             // stop and remove logs container
             try {
