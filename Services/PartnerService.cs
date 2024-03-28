@@ -4,43 +4,39 @@ using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.Services
 {
-    public class CategoryService : ICategoryService
+    public class PartnerService : IPartnerService
     {
-        private readonly IMapper _mapper;
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoryService(IMapper mapper, DataContext context)
+        public PartnerService(DataContext context, IMapper mapper)
         {
-            _mapper = mapper;
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<ServiceResponseModel<List<CategoryViewModel>>> All()
+        public async Task<ServiceResponseModel<List<PartnerViewModel>>> All()
         {
-            var response = new ServiceResponseModel<List<CategoryViewModel>>()
+            var response = new ServiceResponseModel<List<PartnerViewModel>>()
             {
                 isSuccess = false,
             };
 
             try
             {
-                var warehouses = await _context.Categories
+                var data = await _context.Partners
                                     .Where(x => x.IsActive == ActiveEnum.Active)
-                                    .Select(x => new CategoryViewModel()
-                                    {
-                                        Id = x.Id.ToString(),
-                                        Name = x.Name,
-                                        Description = x.Description,
-                                    })
+                                    .Select(x => _mapper.Map<PartnerViewModel>(x))
                                     .ToListAsync();
 
                 response.isSuccess = true;
-                response.data = warehouses;
+                response.data = data;
 
                 return response;
             }
@@ -52,7 +48,7 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<bool>> Create(CreateCategoryRequest request)
+        public async Task<ServiceResponseModel<bool>> Create(CreatePartnerRequest request)
         {
             var response = new ServiceResponseModel<bool>()
             {
@@ -61,19 +57,16 @@ namespace InventoryManagement.Services
 
             try
             {
-                var category = new Category();
+                var newPartner = _mapper.Map<Partner>(request);
 
-                _mapper.Map(request, category);
-
-                _context.Categories.Add(category);
+                _context.Partners.Add(newPartner);
 
                 var result = await _context.SaveChangesAsync();
 
-                if (result == 1)
-                {
-                    response.isSuccess = true;
+                if (result != 1)
                     return response;
-                }
+
+                response.isSuccess = true;
 
                 return response;
             }
@@ -92,20 +85,20 @@ namespace InventoryManagement.Services
 
             try
             {
-                var data = await _context.Categories
+                var data = await _context.Partners
                     .FirstOrDefaultAsync(x => x.Id.ToString() == id && x.IsActive == ActiveEnum.Active);
 
                 if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin ngành hàng!";
+                    response.Message = "Không tìm thấy thông tin đối tác!";
 
                     return response;
                 }
 
                 data.IsActive = ActiveEnum.InActive;
 
-                _context.Categories.Update(data);
+                _context.Partners.Update(data);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -120,28 +113,28 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<CategoryViewModel>> Get(string id)
+        public async Task<ServiceResponseModel<PartnerViewModel>> Get(string id)
         {
-            var response = new ServiceResponseModel<CategoryViewModel>()
+            var response = new ServiceResponseModel<PartnerViewModel>()
             {
                 isSuccess = false,
             };
 
             try
             {
-                var data = await _context.Categories
+                var data = await _context.Partners
                     .FirstOrDefaultAsync(x => x.Id.ToString() == id && x.IsActive == ActiveEnum.Active);
 
                 if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin ngành hàng!";
+                    response.Message = "Không tìm thấy thông tin đối tác!";
 
                     return response;
                 }
 
                 response.isSuccess = true;
-                response.data = _mapper.Map(data, new CategoryViewModel());
+                response.data = _mapper.Map(data, new PartnerViewModel());
 
                 return response;
             }
@@ -151,7 +144,7 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<bool>> Update(UpdateCategoryRequest request)
+        public async Task<ServiceResponseModel<bool>> Update(UpdatePartnerRequest request)
         {
             var response = new ServiceResponseModel<bool>()
             {
@@ -160,20 +153,20 @@ namespace InventoryManagement.Services
 
             try
             {
-                var data = await _context.Categories
+                var data = await _context.Partners
                     .FirstOrDefaultAsync(x => x.Id.ToString() == request.Id || x.IsActive == ActiveEnum.Active);
 
                 if (data == null)
                 {
                     response.isSuccess = false;
-                    response.Message = "Không tìm thấy thông tin ngành hàng!";
+                    response.Message = "Không tìm thấy thông tin đối tác!";
 
                     return response;
                 }
 
                 _mapper.Map(request, data);
 
-                _context.Categories.Update(data);
+                _context.Partners.Update(data);
                 var result = await _context.SaveChangesAsync();
 
                 if (result == 1)

@@ -10,6 +10,7 @@ namespace InventoryManagement.ModuleRegistrations
             services
                 .AddScoped<IWarehouseService, WarehouseService>()
                 .AddScoped<ICategoryService, CategoryService>()
+                .AddScoped<IPartnerService, PartnerService>()
             ;
 
             return services;

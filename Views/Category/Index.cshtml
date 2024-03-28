@@ -1,4 +1,5 @@
-﻿@model List<InventoryManagement.Models.CategoryModels.CategoryViewModel>
+﻿@using InventoryManagement.Models.CategoryModels
+@model List<CategoryViewModel>
 @{
     ViewData["Title"] = "Danh mục ngành hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,32 +19,32 @@
         <tr>
             <td colspan="2">
                 <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
-                    <tbody>
+                    <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td></td>
                             <td>Tên</td>
                             <td>Mô tả</td>
-                            <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
-                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                            <td>&nbsp;Sửa&nbsp;</td>
+                            <td>&nbsp;Xóa&nbsp;</td>
                         </tr>
+                    </thead>
+                    <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td align="center"><input id="dtgrView_chkHot_0" type="checkbox" name="dtgrView$ctl03$chkHot"></td>
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td style="width:100%;">@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                 <td align="center"><a href="@Url.Action("Update", "Category", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
                                 <td align="center"><a onclick="javascript:return confirm('Nếu bạn xoá menu (Danh mục ngành hàng) thì toàn bộ sản phẩm thuộc (Ngành hàng) sẽ bị xoá theo. Bạn chắc chắn muốn xoá menu (Danh mục ngành hàng) không?');" href="@Url.Action("Delete", "Category", new { id = item.Id })"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>
                         }
-                        <tr class="tr-footer" align="left" style="background-color:#F4F4F4;">
-                            <td colspan="8"><span>1</span></td>
-                        </tr>
                     </tbody>
                 </table>
             </td>
         </tr>
         <tr class="tr-view">
             <td class="td-view-left">
-
                 <input type="submit" name="btnUpdate2" value="Cập nhật" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnUpdate2&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnUpdate2" class="button">
             </td>
             <td class="td-view-right">
