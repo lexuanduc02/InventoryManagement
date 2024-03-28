@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CategoryModels;
+using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Models.WarehouseModels;
 
 namespace InventoryManagement.ModuleRegistrations
@@ -16,6 +17,10 @@ namespace InventoryManagement.ModuleRegistrations
             CreateMap<CreateCategoryRequest, Category>().ReverseMap();
             CreateMap<Category, CategoryViewModel>().ReverseMap();
             CreateMap<UpdateCategoryRequest, Category>().ReverseMap();
+
+            CreateMap<CreatePartnerRequest, Partner>().ReverseMap();
+            CreateMap<Partner, PartnerViewModel>().ReverseMap();
+            CreateMap<UpdatePartnerRequest, Partner>().ReverseMap();
 
         }
     }
