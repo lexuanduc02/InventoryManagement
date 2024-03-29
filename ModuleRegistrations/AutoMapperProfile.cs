@@ -2,6 +2,8 @@
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Models.PartnerModels;
+using InventoryManagement.Models.RoleModels;
+using InventoryManagement.Models.UserModels;
 using InventoryManagement.Models.WarehouseModels;
 
 namespace InventoryManagement.ModuleRegistrations
@@ -22,6 +24,9 @@ namespace InventoryManagement.ModuleRegistrations
             CreateMap<Partner, PartnerViewModel>().ReverseMap();
             CreateMap<UpdatePartnerRequest, Partner>().ReverseMap();
 
+            CreateMap<Role, RoleViewModel>().ReverseMap();
+
+            CreateMap<UpdateUserRequest, User>().ReverseMap();
         }
     }
 }

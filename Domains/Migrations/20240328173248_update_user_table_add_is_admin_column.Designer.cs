@@ -4,6 +4,7 @@ using InventoryManagement.Domains.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Domains.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240328173248_update_user_table_add_is_admin_column")]
+    partial class update_user_table_add_is_admin_column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,9 +264,6 @@ namespace InventoryManagement.Domains.Migrations
                     b.Property<int>("IsActive")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -336,6 +336,9 @@ namespace InventoryManagement.Domains.Migrations
 
                     b.Property<int>("IsActive")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()

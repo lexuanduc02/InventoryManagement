@@ -1,0 +1,66 @@
+﻿@using InventoryManagement.Models.UserModels
+@using InventoryManagement.Models.RoleModels
+@model CreateUserRequest
+@{
+    ViewData["Title"] = "Tạo tài khoản cho nhân viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Create" method="post">
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên nhân viên:</div></td>
+                <td class="td2"><input type="text" maxlength="150" asp-for="FullName" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Tên tài khoản:</td>
+                <td class="td2"><input type="text" asp-for="Username" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Ngày sinh:</td>
+                <td class="td2"><input type="date" maxlength="50" asp-for="Dob" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Số điện thoại:</td>
+                <td class="td2"><input type="text" maxlength="10" asp-for="PhoneNumber" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Email:</td>
+                <td class="td2"><input type="text" maxlength="50" asp-for="Email" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Địa chỉ:</td>
+                <td class="td2"><input type="text" maxlength="50" asp-for="Address" class="textbox" style="width:250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Role:</div></td>
+                <td class="td2" style="line-height:180%;">
+                    @{
+                        var roles = (List<RoleViewModel>)ViewBag.Roles;
+
+                        foreach (var role in roles)
+                        {
+                            <label>@Html.RadioButtonFor(x => x.RoleId, role.Id)@role.Name</label>
+                            <br />
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" value="Ghi nhận" class="button" style="width:100px;">
+                    <input type="reset" class="button" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
