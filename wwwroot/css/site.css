@@ -313,6 +313,7 @@ A.menuleft:hover {
     vertical-align: top;
     text-align: right;
     font-weight: bold;
+    align-content: center;
 }
 
 .td2 {
@@ -320,9 +321,8 @@ A.menuleft:hover {
     vertical-align: top;
     width: 100%;
     background-color: #ebedf7;
+    align-content: center;
 }
-
-
 
 span.visible,
 span.hidden,
