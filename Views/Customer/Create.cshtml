@@ -1,0 +1,42 @@
+﻿@model InventoryManagement.Models.CustomerModels.CreateCustomerRequest
+@{
+    ViewData["Title"] = "Thêm khách hàng mới";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Create" method="post">
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                <td class="td2"><input type="text" maxlength="150" asp-for="FullName" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Địa chỉ:</div></td>
+                <td class="td2"><input type="text" maxlength="150" asp-for="Address" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Số điện thoại:</div></td>
+                <td class="td2"><input type="text" maxlength="150" asp-for="PhoneNumber" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Email:</div></td>
+                <td class="td2"><input type="text" maxlength="150" asp-for="Email" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" value="Ghi nhận" class="button" style="width:100px;">
+                    <input type="reset" class="button" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+

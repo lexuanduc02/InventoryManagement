@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Services;
 using InventoryManagement.Services.Contractors;
+using Slugify;
 
 namespace InventoryManagement.ModuleRegistrations
 {
@@ -13,6 +14,10 @@ namespace InventoryManagement.ModuleRegistrations
                 .AddScoped<IPartnerService, PartnerService>()
                 .AddScoped<IRoleService, RoleService>()
                 .AddScoped<IUserService, UserService>()
+                .AddScoped<IProductService, ProductService>()
+                .AddScoped<IImageService, ImageService>()
+                .AddScoped<ISlugHelper, SlugHelper>()
+                .AddScoped<ICustomerService, CustomerService>()
             ;
 
             return services;
