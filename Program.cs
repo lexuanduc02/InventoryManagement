@@ -34,6 +34,7 @@ services
 services
     .AddServiceCollection()
     .AddAutoMapper(typeof(Program))
+    .AddOptionCollection(configuration)
     ;
 
 services

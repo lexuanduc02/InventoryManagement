@@ -1,5 +1,7 @@
 ﻿using InventoryManagement.Domains.Entities;
 using Microsoft.EntityFrameworkCore;
+using InventoryManagement.Models.MerchandiseModels;
+using InventoryManagement.Models.CustomerModels;
 
 namespace InventoryManagement.Domains.EF
 {
@@ -37,5 +39,8 @@ namespace InventoryManagement.Domains.EF
         public DbSet<SaleInvoice> SaleInvoices { get; set;}
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<InventoryManagement.Models.MerchandiseModels.UpdateProductRequest> UpdateProductRequest { get; set; } = default!;
+        public DbSet<InventoryManagement.Models.CustomerModels.CustomerViewModel> CustomerViewModel { get; set; } = default!;
+        public DbSet<InventoryManagement.Models.CustomerModels.UpdateCustomerRequest> UpdateCustomerRequest { get; set; } = default!;
     }
 }

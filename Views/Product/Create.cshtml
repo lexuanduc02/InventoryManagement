@@ -1,0 +1,101 @@
+﻿@using InventoryManagement.Models.WarehouseModels
+@using InventoryManagement.Models.CategoryModels
+@using InventoryManagement.Models.MerchandiseModels
+@model CreateProductRequest
+@{
+    ViewData["Title"] = "Thêm sản phầm mới";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Create" asp-controller="Product" method="post" enctype="multipart/form-data">
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên sản phẩm:</div></td>
+                <td class="td2"><input asp-for="Name" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Giá bán:</td>
+                <td class="td2"><input asp-for="Price" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Số lượng - đơn vị tính:</td>
+                <td class="td2">
+                    <input asp-for="Quantity" type="text" class="textbox" style="width: 50px;">
+                    <span> - </span>
+                    <input asp-for="Unit" type="text" class="textbox" style="width: 50px;">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ngành hàng:</td>
+                <td class="td2">
+                    <select class="select2" asp-for="CategoryId" style="width:200px;">
+                        <option value="null" selected disabled>Chọn ngành hàng..........</option>
+                        @{
+                            var categorys = (List<CategoryViewModel>)ViewBag.Categories;
+
+                            foreach (var category in categorys)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Kho hàng:</td>
+                <td class="td2">
+                    <select class="select2" asp-for="WarehouseId" style="width:200px;">
+                        <option value="null" selected disabled>Chọn kho hàng..........</option>
+                        @{
+                            var warehouses = (List<WarehouseViewModel>)ViewBag.Warehouses;
+
+                            foreach (var warehouse in warehouses)
+                            {
+                                <option value="@warehouse.Id">@warehouse.Name</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Thông tin chi tiết:</td>
+                <td class="td2">
+                    <textarea asp-for="Description"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ảnh:</td>
+                <td class="td2">
+                    <input asp-for="ImageUrl" type="text" class="textbox" placeholder="Link ảnh" style="width:80%;"><hr>
+                    <input asp-for="Image" type="file" style="width:98%;">
+                    <div style="color:Red;">(Chỉ hỗ trợ ảnh có định dạng *.jpg, *.png và dùng lượng &lt; 1MB)</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" name="btnAddU2" value="Ghi nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#Description'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+
