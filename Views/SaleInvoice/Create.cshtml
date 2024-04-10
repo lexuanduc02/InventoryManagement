@@ -1,0 +1,174 @@
+﻿@model InventoryManagement.Models.SaleInvoiceModels.CreateSaleInvoiceRequest
+@{
+    ViewData["Title"] = "Tạo hóa đơn bán hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Create" asp-controller="SaleInvoice" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                <td class="td2"><input asp-for="Customer.FullName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Số điện thoại:</td>
+                <td class="td2"><input asp-for="Customer.PhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Email:</td>
+                <td class="td2"><input asp-for="Customer.Email" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Phương thức thanh toán: </td>
+                <td class="td2">
+                    <select asp-for="PaymentMethod" tabindex="1">
+                        @{
+                            var paymentEnums = Enum.GetValues(typeof(InventoryManagement.Commons.Enums.PaymentMethodEnum));
+
+                            foreach (var paymentMethod in paymentEnums)
+                            {
+                                var value = (int)paymentMethod;
+                                <option value="@value">@paymentMethod</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <div class="add-product">
+                        <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
+                        <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                    </div>
+                    <table id="merchandiseTable">
+                        <thead>
+                            <tr>
+                                <th>Mã sản phẩm</th>
+                                <th>Giá bán</th>
+                                <th>Số lượng</th>
+                                <th>Voucher</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*<tr>
+                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].MerchandiseId" /></td>
+                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].SellingPrice" /></td>
+                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].Quantity" /></td>
+                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].Voucher" /></td>
+                                <td><input type="button" value="Xóa" class="btnRemoveRow button" /></td>
+                            </tr>*@
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" name="btnAddU2" value="Ghi nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('merchandiseTable').addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnRemoveRow')) {
+                    var row = e.target.parentNode.parentNode;
+                    row.parentNode.removeChild(row);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var productLists = [];
+
+        // Define getProductLists function
+        function getProductLists() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/product/all',
+                    dataType: "json",
+                    type: "GET",
+                    success: function (jsonObject, status) {
+                        resolve(jsonObject); // Resolve the Promise with the jsonObject
+                    },
+                    error: function (xhr, status, error) {
+                        reject(error); // Reject the Promise with the error message
+                    }
+                });
+            });
+        }
+
+        // Call getProductLists function and push the JSON data to productLists
+        getProductLists().then(function (jsonData) {
+            // Push the JSON data to productLists array
+            productLists = jsonData;
+        }).catch(function (error) {
+            // Handle errors
+            console.error("Error fetching product lists:", error);
+        });
+
+        $("#btnAddRow").click(function () {
+            var productId = $(".product-id.textbox").val();
+
+            // Iterate over the productLists array to find the matching product
+            var foundProduct = productLists.find(function (product) {
+                return product.id === productId;
+            });
+
+            if (foundProduct) {
+                $(".product-id.textbox").val("");
+
+                var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+                var cells = [];
+                for (var i = 0; i < 4; i++) {
+                    var newCell = newRow.insertCell(i);
+                    var input = document.createElement('input');
+                    if (i === 0) {
+                        input.value = foundProduct.id;
+                    }
+                    else if (i === 1)
+                        input.valueAsNumber = parseInt(foundProduct.price);
+                    else if (i === 2)
+                        input.valueAsNumber = 1;
+                    else if (i === 3)
+                        input.valueAsNumber = 0;
+                    input.type = ['text', 'number', 'number', 'number'][i];
+                    input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'SellingPrice', 'Quantity', 'Voucher'][i];
+                    input.value = 
+                    newCell.appendChild(input);
+                    cells.push(newCell);
+                }
+                var removeButtonCell = newRow.insertCell(4);
+                var removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.classList.add('btnRemoveRow', 'button');
+                removeButton.textContent = 'Xóa';
+                removeButtonCell.appendChild(removeButton);
+            } else {
+                alert("Product not found");
+            }
+        });
+    </script>
+
+}
+
+
+
+
