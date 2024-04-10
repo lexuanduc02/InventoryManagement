@@ -19,6 +19,12 @@ namespace InventoryManagement.Controllers
             _categoryService = categoryService;
         }
 
+        public async Task<IActionResult> All()
+        {
+            var res = await _productService.All();
+            return Ok(res.data);
+        }
+
         public async Task<IActionResult> Index()
         {
             var res = await _productService.All();

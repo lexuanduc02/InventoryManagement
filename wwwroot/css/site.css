@@ -559,7 +559,18 @@ input[type=checkbox], input[type=radio] {
     vertical-align: initial !important
 }
 
-
 .btn-add {
     text-decoration: none;
+}
+
+.add-product {
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product-id {
+    display: block;
+    margin-left: 20px;
+    height: 100%;
 }

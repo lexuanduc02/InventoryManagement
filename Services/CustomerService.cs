@@ -46,9 +46,9 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<bool>> CreateAsync(CreateCustomerRequest request)
+        public async Task<ServiceResponseModel<CustomerViewModel>> CreateAsync(CreateCustomerRequest request)
         {
-            var response = new ServiceResponseModel<bool>()
+            var response = new ServiceResponseModel<CustomerViewModel>()
             {
                 Message = "Cố lỗi trong quá trình tạo khách hàng mới, vui lòng thử lại sau!",
                 isSuccess = false,
@@ -83,6 +83,7 @@ namespace InventoryManagement.Services
                 {
                     response.Message = "Thêm khách hàng thành công!";
                     response.isSuccess = true;
+                    response.data = _mapper.Map<CustomerViewModel>(newCustomer);
                 }
 
                 return response;
@@ -140,6 +141,33 @@ namespace InventoryManagement.Services
             try
             {
                 var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+
+                if (customer == null)
+                    return response;
+
+                var data = _mapper.Map<CustomerViewModel>(customer);
+
+                response.isSuccess = true;
+                response.data = data;
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<CustomerViewModel>> GetByPhoneAsync(string phoneNumber)
+        {
+            var response = new ServiceResponseModel<CustomerViewModel>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
 
                 if (customer == null)
                     return response;
