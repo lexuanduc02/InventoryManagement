@@ -40,6 +40,8 @@ namespace InventoryManagement.ModuleRegistrations
             CreateMap<UpdateCustomerRequest, Customer>().ReverseMap();
 
             CreateMap<MerchandiseSaleInvoice, MerchandiseSaleInvoiceViewModel>().ReverseMap();
+
+            CreateMap<SaleInvoiceViewModel, SaleInvoice>().ReverseMap();
         }
     }
 }

@@ -70,5 +70,53 @@ namespace InventoryManagement.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Update(string id)
+        {
+            var getInvoiceRes = await _saleInvoiceService.GetAsync(id);
+            if (!getInvoiceRes.isSuccess || getInvoiceRes.data == null)
+                return RedirectToAction(nameof(Index));
+
+            var invoice = getInvoiceRes.data;
+
+            var getInvoiceDetailRes = await _merchandiseSaleInvoiceService.GetByInvoiceAsync(id);
+            if (!getInvoiceDetailRes.isSuccess || getInvoiceDetailRes.data == null)
+                return RedirectToAction(nameof(Index));
+
+            var invoiceDetails = getInvoiceDetailRes.data;
+
+            var data = new UpdateSaleInvoiceRequest()
+            {
+                SaleInvoiceViewModel = invoice,
+                MerchandiseSaleInvoiceViewModels = invoiceDetails,
+            };
+
+            return View(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateSaleInvoiceRequest request)
+        {
+            if(!ModelState.IsValid) 
+            { 
+                return RedirectToAction(nameof(Update), new { id = request.SaleInvoiceViewModel.Id });
+            }
+
+            var res = await _saleInvoiceService.UpdateAsync(request);
+
+            if(!res.isSuccess)
+            {
+                return RedirectToAction(nameof(Update), new { id = request.SaleInvoiceViewModel.Id });
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            var res = await _saleInvoiceService.DeleteAsync(id);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

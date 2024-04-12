@@ -52,7 +52,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Total) VNĐ</td>
                                 <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 <td align="center"><a href="@Url.Action("Update", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
-                                <td align="center"><a href="@Url.Action("Delete", "SaleInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Khách hàng không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("Delete", "SaleInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>
                         }
                     </tbody>

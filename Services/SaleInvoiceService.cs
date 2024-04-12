@@ -3,6 +3,7 @@ using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.CustomerModels;
+using InventoryManagement.Models.ProductModels;
 using InventoryManagement.Models.SaleInvoiceModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
+                            where sale.IsActive == Commons.Enums.ActiveEnum.Active
                             group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName , customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
@@ -72,7 +74,8 @@ namespace InventoryManagement.Services
                         Status = x.Status,
                         Note = x.Note,
                         ShippingCarrier = x.ShippingCarrier,
-                        CreateAt= x.CreateAt,
+                        CreateAt = x.CreateAt,
+                        UpdateAt = x.UpdateAt,
                         Total = x.Total,
                     }).ToListAsync();
 
@@ -148,9 +151,61 @@ namespace InventoryManagement.Services
 
                 var insertResult = await _context.SaveChangesAsync();
 
-                if(insertResult != 0)
+                if (insertResult == 0)
+                    return response;
+
+                var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
                 {
-                    response.Message = "Tạo thành công!";
+                    Id = x.MerchandiseId.ToString(),
+                    Quantity = x.Quantity,
+                }).ToList();
+
+                var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);
+
+                if(updateProductResult.isSuccess)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Tạo phiếu thành công";
+
+                    return response;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<bool>> DeleteAsync(string id)
+        {
+            var response = new ServiceResponseModel<bool>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var saleInvoice = await _context.SaleInvoices
+                    .FirstOrDefaultAsync(x => x.Id.ToString() == id && x.IsActive == Commons.Enums.ActiveEnum.Active);
+
+                if(saleInvoice == null)
+                {
+                    response.Message = "Không tìm thấy hóa đơn!";
+                    return response;
+                }
+
+                saleInvoice.IsActive = Commons.Enums.ActiveEnum.InActive;
+
+                _context.SaleInvoices.Update(saleInvoice);
+
+                var result = await _context.SaveChangesAsync();
+
+                if(result != 0)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Xóa thành công!";
                 }
 
                 return response;
@@ -179,6 +234,7 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
+                            where sale.IsActive == Commons.Enums.ActiveEnum.Active
                             group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
@@ -214,6 +270,43 @@ namespace InventoryManagement.Services
                 {
                     response.isSuccess = true;
                     response.data = data;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<bool>> UpdateAsync(UpdateSaleInvoiceRequest request)
+        {
+            var response = new ServiceResponseModel<bool>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var saleInvoice = await _context.SaleInvoices
+                    .FirstOrDefaultAsync(x => x.Id.ToString() == request.SaleInvoiceViewModel.Id && x.IsActive == Commons.Enums.ActiveEnum.Active);
+
+                if(saleInvoice == null)
+                {
+                    response.Message = "Hóa đơn không tồn tại";
+                    return response;
+                }
+
+                _mapper.Map(request.SaleInvoiceViewModel, saleInvoice);
+
+                _context.SaleInvoices.Update(saleInvoice);
+                var result = await _context.SaveChangesAsync();
+
+                if(result != 0)
+                {
+                    response.Message = "Cập nhật thành công";
+                    response.isSuccess = true;
                 }
 
                 return response;

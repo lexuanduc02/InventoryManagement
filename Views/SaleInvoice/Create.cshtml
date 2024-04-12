@@ -56,18 +56,26 @@
                     <div class="add-product">
                         <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
                         <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                        <input type="number" placeholder="Số lượng" class="product-quan textbox" />
                     </div>
-                    <table id="merchandiseTable">
-                        <thead>
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
                             <tr>
-                                <th>Mã sản phẩm</th>
-                                <th>Giá bán</th>
-                                <th>Số lượng</th>
-                                <th>Voucher</th>
-                                <th></th>
+                                <th class="th">Mã sản phẩm</th>
+                                <th class="th">Giá bán</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Voucher</th>
+                                <th class="th"></th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody class="tbody"></tbody>
+                        @*<tfoot class="tfoot">
+                            <tr>
+                                <th class="th">Totals</th>
+                                <td class="td total" colspan="3">0</td>
+                                <td>VNĐ</td>
+                            </tr>
+                        </tfoot>*@
                     </table>
                 </td>
             </tr>
@@ -125,13 +133,20 @@
 
         $("#btnAddRow").click(function () {
             var productId = $(".product-id.textbox").val();
-
             // Iterate over the productLists array to find the matching product
             var foundProduct = productLists.find(function (product) {
                 return product.id === productId;
             });
 
+            var quantity = $(".product-quan.textbox").val();
+
             if (foundProduct) {
+                $(".product-quan.textbox").val("");
+                if (foundProduct.quantity < quantity) {
+                    alert(`Sản phẩm còn lại ${foundProduct.quantity} ${foundProduct.unit}`);
+                    quantity = foundProduct.quantity;
+                }
+                
                 $(".product-id.textbox").val("");
 
                 var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
@@ -145,11 +160,13 @@
                     input.type = ['text', 'number', 'number', 'number'][i];
                     input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'SellingPrice', 'Quantity', 'Voucher'][i];
 
+                    input.className = ['td id', 'td price', 'td quantity', 'td voucher'][i];
+
                     newCell.appendChild(input);
                     cells.push(newCell);
 
                     var inputValue = document.getElementsByName(input.name)[0];
-                    inputValue.value = [foundProduct.id, parseFloat(foundProduct.price), 1, 0][i];
+                    inputValue.value = [foundProduct.id, parseFloat(foundProduct.price), quantity, 0][i];
                 }
 
                 var removeButtonCell = newRow.insertCell(4);
@@ -162,6 +179,23 @@
                 alert("Product not found");
             }
         });
+
+        //$(".td").on("change", function () {
+        //    var total = 0; // Initialize total to 0
+
+        //    // Assuming there are multiple elements with class '.price', '.quantity', and '.voucher'
+        //    $(".price").each(function (index, element) {
+        //        var price = parseFloat($(element).val());
+        //        var quantity = parseFloat($(element).closest("tr").find(".quantity").val());
+        //        var voucher = parseFloat($(element).closest("tr").find(".voucher").val());
+
+        //        // Calculate subtotal for each row and add to total
+        //        total += quantity * price * (100 - voucher) / 100;
+        //    });
+
+        //    $(".total").text(total); // Update the total
+        //});
+
     </script>
 }
 

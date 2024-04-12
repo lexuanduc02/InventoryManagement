@@ -5,6 +5,7 @@ using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.ImageModels;
 using InventoryManagement.Models.MerchandiseModels;
+using InventoryManagement.Models.ProductModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.EntityFrameworkCore;
 using Slugify;
@@ -276,6 +277,47 @@ namespace InventoryManagement.Services
 
                 return response;
 
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<bool>> UpdateQuantityAsync(List<UpdateProductQuantityRequest> requests)
+        {
+            var response = new ServiceResponseModel<bool>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                // Extracting the list of product IDs from requests
+                var listProductId = requests.Select(x => x.Id).ToList();
+
+                // Fetching products from the database
+                var products = await _context.Merchandises
+                    .Where(x => listProductId.Contains(x.Id.ToString()))
+                    .ToListAsync();
+
+                // Updating quantities based on requests
+                foreach (var request in requests)
+                {
+                    var product = products.FirstOrDefault(p => p.Id.ToString() == request.Id);
+                    if (product != null)
+                    {
+                        product.Quantity -= request.Quantity;
+                    }
+                }
+
+                // Updating products in the database
+                _context.Merchandises.UpdateRange(products);
+                var result = await _context.SaveChangesAsync();
+                if (result != 0)
+                    response.isSuccess = true;
+
+                return response;
             }
             catch (Exception)
             {
