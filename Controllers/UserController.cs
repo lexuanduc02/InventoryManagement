@@ -37,6 +37,7 @@ namespace InventoryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.Roles = (await _roleService.All()).data;
                 return View(request);
             }
 
@@ -44,6 +45,7 @@ namespace InventoryManagement.Controllers
 
             if (!response.isSuccess)
             {
+                ViewBag.Roles = (await _roleService.All()).data;
                 return View(request);
             }
 

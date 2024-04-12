@@ -14,7 +14,6 @@ namespace InventoryManagement.Domains.Entities
         public Merchandise Merchandise { get; set; }
 
         public int Quantity { get; set; }
-        public string Unit { get; set; }
         public float SellingPrice { get; set; }
         public float Voucher { get; set; }
 

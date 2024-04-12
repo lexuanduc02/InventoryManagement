@@ -1,0 +1,80 @@
+﻿@model InventoryManagement.Models.SaleInvoiceModels.DetailSaleInvoiceViewModel
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+    @{ 
+        var invoice = Model.SaleInvoiceViewModel;
+        var detais = Model.MerchandiseSaleInvoiceViewModels;
+    }
+    <tbody>
+        <tr class="tr-view">
+            <td colspan="2" class="td-view-left">
+                <a asp-action="Index" class="button btn-add">Danh sách phiếu</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Người lập phiếu:</div></td>
+            <td class="td2"><input value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+            <td class="td2"><input value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1">Số điện thoại:</td>
+            <td class="td2"><input value="@invoice.CustomerPhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1">Phương thức thanh toán: </td>
+            <td class="td2"><input value="@invoice.PaymentMethod" type="text" class="textbox" style="width: 250px;" /></td>
+        </tr>
+        <tr>
+            <td class="td1">Ghi chú:</td>
+            <td class="td2"><textarea rows="8" cols="20" class="textbox" style="width:98%;">@invoice.Note</textarea></td>
+        </tr>
+        <tr>
+            <td class="td1">Thông tin đơn vị vận chuyển:</td>
+            <td class="td2"><textarea rows="8" cols="20" class="textbox" style="width:98%;">@invoice.ShippingCarrier</textarea></td>
+        </tr>
+        <tr>
+            <td class="td1">Danh sách sản phẩm: </td>
+            <td class="td2">
+                <table id="merchandiseTable" class="table">
+                    <thead class="thead">
+                        <tr>
+                            <th class="th">Mã sản phẩm</th>
+                            <th class="th">Giá bán</th>
+                            <th class="th">Số lượng</th>
+                            <th class="th">Voucher</th>
+                            <th class="th">Thanh toán</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody">
+                        @foreach (var item in detais)
+                        {
+                            var fee = item.Quantity * item.SellingPrice * (100 - item.Voucher) / 100;
+                            <tr>
+                                <td class="td">@item.MerchandiseId</td>
+                                <td class="td">@item.SellingPrice</td>
+                                <td class="td">@item.Quantity</td>
+                                <td class="td">@item.Voucher %</td>
+                                <td class="td">@fee</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="tfoot">
+                        <tr>
+                            <th class="th">Totals</th>
+                            <td class="td" colspan="4">@invoice.Total</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+

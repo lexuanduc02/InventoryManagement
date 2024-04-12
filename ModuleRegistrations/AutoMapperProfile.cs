@@ -3,8 +3,10 @@ using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Models.CustomerModels;
 using InventoryManagement.Models.MerchandiseModels;
+using InventoryManagement.Models.MerchandiseSaleInvoiceModels;
 using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Models.RoleModels;
+using InventoryManagement.Models.SaleInvoiceModels;
 using InventoryManagement.Models.UserModels;
 using InventoryManagement.Models.WarehouseModels;
 
@@ -29,12 +31,15 @@ namespace InventoryManagement.ModuleRegistrations
             CreateMap<Role, RoleViewModel>().ReverseMap();
 
             CreateMap<UpdateUserRequest, User>().ReverseMap();
+            CreateMap<CreateUserRequest, User>().ReverseMap();
 
             CreateMap<UpdateProductRequest, Merchandise>().ReverseMap();
 
             CreateMap<Customer, CustomerViewModel>().ReverseMap();
             CreateMap<CreateCustomerRequest, Customer>().ReverseMap();
             CreateMap<UpdateCustomerRequest, Customer>().ReverseMap();
+
+            CreateMap<MerchandiseSaleInvoice, MerchandiseSaleInvoiceViewModel>().ReverseMap();
         }
     }
 }
