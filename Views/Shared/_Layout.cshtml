@@ -42,11 +42,15 @@
                             <a class="menuleft" asp-controller="Customer" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục khách hàng</a>
                             <a class="menuleft" asp-controller="User" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục nhân viên</a>
 
-                            <div class="title-left">Quản lý xuất nhập kho</div>
-                            <a class="menuleft" href="pro.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Cập nhật kho</a>
-                            <a class="menuleft" href="thuoctinhG.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Cập nhật xuất kho</a>
-                            <a class="menuleft" href="thuoctinh.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách phiếu nhập</a>
-                            <a class="menuleft" href="news.aspx"><img class="imgmid" src="/iconcp/icon_news.png"> Danh sách phiếu xuất</a>
+                            <div class="title-left">Quản lý xuất kho</div>
+                            <a class="menuleft" asp-controller="SaleInvoice" asp-action="Index"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách hóa đơn</a>
+                            <a class="menuleft" asp-controller="SaleInvoice" asp-action="Create"><img class="imgmid" src="/iconcp/icon_pro.png">Xuất kho bán hàng</a>
+                            <a class="menuleft" asp-controller="SaleInvoice" asp-action="ReturnProduct"><img class="imgmid" src="/iconcp/icon_pro.png">Trả hàng NCC</a>
+
+                            <div class="title-left">Quản lý nhập kho</div>
+                            <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Index"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách hóa đơn</a>
+                            <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Create"><img class="imgmid" src="/iconcp/icon_pro.png">Nhập kho bán hàng</a>
+                            <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="ReturnProduct"><img class="imgmid" src="/iconcp/icon_pro.png">Hóa đơn trả hàng</a>
 
                             <div class="title-left">Quản lý tồn kho</div>
                             <a class="menuleft" href="pro.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Theo dõi tồn kho</a>

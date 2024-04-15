@@ -18,6 +18,8 @@ namespace InventoryManagement.ModuleRegistrations
                 .AddScoped<IImageService, ImageService>()
                 .AddScoped<ISlugHelper, SlugHelper>()
                 .AddScoped<ICustomerService, CustomerService>()
+                .AddScoped<ISaleInvoiceService, SaleInvoiceService>()
+                .AddScoped<IMerchandiseSaleInvoiceService, MerchandiseSaleInvoiceService>()
             ;
 
             return services;

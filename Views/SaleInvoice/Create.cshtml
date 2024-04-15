@@ -4,13 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-action="Create" asp-controller="SaleInvoice" method="post">
-    <input type="hidden" asp-for="UserId" />
+<form asp-action="Confirm" asp-controller="SaleInvoice" method="post">
+    <input type="hidden" asp-for="UserId" value="F48CF82D-EE9E-4C82-2ACE-08DC5ADE8E8E"/>
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
             <tr class="tr-view">
                 <td colspan="2" class="td-view-left">
-                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
                     <input type="reset" class="button" name="cmdReset" value="Mặc định">
                 </td>
             </tr>
@@ -43,38 +43,40 @@
                 </td>
             </tr>
             <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Thông tin đơn vị vận chuyển:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="ShippingCarrier" class="textbox" style="width:98%;"></textarea></td>
+            </tr>
+            <tr>
                 <td class="td1">Danh sách sản phẩm: </td>
                 <td class="td2">
                     <div class="add-product">
                         <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
                         <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                        <input type="number" placeholder="Số lượng" class="product-quan textbox" />
                     </div>
-                    <table id="merchandiseTable">
-                        <thead>
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
                             <tr>
-                                <th>Mã sản phẩm</th>
-                                <th>Giá bán</th>
-                                <th>Số lượng</th>
-                                <th>Voucher</th>
-                                <th></th>
+                                <th style="display: none"></th>
+                                <th class="th">Tên sản phẩm</th>
+                                <th class="th">Giá bán</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Voucher</th>
+                                <th class="th"></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @*<tr>
-                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].MerchandiseId" /></td>
-                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].SellingPrice" /></td>
-                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].Quantity" /></td>
-                                <td><input asp-for="@Model.MerchandiseSaleInvoices[0].Voucher" /></td>
-                                <td><input type="button" value="Xóa" class="btnRemoveRow button" /></td>
-                            </tr>*@
-                        </tbody>
+                        <tbody class="tbody hide-first"></tbody>
                     </table>
                 </td>
             </tr>
             <tr>
                 <td class="td1">&nbsp;</td>
                 <td class="td1" style="text-align:left;">
-                    <input type="submit" name="btnAddU2" value="Ghi nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
                     <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
                 </td>
             </tr>
@@ -88,6 +90,15 @@
             document.getElementById('merchandiseTable').addEventListener('click', function (e) {
                 if (e.target.classList.contains('btnRemoveRow')) {
                     var row = e.target.parentNode.parentNode;
+                    var productId = row.querySelector('.id').value;
+                    var quantity = row.querySelector('.quantity').value;
+
+                    productLists.forEach(e => {
+                        if (e.id === productId) {
+                            e.quantity += parseInt(quantity);
+                        }
+                    });
+
                     row.parentNode.removeChild(row);
                 }
             });
@@ -125,48 +136,69 @@
 
         $("#btnAddRow").click(function () {
             var productId = $(".product-id.textbox").val();
-
+            var quantity = $(".product-quan.textbox").val();
             // Iterate over the productLists array to find the matching product
+            addProduct(productId, parseInt(quantity))
+        });
+
+        function addProduct(productId, quantity) {
             var foundProduct = productLists.find(function (product) {
                 return product.id === productId;
             });
 
             if (foundProduct) {
+                $(".product-quan.textbox").val("");
+                if (foundProduct.quantity < quantity) {
+                    alert(`Sản phẩm còn lại ${foundProduct.quantity} ${foundProduct.unit}`);
+                    return;
+                }
+
+                foundProduct.quantity -= quantity;
+
                 $(".product-id.textbox").val("");
 
                 var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
                 var newRow = table.insertRow(table.rows.length);
                 var cells = [];
-                for (var i = 0; i < 4; i++) {
-                    var newCell = newRow.insertCell(i);
-                    var input = document.createElement('input');
-                    if (i === 0) {
-                        input.value = foundProduct.id;
+
+                var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
+
+                if (existingRow.length === 0 ) {
+                    for (var i = 0; i < 5; i++) {
+                        var newCell = newRow.insertCell(i);
+                        var input = document.createElement('input');
+
+                        input.type = ['hidden', 'text', 'number', 'number', 'number'][i];
+                        input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'SellingPrice', 'Quantity', 'Voucher'][i];
+
+                        input.className = ['id hide', 'td name', 'td price', 'td quantity', 'td voucher'][i];
+
+                        newCell.appendChild(input);
+                        cells.push(newCell);
+
+                        var inputValue = document.getElementsByName(input.name)[0];
+                        inputValue.value = [foundProduct.id, foundProduct.name, parseFloat(foundProduct.price), quantity, 0][i];
                     }
-                    else if (i === 1)
-                        input.valueAsNumber = parseInt(foundProduct.price);
-                    else if (i === 2)
-                        input.valueAsNumber = 1;
-                    else if (i === 3)
-                        input.valueAsNumber = 0;
-                    input.type = ['text', 'number', 'number', 'number'][i];
-                    input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'SellingPrice', 'Quantity', 'Voucher'][i];
-                    input.value = 
-                    newCell.appendChild(input);
-                    cells.push(newCell);
+
+                    var removeButtonCell = newRow.insertCell(5);
+                    var removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.classList.add('btnRemoveRow', 'button');
+                    removeButton.textContent = 'Xóa';
+                    removeButtonCell.appendChild(removeButton);
+                } else {
+                    var existingProduct = existingRow.parent().parent();
+                    var existingQuantityInput = $(existingProduct).find('.quantity');
+                    var existingQuantity = parseInt(existingQuantityInput.val());
+
+                    existingQuantity += quantity;
+                    existingQuantityInput.val(existingQuantity);
                 }
-                var removeButtonCell = newRow.insertCell(4);
-                var removeButton = document.createElement('button');
-                removeButton.type = 'button';
-                removeButton.classList.add('btnRemoveRow', 'button');
-                removeButton.textContent = 'Xóa';
-                removeButtonCell.appendChild(removeButton);
             } else {
                 alert("Product not found");
             }
-        });
+        }
     </script>
-
 }
 
 
