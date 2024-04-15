@@ -4,13 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-action="Create" asp-controller="SaleInvoice" method="post">
+<form asp-action="Confirm" asp-controller="SaleInvoice" method="post">
     <input type="hidden" asp-for="UserId" value="F48CF82D-EE9E-4C82-2ACE-08DC5ADE8E8E"/>
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
             <tr class="tr-view">
                 <td colspan="2" class="td-view-left">
-                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
                     <input type="reset" class="button" name="cmdReset" value="Mặc định">
                 </td>
             </tr>
@@ -61,28 +61,22 @@
                     <table id="merchandiseTable" class="table">
                         <thead class="thead">
                             <tr>
-                                <th class="th">Mã sản phẩm</th>
+                                <th style="display: none"></th>
+                                <th class="th">Tên sản phẩm</th>
                                 <th class="th">Giá bán</th>
                                 <th class="th">Số lượng</th>
                                 <th class="th">Voucher</th>
                                 <th class="th"></th>
                             </tr>
                         </thead>
-                        <tbody class="tbody"></tbody>
-                        @*<tfoot class="tfoot">
-                            <tr>
-                                <th class="th">Totals</th>
-                                <td class="td total" colspan="3">0</td>
-                                <td>VNĐ</td>
-                            </tr>
-                        </tfoot>*@
+                        <tbody class="tbody hide-first"></tbody>
                     </table>
                 </td>
             </tr>
             <tr>
                 <td class="td1">&nbsp;</td>
                 <td class="td1" style="text-align:left;">
-                    <input type="submit" name="btnAddU2" value="Ghi nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
                     <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
                 </td>
             </tr>
@@ -96,6 +90,15 @@
             document.getElementById('merchandiseTable').addEventListener('click', function (e) {
                 if (e.target.classList.contains('btnRemoveRow')) {
                     var row = e.target.parentNode.parentNode;
+                    var productId = row.querySelector('.id').value;
+                    var quantity = row.querySelector('.quantity').value;
+
+                    productLists.forEach(e => {
+                        if (e.id === productId) {
+                            e.quantity += parseInt(quantity);
+                        }
+                    });
+
                     row.parentNode.removeChild(row);
                 }
             });
@@ -133,69 +136,68 @@
 
         $("#btnAddRow").click(function () {
             var productId = $(".product-id.textbox").val();
+            var quantity = $(".product-quan.textbox").val();
             // Iterate over the productLists array to find the matching product
+            addProduct(productId, parseInt(quantity))
+        });
+
+        function addProduct(productId, quantity) {
             var foundProduct = productLists.find(function (product) {
                 return product.id === productId;
             });
-
-            var quantity = $(".product-quan.textbox").val();
 
             if (foundProduct) {
                 $(".product-quan.textbox").val("");
                 if (foundProduct.quantity < quantity) {
                     alert(`Sản phẩm còn lại ${foundProduct.quantity} ${foundProduct.unit}`);
-                    quantity = foundProduct.quantity;
+                    return;
                 }
-                
+
+                foundProduct.quantity -= quantity;
+
                 $(".product-id.textbox").val("");
 
                 var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
                 var newRow = table.insertRow(table.rows.length);
                 var cells = [];
 
-                for (var i = 0; i < 4; i++) {
-                    var newCell = newRow.insertCell(i);
-                    var input = document.createElement('input');
+                var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
 
-                    input.type = ['text', 'number', 'number', 'number'][i];
-                    input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'SellingPrice', 'Quantity', 'Voucher'][i];
+                if (existingRow.length === 0 ) {
+                    for (var i = 0; i < 5; i++) {
+                        var newCell = newRow.insertCell(i);
+                        var input = document.createElement('input');
 
-                    input.className = ['td id', 'td price', 'td quantity', 'td voucher'][i];
+                        input.type = ['hidden', 'text', 'number', 'number', 'number'][i];
+                        input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'SellingPrice', 'Quantity', 'Voucher'][i];
 
-                    newCell.appendChild(input);
-                    cells.push(newCell);
+                        input.className = ['id hide', 'td name', 'td price', 'td quantity', 'td voucher'][i];
 
-                    var inputValue = document.getElementsByName(input.name)[0];
-                    inputValue.value = [foundProduct.id, parseFloat(foundProduct.price), quantity, 0][i];
+                        newCell.appendChild(input);
+                        cells.push(newCell);
+
+                        var inputValue = document.getElementsByName(input.name)[0];
+                        inputValue.value = [foundProduct.id, foundProduct.name, parseFloat(foundProduct.price), quantity, 0][i];
+                    }
+
+                    var removeButtonCell = newRow.insertCell(5);
+                    var removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.classList.add('btnRemoveRow', 'button');
+                    removeButton.textContent = 'Xóa';
+                    removeButtonCell.appendChild(removeButton);
+                } else {
+                    var existingProduct = existingRow.parent().parent();
+                    var existingQuantityInput = $(existingProduct).find('.quantity');
+                    var existingQuantity = parseInt(existingQuantityInput.val());
+
+                    existingQuantity += quantity;
+                    existingQuantityInput.val(existingQuantity);
                 }
-
-                var removeButtonCell = newRow.insertCell(4);
-                var removeButton = document.createElement('button');
-                removeButton.type = 'button';
-                removeButton.classList.add('btnRemoveRow', 'button');
-                removeButton.textContent = 'Xóa';
-                removeButtonCell.appendChild(removeButton);
             } else {
                 alert("Product not found");
             }
-        });
-
-        //$(".td").on("change", function () {
-        //    var total = 0; // Initialize total to 0
-
-        //    // Assuming there are multiple elements with class '.price', '.quantity', and '.voucher'
-        //    $(".price").each(function (index, element) {
-        //        var price = parseFloat($(element).val());
-        //        var quantity = parseFloat($(element).closest("tr").find(".quantity").val());
-        //        var voucher = parseFloat($(element).closest("tr").find(".voucher").val());
-
-        //        // Calculate subtotal for each row and add to total
-        //        total += quantity * price * (100 - voucher) / 100;
-        //    });
-
-        //    $(".total").text(total); // Update the total
-        //});
-
+        }
     </script>
 }
 

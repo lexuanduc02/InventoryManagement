@@ -607,3 +607,7 @@ input[type=checkbox], input[type=radio] {
 .td {
     text-align: center;
 }
+
+.hide-first tr > *:nth-child(1) {
+    display: none;
+}

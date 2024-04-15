@@ -71,6 +71,16 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Confirm(CreateSaleInvoiceRequest request)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View("Create", request);
+            }
+
+            return View(request);
+        }
+
         public async Task<IActionResult> Update(string id)
         {
             var getInvoiceRes = await _saleInvoiceService.GetAsync(id);

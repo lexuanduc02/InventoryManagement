@@ -104,7 +104,7 @@ namespace InventoryManagement.Services
             {
                 var customer = await _customerService.GetByPhoneAsync(request.Customer.PhoneNumber.ToString());
 
-                if (customer == null)
+                if (customer.data == null)
                 {
                     var newCustomer = new CreateCustomerRequest()
                     {
@@ -234,7 +234,8 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
-                            where sale.IsActive == Commons.Enums.ActiveEnum.Active
+                            where sale.IsActive == Commons.Enums.ActiveEnum.Active 
+                            && sale.Id.ToString() == id
                             group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
