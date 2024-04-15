@@ -58,17 +58,18 @@
                             var fee = item.Quantity * item.SellingPrice * (100 - item.Voucher) / 100;
                             <tr>
                                 <td class="td">@item.MerchandiseId</td>
-                                <td class="td">@item.SellingPrice</td>
+                                <td class="td">@item.SellingPrice VNĐ</td>
                                 <td class="td">@item.Quantity</td>
                                 <td class="td">@item.Voucher %</td>
-                                <td class="td">@fee</td>
+                                <td class="td">@fee VNĐ</td>
                             </tr>
                         }
                     </tbody>
                     <tfoot class="tfoot">
                         <tr>
-                            <th class="th">Totals</th>
-                            <td class="td" colspan="4">@invoice.Total</td>
+                            <th class="th"></th>
+                            <th class="th" colspan="3">Totals</th>
+                            <td class="td">@invoice.Total VNĐ</td>
                         </tr>
                     </tfoot>
                 </table>

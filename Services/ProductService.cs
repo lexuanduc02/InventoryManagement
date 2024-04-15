@@ -307,7 +307,7 @@ namespace InventoryManagement.Services
                     var product = products.FirstOrDefault(p => p.Id.ToString() == request.Id);
                     if (product != null)
                     {
-                        product.Quantity -= request.Quantity;
+                        product.Quantity += request.Quantity;
                     }
                 }
 

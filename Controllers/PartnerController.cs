@@ -20,6 +20,18 @@ namespace InventoryManagement.Controllers
             return View(response.data);
         }
 
+        public async Task<IActionResult> All()
+        {
+            var response = await _partnerService.All();
+
+            if (response.data != null)
+            {
+                return Ok(response.data);
+            }
+
+            return BadRequest();
+        }
+
         public IActionResult Create()
         {
             return View();

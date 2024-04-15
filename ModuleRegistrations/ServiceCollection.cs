@@ -20,6 +20,8 @@ namespace InventoryManagement.ModuleRegistrations
                 .AddScoped<ICustomerService, CustomerService>()
                 .AddScoped<ISaleInvoiceService, SaleInvoiceService>()
                 .AddScoped<IMerchandiseSaleInvoiceService, MerchandiseSaleInvoiceService>()
+                .AddScoped<IPurchaseInvoiceService, PurchaseInvoiceService>()
+                .AddScoped<IMerchandisePurchaseInvoiceService, MerchandisePurchaseInvoiceService>()
             ;
 
             return services;

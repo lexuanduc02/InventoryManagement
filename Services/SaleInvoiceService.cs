@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagement.Commons.Enums;
 using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
@@ -46,7 +47,7 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
-                            where sale.IsActive == Commons.Enums.ActiveEnum.Active
+                            where sale.IsActive == ActiveEnum.Active && sale.InvoiceTypeEnum == InvoiceTypeEnum.Invoice
                             group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName , customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
@@ -157,7 +158,7 @@ namespace InventoryManagement.Services
                 var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
                 {
                     Id = x.MerchandiseId.ToString(),
-                    Quantity = x.Quantity,
+                    Quantity = -x.Quantity,
                 }).ToList();
 
                 var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);

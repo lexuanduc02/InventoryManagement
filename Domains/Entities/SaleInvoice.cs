@@ -22,8 +22,8 @@ namespace InventoryManagement.Domains.Entities
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
 
-        [DefaultValue(ActiveEnum.Active)]
-        public ActiveEnum IsActive { get; set; }
+        public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
+        public InvoiceTypeEnum InvoiceTypeEnum { get; set; } = InvoiceTypeEnum.Invoice;
 
         public ICollection<MerchandiseSaleInvoice> MerchandiseSaleInvoices { get; set; }
     }

@@ -12,8 +12,8 @@ namespace InventoryManagement.Models.SaleInvoiceModels
         public InvoiceStatusEnum Status { get; set; }
         public string? Note { get; set; }
         public string? ShippingCarrier { get; set; }
-        public DateTime CreateAt { get; set; }
-        public DateTime UpdateAt { get; set; }
+        public DateTime? CreateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public float Total { get; set; }
     }
 }

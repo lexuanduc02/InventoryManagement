@@ -1,0 +1,107 @@
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.PurchaseInvoiceModels.DetailPurchaseInvoiceModel
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+    var invoice = Model.PurchaseInvoiceViewModel;
+    var invoiceDetails = Model.MerchandisePurchaseViewModels;
+}
+
+<form asp-action="Update" method="post">
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Nhân viên lập:</div></td>
+                <td class="td2"><input readonly value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+                <td class="td2"><input readonly value="@invoice.PartnerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Phương thức thanh toán: </td>
+                <td class="td2">
+                    <select>
+                        <option value="null" disabled>Chọn phương thức thanh toán..........</option>
+                        @{
+                            var paymentMethods = Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>();
+
+                            foreach (var paymentMethod in paymentMethods)
+                            {
+                                var isSelect = invoice.PaymentMethod == paymentMethod;
+                                <option selected="@isSelect" value="@paymentMethod">@paymentMethod</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Trạng Thái: </td>
+                <td class="td2">
+                    <select asp-for="@invoice.Status">
+                        @{
+                            var status = Enum.GetValues(typeof(InvoiceStatusEnum)).Cast<InvoiceStatusEnum>();
+
+                            foreach (var item in status)
+                            {
+                                var isSelect = invoice.Status == item;
+                                <option selected="@isSelect" value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="8" cols="20"class="textbox" style="width:98%;">@invoice.Note</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th style="display: none"></th>
+                                <th class="th">Mã sản phẩm</th>
+                                <th class="th">Giá mua</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Đơn vị tính</th>
+                                <th class="th"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                            @foreach (var item in invoiceDetails)
+                            {
+                                var fee = item.Quantity * item.PurchasePrice;
+                                <tr>
+                                    <td class="td">@item.MerchandiseId</td>
+                                    <td class="td">@item.PurchasePrice VNĐ</td>
+                                    <td class="td">@item.Quantity</td>
+                                    <td class="td">@item.Unit %</td>
+                                    <td class="td">@fee VNĐ</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="tfoot">
+                            <tr>
+                                <th class="th"></th>
+                                <th class="th" colspan="3">Totals</th>
+                                <td class="td">@invoice.Total VNĐ</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
