@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagement.Commons.Enums;
 using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
@@ -28,7 +29,7 @@ namespace InventoryManagement.Services
             _context = context;
         }
 
-        public async Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> AllAsync()
+        public async Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> AllAsync(InvoiceTypeEnum invoiceType)
         {
             var response = new ServiceResponseModel<List<SaleInvoiceViewModel>>() 
             {
@@ -46,7 +47,7 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
-                            where sale.IsActive == Commons.Enums.ActiveEnum.Active
+                            where sale.IsActive == ActiveEnum.Active && sale.InvoiceType == invoiceType
                             group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName , customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
@@ -157,12 +158,88 @@ namespace InventoryManagement.Services
                 var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
                 {
                     Id = x.MerchandiseId.ToString(),
-                    Quantity = x.Quantity,
+                    Quantity = -x.Quantity,
                 }).ToList();
 
                 var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);
 
                 if(updateProductResult.isSuccess)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Tạo phiếu thành công";
+
+                    return response;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<bool>> CreateReturnAsync(CreateSaleReturnInvoiceRequest request)
+        {
+            var response = new ServiceResponseModel<bool>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var customer = await _customerService.GetByPhoneAsync(request.CustomerPhoneNumber.ToString());
+
+                if (customer.data == null)
+                {
+                    response.Message = "Không tìm thấy thông tin khác hàng";
+                    return response;
+                }
+
+                var checkExitInvoice = _context.SaleInvoices.Where(x => x.CustomerId.ToString() == request.CustomerId);
+                if(!checkExitInvoice.Any()) 
+                {
+                    response.Message = "Khách hàng chưa mua hàng!";
+                    return response;
+                }
+
+                request.CustomerId = customer.data.Id.ToString();
+
+                var invoiceDetails = request.MerchandiseSaleInvoices;
+                var saleInvoice = new SaleInvoice()
+                {
+                    UserId = new Guid(request.UserId),
+                    CustomerId = new Guid(request.CustomerId),
+                    Status = request.Status,
+                    Note = request.Note,
+                    CreateAt = request.CreateAt,
+                    IsActive = request.IsActive,
+                    InvoiceType = InvoiceTypeEnum.ReturnInvoice,
+
+                    MerchandiseSaleInvoices = invoiceDetails.Select(x => new MerchandiseSaleInvoice()
+                    {
+                        MerchandiseId = x.MerchandiseId,
+                        Quantity = x.Quantity,
+                        IsActive = x.IsActive,
+                    }).ToList(),
+                };
+
+                _context.SaleInvoices.Add(saleInvoice);
+
+                var insertResult = await _context.SaveChangesAsync();
+
+                if (insertResult == 0)
+                    return response;
+
+                var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
+                {
+                    Id = x.MerchandiseId.ToString(),
+                    Quantity = x.Quantity,
+                }).ToList();
+
+                var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);
+
+                if (updateProductResult.isSuccess)
                 {
                     response.isSuccess = true;
                     response.Message = "Tạo phiếu thành công";
@@ -234,9 +311,9 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
-                            where sale.IsActive == Commons.Enums.ActiveEnum.Active 
+                            where sale.IsActive == ActiveEnum.Active 
                             && sale.Id.ToString() == id
-                            group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
+                            group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt, sale.InvoiceType } into grouped
                             select new
                             {
                                 SaleInvoiceId = grouped.Key.Id,
@@ -244,6 +321,7 @@ namespace InventoryManagement.Services
                                 CustomerName = grouped.Key.cm,
                                 CustomerPhoneNumber = grouped.Key.PhoneNumber,
                                 PaymentMethod = grouped.Key.PaymentMethod,
+                                InvoiceType = grouped.Key.InvoiceType,
                                 Status = grouped.Key.Status,
                                 Note = grouped.Key.Note,
                                 ShippingCarrier = grouped.Key.ShippingCarrier,
@@ -260,6 +338,7 @@ namespace InventoryManagement.Services
                         CustomerName = x.CustomerName,
                         CustomerPhoneNumber = x.CustomerPhoneNumber,
                         PaymentMethod = x.PaymentMethod,
+                        InvoiceType = x.InvoiceType,
                         Status = x.Status,
                         Note = x.Note,
                         ShippingCarrier = x.ShippingCarrier,

@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Models.SaleInvoiceModels;
+﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Models.SaleInvoiceModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace InventoryManagement.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var res = await _saleInvoiceService.AllAsync();
+            var res = await _saleInvoiceService.AllAsync(InvoiceTypeEnum.Invoice);
 
             var data = res.data;
 
@@ -44,6 +45,8 @@ namespace InventoryManagement.Controllers
                 SaleInvoiceViewModel = invoice,
                 MerchandiseSaleInvoiceViewModels = invoiceDetails,
             };
+
+            ViewBag.InvoiceType = invoice.InvoiceType;
 
             return View(data);
         }
@@ -127,6 +130,38 @@ namespace InventoryManagement.Controllers
             var res = await _saleInvoiceService.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Return()
+        {
+            var res = await _saleInvoiceService.AllAsync(InvoiceTypeEnum.ReturnInvoice);
+
+            var data = res.data;
+
+            return View(data);
+        }
+
+        public IActionResult CreateReturn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReturn(CreateSaleReturnInvoiceRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var res = await _saleInvoiceService.CreateReturnAsync(request);
+
+            if (!res.isSuccess)
+            {
+                return View(request);
+            }
+
+            return RedirectToAction(nameof(Return));
         }
     }
 }

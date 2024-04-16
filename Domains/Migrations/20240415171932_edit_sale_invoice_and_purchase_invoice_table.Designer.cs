@@ -4,6 +4,7 @@ using InventoryManagement.Domains.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagement.Domains.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240415171932_edit_sale_invoice_and_purchase_invoice_table")]
+    partial class edit_sale_invoice_and_purchase_invoice_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,10 +215,10 @@ namespace InventoryManagement.Domains.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime?>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("InvoiceType")
+                    b.Property<int>("InvoiceTypeEnum")
                         .HasColumnType("int");
 
                     b.Property<int>("IsActive")
@@ -233,7 +236,7 @@ namespace InventoryManagement.Domains.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdateAt")
+                    b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
@@ -284,7 +287,7 @@ namespace InventoryManagement.Domains.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("InvoiceType")
+                    b.Property<int>("InvoiceTypeEnum")
                         .HasColumnType("int");
 
                     b.Property<int>("IsActive")
