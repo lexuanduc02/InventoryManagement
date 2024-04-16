@@ -1,0 +1,184 @@
+﻿@model InventoryManagement.Models.PurchaseInvoiceModels.CreatePurchaseInvoiceReturnRequest
+@{
+    ViewData["Title"] = "Tạo phiếu nhập kho";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="CreateReturn" method="post">
+    <input type="hidden" asp-for="UserId" value="F48CF82D-EE9E-4C82-2ACE-08DC5ADE8E8E" />
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+                <td class="td2">
+                    <select class="select2" asp-for="PartnerId" style="width:200px;">
+                        <option value="null" selected disabled>Chọn đối tác..........</option>
+                        @{
+                            var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
+
+                            foreach (var partner in partners)
+                            {
+                                <option value="@partner.Id">@partner.FullName</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="4" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <div class="add-product">
+                        <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
+                        <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                        <input type="number" placeholder="Số lượng" class="product-quan textbox" />
+                    </div>
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th style="display: none"></th>
+                                <th class="th">Tên sản phẩm</th>
+                                <th class="th">Giá mua</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Đơn vị tính</th>
+                                <th class="th"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody hide-first"></tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('merchandiseTable').addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnRemoveRow')) {
+                    var row = e.target.parentNode.parentNode;
+                    var productId = row.querySelector('.id').value;
+                    var quantity = row.querySelector('.quantity').value;
+
+                    productLists.forEach(e => {
+                        if (e.id === productId) {
+                            e.quantity += parseInt(quantity);
+                        }
+                    });
+
+                    row.parentNode.removeChild(row);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var productLists = [];
+
+        // Define getProductLists function
+        function getProductLists() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/product/all',
+                    dataType: "json",
+                    type: "GET",
+                    success: function (jsonObject, status) {
+                        resolve(jsonObject); // Resolve the Promise with the jsonObject
+                    },
+                    error: function (xhr, status, error) {
+                        reject(error); // Reject the Promise with the error message
+                    }
+                });
+            });
+        }
+
+        // Call getProductLists function and push the JSON data to productLists
+        getProductLists().then(function (jsonData) {
+            // Push the JSON data to productLists array
+            productLists = jsonData;
+        }).catch(function (error) {
+            // Handle errors
+            console.error("Error fetching product lists:", error);
+            alert("Đã xảy ra lỗi trong quá trình thực hiện, vui lòng thử lại!");
+        });
+
+        $("#btnAddRow").click(function () {
+            var productId = $(".product-id.textbox").val();
+            var quantity = $(".product-quan.textbox").val();
+            // Iterate over the productLists array to find the matching product
+            addProduct(productId, parseInt(quantity))
+        });
+
+        function addProduct(productId, quantity) {
+            var foundProduct = productLists.find(function (product) {
+                return product.id === productId;
+            });
+
+            if (foundProduct) {
+                $(".product-id.textbox").val("");
+                $(".product-quan.textbox").val("");
+
+                var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+                var cells = [];
+
+                var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
+
+                if (existingRow.length === 0 ) {
+                    for (var i = 0; i < 5; i++) {
+                        var newCell = newRow.insertCell(i);
+                        var input = document.createElement('input');
+
+                        input.type = ['hidden', 'text', 'number', 'number', 'text'][i];
+                        input.name = 'MerchandisePurchaseInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'PurchasePrice', 'Quantity', 'Unit'][i];
+
+                        input.className = ['id hide', 'td name', 'td price', 'td quantity', 'td unit'][i];
+
+                        newCell.appendChild(input);
+                        cells.push(newCell);
+
+                        var inputValue = document.getElementsByName(input.name)[0];
+                        inputValue.value = [foundProduct.id, foundProduct.name, parseFloat(foundProduct.price), quantity, foundProduct.unit][i];
+                    }
+
+                    var removeButtonCell = newRow.insertCell(5);
+                    var removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.classList.add('btnRemoveRow', 'button');
+                    removeButton.textContent = 'Xóa';
+                    removeButtonCell.appendChild(removeButton);
+                } else {
+                    var existingProduct = existingRow.parent().parent();
+                    var existingQuantityInput = $(existingProduct).find('.quantity');
+                    var existingQuantity = parseInt(existingQuantityInput.val());
+
+                    existingQuantity += quantity;
+                    existingQuantityInput.val(existingQuantity);
+                }
+            } else {
+                alert("Product not found!");
+            }
+        }
+    </script>
+}
+
+
+
+

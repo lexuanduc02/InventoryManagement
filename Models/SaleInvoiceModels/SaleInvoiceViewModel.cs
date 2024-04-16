@@ -10,6 +10,7 @@ namespace InventoryManagement.Models.SaleInvoiceModels
         public string CustomerPhoneNumber { get; set; }
         public PaymentMethodEnum PaymentMethod { get; set; }
         public InvoiceStatusEnum Status { get; set; }
+        public InvoiceTypeEnum InvoiceType { get; set; }
         public string? Note { get; set; }
         public string? ShippingCarrier { get; set; }
         public DateTime? CreateAt { get; set; }

@@ -1,6 +1,5 @@
-﻿using InventoryManagement.Models.PurchaseInvoiceModels;
-using InventoryManagement.Models.SaleInvoiceModels;
-using InventoryManagement.Services;
+﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Models.PurchaseInvoiceModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +44,7 @@ namespace InventoryManagement.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var res = await _purchaseInvoiceService.AllAsync();
+            var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.Invoice);
 
             var data = res.data;
 
@@ -146,6 +145,44 @@ namespace InventoryManagement.Controllers
             var res = await _purchaseInvoiceService.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Return()
+        {
+            var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.ReturnInvoice);
+
+            var data = res.data;
+
+            return View(data);
+        }
+
+        public async Task<IActionResult> CreateReturn()
+        {
+            var partners = await _partnerService.All();
+            ViewBag.Partners = partners.data;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReturn(CreatePurchaseInvoiceReturnRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                var partners = await _partnerService.All();
+                ViewBag.Partners = partners.data;
+
+                return View(request);
+            }
+
+            var res = await _purchaseInvoiceService.CreateReturnAsync(request);
+
+            if (!res.isSuccess)
+            {
+                return View(request);
+            }
+
+            return RedirectToAction(nameof(Return));
         }
     }
 }

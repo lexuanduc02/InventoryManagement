@@ -23,7 +23,7 @@ namespace InventoryManagement.Domains.Entities
         public DateTime UpdateAt { get; set; }
 
         public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
-        public InvoiceTypeEnum InvoiceTypeEnum { get; set; } = InvoiceTypeEnum.Invoice;
+        public InvoiceTypeEnum InvoiceType { get; set; } = InvoiceTypeEnum.Invoice;
 
         public ICollection<MerchandisePurchaseInvoice> MerchandisePurchaseInvoices { get; set; }
     }

@@ -31,7 +31,7 @@ namespace InventoryManagement.Services
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponseModel<List<PurchaseInvoiceViewModel>>> AllAsync()
+        public async Task<ServiceResponseModel<List<PurchaseInvoiceViewModel>>> AllAsync(InvoiceTypeEnum invoiceType)
         {
             var response = new ServiceResponseModel<List<PurchaseInvoiceViewModel>>()
             {
@@ -49,7 +49,8 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join p in _context.Partners on purchase.PartnerId equals p.Id into psi
                             from partner in psi.DefaultIfEmpty()
-                            where purchase.IsActive == ActiveEnum.Active && purchase.InvoiceTypeEnum == InvoiceTypeEnum.Invoice
+                            where purchase.IsActive == ActiveEnum.Active 
+                            && purchase.InvoiceType == invoiceType
                             group new { merchandise, m, purchase, user, partner } by new { purchase.Id, user.FullName, pm = partner.FullName, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
                             select new
                             {
@@ -162,6 +163,75 @@ namespace InventoryManagement.Services
             }
         }
 
+        public async Task<ServiceResponseModel<string>> CreateReturnAsync(CreatePurchaseInvoiceReturnRequest request)
+        {
+            var response = new ServiceResponseModel<string>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var user = await _userService.Get(request.UserId);
+                var partner = await _partnerService.Get(request.PartnerId);
+
+                if (user == null || partner == null)
+                {
+                    return response;
+                }
+
+                var invoiceDetails = request.MerchandisePurchaseInvoices;
+
+                var purchaseInvoice = new PurchaseInvoice()
+                {
+                    UserId = new Guid(request.UserId),
+                    PartnerId = new Guid(request.PartnerId),
+                    Status = request.Status,
+                    Note = request.Note,
+                    CreateAt = request.CreateAt,
+                    IsActive = request.IsActive,
+                    InvoiceType = InvoiceTypeEnum.ReturnInvoice,
+                    MerchandisePurchaseInvoices = invoiceDetails.Select(x => new MerchandisePurchaseInvoice()
+                    {
+                        MerchandiseId = x.MerchandiseId,
+                        Quantity = x.Quantity,
+                        PurchasePrice = x.PurchasePrice,
+                        Unit = x.Unit ?? "Unknown",
+                        IsActive = x.IsActive,
+                    }).ToList()
+                };
+
+                _context.PurchaseInvoices.Add(purchaseInvoice);
+
+                var insertResult = await _context.SaveChangesAsync();
+
+                if (insertResult == 0)
+                    return response;
+
+                var updateProductsQuan = request.MerchandisePurchaseInvoices.Select(x => new UpdateProductQuantityRequest()
+                {
+                    Id = x.MerchandiseId.ToString(),
+                    Quantity = -x.Quantity,
+                }).ToList();
+
+                var updateProductResult = await _productService.UpdateQuantityAsync(updateProductsQuan);
+
+                if (updateProductResult.isSuccess)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Tạo phiếu thành công";
+                    response.data = purchaseInvoice.Id.ToString();
+                    return response;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
         public async Task<ServiceResponseModel<bool>> DeleteAsync(string id)
         {
             var response = new ServiceResponseModel<bool>()
@@ -219,7 +289,6 @@ namespace InventoryManagement.Services
                             join p in _context.Partners on purchase.PartnerId equals p.Id into psi
                             from partner in psi.DefaultIfEmpty()
                             where purchase.IsActive == ActiveEnum.Active 
-                            && purchase.InvoiceTypeEnum == InvoiceTypeEnum.Invoice
                             && purchase.Id.ToString() == id
                             group new { merchandise, m, purchase, user, partner } by new { purchase.Id, user.FullName, pm = partner.FullName, pi = partner.Id, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
                             select new
