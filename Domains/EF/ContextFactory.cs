@@ -18,7 +18,7 @@ namespace InventoryManagement.Domains.EF
 
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-            optionsBuilder.UseSqlServer("Server=.;Database=InventoryManagement;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Data Source=mssql.cpqyemq62wqv.ap-southeast-2.rds.amazonaws.com,1433;Initial Catalog=InventoryManagement;Persist Security Info=True;User ID=admin;Password=13.4+72KoQ8Y;Trust Server Certificate=True");
 
             return new DataContext(optionsBuilder.Options);
         }
