@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Domains.Contractors;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace InventoryManagement.Domains.Entities
 {
     [Table("Partners")]
-    public class Partner
+    public class Partner : IEntity<Guid>
     {
         public Guid Id { get; set; }
 

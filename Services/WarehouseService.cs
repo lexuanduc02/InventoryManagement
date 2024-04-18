@@ -4,6 +4,7 @@ using InventoryManagement.Commons.Enums;
 using InventoryManagement.Domains.EF;
 using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.ProductModels;
 using InventoryManagement.Models.WarehouseModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,18 @@ namespace InventoryManagement.Services
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
+        private readonly IMerchandisePurchaseInvoiceService _merchandisePurchaseInvoiceService;
+        private readonly IProductService _productService;
 
-        public WarehouseService(IMapper mapper, DataContext context)
+        public WarehouseService(IMapper mapper, 
+            DataContext context, 
+            IMerchandisePurchaseInvoiceService merchandisePurchaseInvoiceService,
+            IProductService productService)
         {
             _mapper = mapper;
             _context = context;
+            _merchandisePurchaseInvoiceService = merchandisePurchaseInvoiceService;
+            _productService = productService;
         }
 
         public async Task<ServiceResponseModel<List<WarehouseViewModel>>> All()
@@ -195,6 +203,50 @@ namespace InventoryManagement.Services
                 response.isSuccess = false;
                 response.Message = "Có lỗi trong chương trình!";
 
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<string>> UpdateInventoryAsync(UpdateInventoryRequest request)
+        {
+            var response = new ServiceResponseModel<string>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var invoice = await _context.PurchaseInvoices.FirstOrDefaultAsync(x => x.Id.ToString() == request.PurchaseInvoiceViewModel.Id);
+
+                if(invoice == null)
+                {
+                    response.Message = "Không tìm thấy thông tin hóa đơn!";
+                    return response;
+                }
+
+                invoice.WarehouseStatus = WarehouseStatusEnum.Update;
+                await _context.SaveChangesAsync();
+
+                _context.PurchaseInvoices.Update(invoice);
+                var updateProductsQuan = request.MerchandisePurchaseViewModels.Select(x => new UpdateProductQuantityRequest()
+                {
+                    Id = x.MerchandiseId.ToString(),
+                    Quantity = x.Quantity,
+                }).ToList();
+
+                var updateProductResult = await _productService.UpdateQuantityAsync(updateProductsQuan);
+
+                if (updateProductResult.isSuccess)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Tạo phiếu thành công";
+                    response.data = invoice.Id.ToString();
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
                 return response;
             }
         }

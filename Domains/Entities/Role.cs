@@ -1,10 +1,11 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Domains.Contractors;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagement.Domains.Entities
 {
     [Table("Roles")]
-    public class Role
+    public class Role : IEntity<Guid>
     {
         public Guid Id { get; set; }
 

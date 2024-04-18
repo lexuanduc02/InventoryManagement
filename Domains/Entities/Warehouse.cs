@@ -1,12 +1,12 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Domains.Contractors;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagement.Domains.Entities
 {
     [Table("Warehouses")]
-    public class Warehouse
+    public class Warehouse : IEntity<Guid>
     {
         public Guid Id { get; set; }
 

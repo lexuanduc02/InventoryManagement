@@ -1,12 +1,11 @@
 ﻿using InventoryManagement.Commons.Enums;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+using InventoryManagement.Domains.Contractors;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagement.Domains.Entities
 {
     [Table("PurchaseInvoices")]
-    public class PurchaseInvoice
+    public class PurchaseInvoice : IEntity<Guid>
     {
         public Guid Id { get; set; }
 
@@ -24,6 +23,7 @@ namespace InventoryManagement.Domains.Entities
 
         public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
         public InvoiceTypeEnum InvoiceType { get; set; } = InvoiceTypeEnum.Invoice;
+        public WarehouseStatusEnum WarehouseStatus { get; set; } = WarehouseStatusEnum.NotUpdate;
 
         public ICollection<MerchandisePurchaseInvoice> MerchandisePurchaseInvoices { get; set; }
     }

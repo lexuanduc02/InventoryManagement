@@ -35,6 +35,7 @@ services
     .AddServiceCollection()
     .AddAutoMapper(typeof(Program))
     .AddOptionCollection(configuration)
+    .AddRepositoryCollection(connectionString)
     ;
 
 services
