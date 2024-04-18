@@ -1,14 +1,12 @@
 ﻿using InventoryManagement.Domains.Entities;
 using Microsoft.EntityFrameworkCore;
-using InventoryManagement.Models.MerchandiseModels;
-using InventoryManagement.Models.CustomerModels;
-using InventoryManagement.Models.SaleInvoiceModels;
+using System.Data.Common;
 
 namespace InventoryManagement.Domains.EF
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
 
@@ -27,6 +25,16 @@ namespace InventoryManagement.Domains.EF
             builder.Entity<SaleInvoice>().HasKey(x => x.Id);
             builder.Entity<User>().HasKey(x => x.Id);
             builder.Entity<Warehouse>().HasKey(x => x.Id);
+        }
+
+        public DbConnection GetDbConnect()
+        {
+            return base.Database.GetDbConnection();
+        }
+
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : class
+        {
+            return base.Set<TEntity>();
         }
 
         public DbSet<Category> Categories { get; set; }

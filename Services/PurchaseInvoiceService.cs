@@ -5,6 +5,7 @@ using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.ProductModels;
 using InventoryManagement.Models.PurchaseInvoiceModels;
+using InventoryManagement.Repositories.Contractors;
 using InventoryManagement.Services.Contractors;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace InventoryManagement.Services
         private readonly IUserService _userService;
         private readonly IPartnerService _partnerService;
         private readonly IProductService _productService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
@@ -22,12 +24,14 @@ namespace InventoryManagement.Services
             IPartnerService partnerService,
             IProductService productService,
             DataContext context,
+            IUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _userService = userService;
             _partnerService = partnerService;
             _productService = productService;
             _context = context;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -93,6 +97,31 @@ namespace InventoryManagement.Services
             }
         }
 
+        public async Task<ServiceResponseModel<List<PurchaseInvoice>>> AllUnUpdateWarehouseInvoiceAsync()
+        {
+            var response = new ServiceResponseModel<List<PurchaseInvoice>>()
+            {
+                Message = "Lấy danh sách thất bại!",
+                isSuccess = false,
+            };
+
+            try
+            {
+                var data = await _unitOfWork.PurchaseInvoiceRepository
+                    .FindByAsync(x => x.WarehouseStatus == WarehouseStatusEnum.NotUpdate);
+
+                if (data == null) return response;
+
+                response.isSuccess = true;
+                response.data = data;
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
         public async Task<ServiceResponseModel<string>> CreateAsync(CreatePurchaseInvoiceRequest request)
         {
             var response = new ServiceResponseModel<string>()
@@ -136,24 +165,12 @@ namespace InventoryManagement.Services
 
                 var insertResult = await _context.SaveChangesAsync();
 
-                if (insertResult == 0)
-                    return response;
-
-                var updateProductsQuan = request.MerchandisePurchaseInvoices.Select(x => new UpdateProductQuantityRequest()
-                {
-                    Id = x.MerchandiseId.ToString(),
-                    Quantity = x.Quantity,
-                }).ToList();
-
-                var updateProductResult = await _productService.UpdateQuantityAsync(updateProductsQuan);
-
-                if (updateProductResult.isSuccess)
+                if (insertResult != 0)
                 {
                     response.isSuccess = true;
                     response.Message = "Tạo phiếu thành công";
                     response.data = purchaseInvoice.Id.ToString();
-                    return response;
-                }
+                }    
 
                 return response;
             }
@@ -288,8 +305,7 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join p in _context.Partners on purchase.PartnerId equals p.Id into psi
                             from partner in psi.DefaultIfEmpty()
-                            where purchase.IsActive == ActiveEnum.Active 
-                            && purchase.Id.ToString() == id
+                            where purchase.Id.ToString() == id
                             group new { merchandise, m, purchase, user, partner } by new { purchase.Id, user.FullName, pm = partner.FullName, pi = partner.Id, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
                             select new
                             {

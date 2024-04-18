@@ -9,14 +9,17 @@ namespace InventoryManagement.Controllers
         private readonly IProductService _productService;
         private readonly IWarehouseService _warehouseService;
         private readonly ICategoryService _categoryService;
+        private readonly IReportService _reportService;
 
         public ProductController(IProductService productService, 
             IWarehouseService warehouseService, 
-            ICategoryService categoryService)
+            ICategoryService categoryService, 
+            IReportService reportService)
         {
             _productService = productService;
             _warehouseService = warehouseService;
             _categoryService = categoryService;
+            _reportService = reportService;
         }
 
         public async Task<IActionResult> All()

@@ -47,6 +47,7 @@ namespace InventoryManagement.ModuleRegistrations
             CreateMap<SaleInvoiceViewModel, SaleInvoice>().ReverseMap();
 
             CreateMap<PurchaseInvoiceViewModel, PurchaseInvoice>().ReverseMap();
+            CreateMap<PurchaseInvoice?, PurchaseInvoiceViewModel>().ReverseMap();
             CreateMap<UpdatePurchaseInvoiceRequest, PurchaseInvoice>().ReverseMap();
         }
     }

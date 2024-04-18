@@ -12,12 +12,13 @@
   <ItemGroup>
     <Folder Include="Domains\Extentions\" />
     <Folder Include="Domains\Migrations\" />
-    <Folder Include="Repositories\Contractors\" />
+    <Folder Include="Views\Report\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.3" />

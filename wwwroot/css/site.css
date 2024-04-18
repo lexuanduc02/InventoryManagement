@@ -611,3 +611,22 @@ input[type=checkbox], input[type=radio] {
 .hide-first tr > *:nth-child(1) {
     display: none;
 }
+
+.difference-td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.difference {
+    display: flex;
+    align-items: center;
+}
+
+.difference .icon{
+    max-width: 15px;
+}
+
+/*    .difference .detail {
+        margin-top: 5px;
+    }*/

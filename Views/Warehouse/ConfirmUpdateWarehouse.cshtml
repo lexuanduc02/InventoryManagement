@@ -1,0 +1,73 @@
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.WarehouseModels.UpdateInventoryRequest
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var invoice = Model.PurchaseInvoiceViewModel;
+    var invoiceDetails = Model.MerchandisePurchaseViewModels;
+}
+
+<form asp-action="UpdateWarehouse" method="post">
+    <input type="hidden" asp-for="@Model.PurchaseInvoiceViewModel.Id" />
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Ngày lập:</div></td>
+                <td class="td2"><input readonly value="@invoice.CreateAt" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Ngày sửa gần nhất:</div></td>
+                <td class="td2"><input readonly value="@invoice.UpdateAt" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="8" cols="20" class="textbox" style="width:98%;">@invoice.Note</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th class="th">Mã sản phẩm</th>
+                                <th class="th">Giá mua</th>
+                                <th class="th">Số lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                            @for (var index = 0; index < Model.MerchandisePurchaseViewModels.Count; index++)
+                            {
+                                var item = Model.MerchandisePurchaseViewModels[index];
+
+                                <tr>
+                                    <td class="td">
+                                        @item.MerchandiseId
+                                        <input type="hidden" readonly name="MerchandisePurchaseViewModels[@index].MerchandiseId" value="@item.MerchandiseId" />
+                                    </td>
+                                    <td class="td">
+                                        @item.PurchasePrice
+                                        <input type="hidden" readonly name="MerchandisePurchaseViewModels[@index].PurchasePrice" value="@item.PurchasePrice" />
+                                    </td>
+                                    <td class="td">
+                                        @item.Quantity
+                                        <input type="hidden" readonly name="MerchandisePurchaseViewModels[@index].Quantity" value="@item.Quantity" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+

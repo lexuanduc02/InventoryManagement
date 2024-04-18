@@ -36,8 +36,8 @@
                         <div class="col-left">
                             <div class="title-left">Quản lý danh mục</div>
                             <a class="menuleft" asp-controller="Warehouse" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục kho hàng</a>
+                            <a class="menuleft" asp-controller="Category" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục nhóm hàng</a>
                             <a class="menuleft" asp-controller="Product" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục hàng hóa</a>
-                            <a class="menuleft" asp-controller="Category" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục ngành hàng</a>
                             <a class="menuleft" asp-controller="Partner" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục nhà cung cấp</a>
                             <a class="menuleft" asp-controller="Customer" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục khách hàng</a>
                             <a class="menuleft" asp-controller="User" asp-action="index"><img class="imgmid" src="/iconcp/icon_menu.png"> Danh mục nhân viên</a>
@@ -45,23 +45,23 @@
                             <div class="title-left">Quản lý xuất kho</div>
                             <a class="menuleft" asp-controller="SaleInvoice" asp-action="Index"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách hóa đơn</a>
                             <a class="menuleft" asp-controller="SaleInvoice" asp-action="Create"><img class="imgmid" src="/iconcp/icon_pro.png">Xuất kho bán hàng</a>
-                            <a class="menuleft" asp-controller="SaleInvoice" asp-action="Return"><img class="imgmid" src="/iconcp/icon_pro.png">Hóa đơn trả hàng</a>
+                            <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Return"><img class="imgmid" src="/iconcp/icon_pro.png">Xuất kho trả hàng NCC</a>
 
                             <div class="title-left">Quản lý nhập kho</div>
                             <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Index"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách hóa đơn</a>
                             <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Create"><img class="imgmid" src="/iconcp/icon_pro.png">Nhập kho bán hàng</a>
-                            <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Return"><img class="imgmid" src="/iconcp/icon_pro.png">Trả hàng NCC</a>
+                            <a class="menuleft" asp-controller="SaleInvoice" asp-action="Return"><img class="imgmid" src="/iconcp/icon_pro.png">Nhập hàng trả lại từ KH</a>
 
                             <div class="title-left">Quản lý tồn kho</div>
-                            <a class="menuleft" href="pro.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Theo dõi tồn kho</a>
-                            <a class="menuleft" href="thuoctinhG.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Cập nhật tồn kho khi có giao dịch</a>
+                            <a class="menuleft" asp-controller="Warehouse" asp-action="ProductReport"><img class="imgmid" src="/iconcp/icon_pro.png">Theo dõi số lượng tồn kho</a>
+                            <a class="menuleft" asp-controller="Warehouse" asp-action="MonthlyProductReport"><img class="imgmid" src="/iconcp/icon_pro.png">Tổng hợp tồn kho</a>
+                            <a class="menuleft" asp-controller="Warehouse" asp-action="UpdateWarehouse"><img class="imgmid" src="/iconcp/icon_pro.png">Kiểm kê kho</a>
 
                             <div class="title-left">Báo cáo thống kê</div>
-                            <a class="menuleft" href="pro.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo danh thu bán hàng</a>
-                            <a class="menuleft" href="thuoctinhG.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Thống kê về sản phẩm bán chạy</a>
-                            <a class="menuleft" href="thuoctinh.aspx"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo tồn kho</a>
-                            <a class="menuleft" href="news.aspx"><img class="imgmid" src="/iconcp/icon_news.png"> Báo cáo nhập xuất</a>
-                            <a class="menuleft" href="advert.aspx"><img class="imgmid" src="/iconcp/icon_media.png"> Lịch sử lấy hàng từ NCC</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="Product"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo danh thu bán hàng</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo tồn kho</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_news.png"> Báo cáo nhập kho</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_media.png"> Báo cáo xuất kho</a>
 
                             <div class="title-left">Khác</div>
                             <a class="menuleft" href="pass.aspx"><img class="imgmid" src="/iconcp/icon_pass.png"> Đổi mật khẩu</a>
@@ -79,7 +79,7 @@
             <tbody>
                 <tr>
                     <td style="padding:10px;">Xem tốt nhất trên trình duyệt Firefox hoặc Chrome với độ phân giải 1366x768 px</td>
-                    <td style="text-align:right; padding:10px;">Code by Đặng Hương Giang</td>
+                    <td style="text-align:right; padding:10px;">All Right Reserved by Đặng Hương Giang</td>
                 </tr>
             </tbody>
         </table>
