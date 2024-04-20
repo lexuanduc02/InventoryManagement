@@ -9,11 +9,9 @@
     <tbody>
         <tr class="tr-view">
             <td class="td-view-left">
-                <input type="submit" name="btnUpdate1" value="Cập nhật" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnUpdate1&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnUpdate1" class="button">
             </td>
             <td class="td-view-right">
                 <a asp-action="Create" class="button btn-add">Thêm mới</a>
-                <input type="reset" class="button" name="cmdReset" value="Mặc định">
             </td>
         </tr>
         <tr>
@@ -21,7 +19,6 @@
                 <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
                     <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
-                            <td></td>
                             <td>Tên</td>
                             <td>Mô tả</td>
                             <td>&nbsp;Sửa&nbsp;</td>
@@ -32,7 +29,6 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td align="center"><input id="dtgrView_chkHot_0" type="checkbox" name="dtgrView$ctl03$chkHot"></td>
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                 <td align="center"><a href="@Url.Action("Update", "Category", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
@@ -41,15 +37,6 @@
                         }
                     </tbody>
                 </table>
-            </td>
-        </tr>
-        <tr class="tr-view">
-            <td class="td-view-left">
-                <input type="submit" name="btnUpdate2" value="Cập nhật" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnUpdate2&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnUpdate2" class="button">
-            </td>
-            <td class="td-view-right">
-                <input type="submit" name="btnAdd2" value="Thêm mới" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;btnAdd2&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="btnAdd2" class="button">
-                <input type="reset" class="button" name="cmdReset" value="Mặc định">
             </td>
         </tr>
     </tbody>

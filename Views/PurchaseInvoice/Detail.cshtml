@@ -13,12 +13,6 @@
 <form asp-action="Update" method="post">
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
-            <tr class="tr-view">
-                <td colspan="2" class="td-view-left">
-                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
-                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
-                </td>
-            </tr>
             <tr>
                 <td class="td1"><div style="width:105px;">Nhân viên lập:</div></td>
                 <td class="td2"><input readonly value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
