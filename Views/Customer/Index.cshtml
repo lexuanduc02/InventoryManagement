@@ -23,6 +23,7 @@
                             <td>Địa chỉ</td>
                             <td>SĐT</td>
                             <td>Email</td>
+                            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
                             <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
                         </tr>
@@ -35,6 +36,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Address)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td align="center"><a href="@Url.Action("Detail", "Customer", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 <td align="center"><a href="@Url.Action("Update", "Customer", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
                                 <td align="center"><a href="@Url.Action("Delete", "Customer", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Khách hàng không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>

@@ -360,6 +360,73 @@ namespace InventoryManagement.Services
             }
         }
 
+        public async Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> GetByCustomerIdAsync(string id, InvoiceTypeEnum invoiceType)
+        {
+            var response = new ServiceResponseModel<List<SaleInvoiceViewModel>>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var query = from m in _context.Merchandises
+                            join ms in _context.MerchandiseSaleInvoices on m.Id equals ms.MerchandiseId into mms
+                            from merchandise in mms.DefaultIfEmpty()
+                            join si in _context.SaleInvoices on merchandise.SaleInvoiceId equals si.Id into msi
+                            from sale in msi.DefaultIfEmpty()
+                            join u in _context.Users on sale.UserId equals u.Id into usi
+                            from user in usi.DefaultIfEmpty()
+                            join c in _context.Customers on sale.CustomerId equals c.Id into csi
+                            from customer in csi.DefaultIfEmpty()
+                            where sale.CustomerId.ToString() == id
+                            && sale.InvoiceType == invoiceType
+                            group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt, sale.InvoiceType } into grouped
+                            select new
+                            {
+                                SaleInvoiceId = grouped.Key.Id,
+                                UserName = grouped.Key.FullName,
+                                CustomerName = grouped.Key.cm,
+                                CustomerPhoneNumber = grouped.Key.PhoneNumber,
+                                PaymentMethod = grouped.Key.PaymentMethod,
+                                InvoiceType = grouped.Key.InvoiceType,
+                                Status = grouped.Key.Status,
+                                Note = grouped.Key.Note,
+                                ShippingCarrier = grouped.Key.ShippingCarrier,
+                                CreateAt = grouped.Key.CreateAt,
+                                UpdateAt = grouped.Key.UpdateAt,
+                                Total = grouped.Sum(x => x.merchandise.Quantity * x.merchandise.SellingPrice * (100 - x.merchandise.Voucher) / 100)
+                            };
+
+                var data = await query
+                    .Select(x => new SaleInvoiceViewModel()
+                    {
+                        Id = x.SaleInvoiceId.ToString(),
+                        UserName = x.UserName,
+                        CustomerName = x.CustomerName,
+                        CustomerPhoneNumber = x.CustomerPhoneNumber,
+                        PaymentMethod = x.PaymentMethod,
+                        InvoiceType = x.InvoiceType,
+                        Status = x.Status,
+                        Note = x.Note,
+                        ShippingCarrier = x.ShippingCarrier,
+                        CreateAt = x.CreateAt,
+                        Total = x.Total,
+                    }).ToListAsync();
+
+                if (data != null)
+                {
+                    response.isSuccess = true;
+                    response.data = data;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
         public async Task<ServiceResponseModel<bool>> UpdateAsync(UpdateSaleInvoiceRequest request)
         {
             var response = new ServiceResponseModel<bool>()
