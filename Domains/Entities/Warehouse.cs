@@ -9,16 +9,11 @@ namespace InventoryManagement.Domains.Entities
     public class Warehouse : IEntity<Guid>
     {
         public Guid Id { get; set; }
-
         public string Name { get; set; }
-        public float StorageCapacity { get; set; }
         public float? Area { get; set; }
-        public string Unit { get; set; }
-        public string? Description { get; set; }
-
-        [DefaultValue(ActiveEnum.Active)]
-        public ActiveEnum IsActive { get; set; }
-
+        public string? Description { get; set; }    
+        public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
+        public WarehouseCapacityEnum WarehouseCapacity { get; set; } = WarehouseCapacityEnum.Empty;
         public ICollection<Merchandise> Merchandises { get; set; } = new List<Merchandise>();
     }
 }

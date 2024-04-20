@@ -16,8 +16,6 @@ namespace InventoryManagement.Models.MerchandiseModels
         public string Unit { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-
-        [NotMapped]
         public IFormFile? ImageFile { get; set; }
         public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
     }

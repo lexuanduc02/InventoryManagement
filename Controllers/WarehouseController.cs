@@ -58,9 +58,23 @@ namespace InventoryManagement.Controllers
 
         public async Task<IActionResult> Update(string id)
         {
-            var data = await _warehouseService.Get(id);
+            var res = await _warehouseService.Get(id);
 
-            return View(data.data);
+            if(!res.isSuccess)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var model = new UpdateWarehouseRequest()
+            {
+                Id = id,
+                Name = res.data.Name,
+                Area = res.data.Area,
+                Description = res.data.Description,
+                WarehouseCapacity = res.data.WarehouseCapacity,
+            };
+
+            return View(model);
         }
 
         [HttpPost]

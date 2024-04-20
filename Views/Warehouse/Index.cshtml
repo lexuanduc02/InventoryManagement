@@ -21,7 +21,7 @@
                             <td>Tên</td>
                             <td>Mô tả</td>
                             <td>Diện tích</td>
-                            <td>Số lượng trong kho</td>
+                            <td>Trạng thái kho</td>
                             <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
                         </tr>
@@ -33,7 +33,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Area) m<sup>2</sup></td>
-                                <td><input name="dtgrView$ctl03$txtSort" type="text" value="11" maxlength="10" id="dtgrView_txtSort_0" class="textbox" style="width:50px;"> / @Html.DisplayFor(modelItem => item.StorageCapacity) @Html.DisplayFor(modelItem => item.Unit)</td>
+                                <td>@Html.DisplayFor(modelItem => item.WarehouseCapacityString)</td>
                                 <td align="center"><a href="@Url.Action("Update", "Warehouse", new { id = item.Id })"><img border="0" src="iconcp/icon_edit.gif"></a></td>
                                 <td align="center"><a onclick="javascript:return confirm('Nếu bạn xoá menu (Danh mục sản phẩm) thì toàn bộ menu cấp 2 thuộc menu (Danh mục sản phẩm) sẽ bị xoá theo. Bạn chắc chắn muốn xoá menu (Danh mục sản phẩm) không?');" href="@Url.Action("Delete", "Warehouse", new { id = item.Id })"><img border="0" src="iconcp/icon_delete.gif"></a></td>
                             </tr>

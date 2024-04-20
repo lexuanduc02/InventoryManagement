@@ -44,10 +44,9 @@ namespace InventoryManagement.Services
                     {
                         Id = x.Id.ToString(),
                         Name = x.Name,
-                        StorageCapacity = x.StorageCapacity,
                         Area = x.Area,
-                        Unit = x.Unit,
                         Description = x.Description,
+                        WarehouseCapacity = x.WarehouseCapacity,
                     })
                     .ToListAsync();
 
