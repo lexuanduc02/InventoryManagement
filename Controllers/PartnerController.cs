@@ -7,10 +7,16 @@ namespace InventoryManagement.Controllers
     public class PartnerController : Controller
     {
         private readonly IPartnerService _partnerService;
+        private readonly IPurchaseInvoiceService _purchaseInvoiceService;
+        private readonly ISaleInvoiceService _saleInvoiceService;
 
-        public PartnerController(IPartnerService partnerService)
+        public PartnerController(IPartnerService partnerService, 
+            IPurchaseInvoiceService purchaseInvoiceService, 
+            ISaleInvoiceService saleInvoiceService)
         {
             _partnerService = partnerService;
+            _purchaseInvoiceService = purchaseInvoiceService;
+            _saleInvoiceService = saleInvoiceService;
         }
 
         public async Task<IActionResult> Index()
@@ -30,6 +36,25 @@ namespace InventoryManagement.Controllers
             }
 
             return BadRequest();
+        }
+
+        public async Task<IActionResult> Detail(string id)
+        {
+            var partner = await _partnerService.Get(id);
+            var purchaseInvoice = await _purchaseInvoiceService.GetByPartnerIdAsync(id);
+            var returnInvoice = await _purchaseInvoiceService.GetByPartnerIdAsync(id, Commons.Enums.InvoiceTypeEnum.ReturnInvoice);
+
+            if (!partner.isSuccess || !purchaseInvoice.isSuccess || !returnInvoice.isSuccess)
+                return RedirectToAction(nameof(Index));
+
+            var model = new PartnerDetailViewModel()
+            {
+                Partner = partner.data,
+                PurchaseInvoices = purchaseInvoice.data,
+                ReturnInvoices = returnInvoice.data,
+            };
+
+            return View(model);
         }
 
         public IActionResult Create()

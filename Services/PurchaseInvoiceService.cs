@@ -350,6 +350,68 @@ namespace InventoryManagement.Services
             }
         }
 
+        public async Task<ServiceResponseModel<List<PurchaseInvoiceViewModel>>> GetByPartnerIdAsync(string id, InvoiceTypeEnum invoiceType)
+        {
+            var response = new ServiceResponseModel<List<PurchaseInvoiceViewModel>>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var query = from m in _context.Merchandises
+                            join mp in _context.MerchandisePurchaseInvoices on m.Id equals mp.MerchandiseId into mmp
+                            from merchandise in mmp.DefaultIfEmpty()
+                            join pi in _context.PurchaseInvoices on merchandise.PurchaseInvoiceId equals pi.Id into mpi
+                            from purchase in mpi.DefaultIfEmpty()
+                            join u in _context.Users on purchase.UserId equals u.Id into usi
+                            from user in usi.DefaultIfEmpty()
+                            join p in _context.Partners on purchase.PartnerId equals p.Id into psi
+                            from partner in psi.DefaultIfEmpty()
+                            where purchase.PartnerId.ToString() == id
+                            && purchase.InvoiceType == invoiceType
+                            group new { merchandise, m, purchase, user, partner } by new { purchase.Id, user.FullName, pm = partner.FullName, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
+                            select new
+                            {
+                                PurchaseInvoiceId = grouped.Key.Id,
+                                UserName = grouped.Key.FullName,
+                                PartnerName = grouped.Key.pm,
+                                PaymentMethod = grouped.Key.PaymentMethod,
+                                Status = grouped.Key.Status,
+                                Note = grouped.Key.Note,
+                                CreateAt = grouped.Key.CreateAt,
+                                UpdateAt = grouped.Key.UpdateAt,
+                                Total = grouped.Sum(x => x.merchandise.Quantity * x.merchandise.PurchasePrice)
+                            };
+
+                var data = await query
+                    .Select(x => new PurchaseInvoiceViewModel()
+                    {
+                        Id = x.PurchaseInvoiceId.ToString(),
+                        UserName = x.UserName,
+                        PartnerName = x.PartnerName,
+                        PaymentMethod = x.PaymentMethod,
+                        Status = x.Status,
+                        Note = x.Note,
+                        CreateAt = x.CreateAt,
+                        UpdateAt = x.UpdateAt,
+                        Total = x.Total,
+                    }).ToListAsync();
+
+                if (data == null)
+                    return response;
+
+                response.isSuccess = true;
+                response.data = data;
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
         public async Task<ServiceResponseModel<string>> UpdateAsync(UpdatePurchaseInvoiceRequest request)
         {
             var response = new ServiceResponseModel<string>()

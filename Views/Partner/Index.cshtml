@@ -25,6 +25,7 @@
                             <td>SĐT</td>
                             <td>Email</td>
                             <td>Hiện</td>
+                            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
                             <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
                         </tr>
@@ -48,6 +49,7 @@
                                      }
                                  </select>
                              </td>
+                             <td align="center"><a href="@Url.Action("Detail", "Partner", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                              <td align="center"><a href="@Url.Action("Update", "Partner", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
                              <td align="center"><a href="@Url.Action("Delete", "Partner", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Đối tác không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                          </tr>

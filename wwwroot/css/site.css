@@ -627,6 +627,9 @@ input[type=checkbox], input[type=radio] {
     max-width: 15px;
 }
 
-/*    .difference .detail {
-        margin-top: 5px;
-    }*/
+.history-table-title {
+    padding: 5px 10px;
+    font-weight: bold;
+    background-color: #D6DEEC;
+    margin-top:20px;
+}

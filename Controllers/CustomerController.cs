@@ -1,4 +1,6 @@
-﻿using InventoryManagement.Models.CustomerModels;
+﻿using InventoryManagement.Domains.Entities;
+using InventoryManagement.Models.CustomerModels;
+using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Services.Contractors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +9,13 @@ namespace InventoryManagement.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
+        private readonly ISaleInvoiceService _saleInvoiceService;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService,
+            ISaleInvoiceService saleInvoiceService)
         {
             _customerService = customerService;
+            _saleInvoiceService = saleInvoiceService;
         }
 
         public async Task<IActionResult> Index()
@@ -18,6 +23,25 @@ namespace InventoryManagement.Controllers
             var res = await _customerService.All();
 
             return View(res.data);
+        }
+
+        public async Task<IActionResult> Detail(string id)
+        {
+            var customer = await _customerService.GetAsync(id);
+            var invoices = await _saleInvoiceService.GetByCustomerIdAsync(id);
+            var returnInvoices = await _saleInvoiceService.GetByCustomerIdAsync(id, Commons.Enums.InvoiceTypeEnum.ReturnInvoice);
+
+            if (!customer.isSuccess || !invoices.isSuccess || !returnInvoices.isSuccess)
+                return RedirectToAction(nameof(Index));
+
+            var model = new CustomerDetailViewModel()
+            {
+                Customer = customer.data,
+                Invoice = invoices.data,
+                ReturnInvoice = returnInvoices.data,
+            };
+
+            return View(model);
         }
 
         public IActionResult Create() 
