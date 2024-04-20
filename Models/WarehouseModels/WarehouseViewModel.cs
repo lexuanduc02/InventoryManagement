@@ -1,4 +1,6 @@
-﻿namespace InventoryManagement.Models.WarehouseModels
+﻿using InventoryManagement.Commons.Enums;
+
+namespace InventoryManagement.Models.WarehouseModels
 {
     public class WarehouseViewModel
     {
@@ -8,5 +10,15 @@
         public float? Area { get; set; }
         public string Unit { get; set; }
         public string? Description { get; set; }
+        public WarehouseCapacityEnum WarehouseCapacity { get; set; }
+
+        public string WarehouseCapacityString {
+            get {
+                if (WarehouseCapacity == WarehouseCapacityEnum.Empty)
+                    return "Còn trống";
+                else
+                    return "Đã đầy";
+            }
+        }
     }
 }

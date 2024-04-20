@@ -1,10 +1,10 @@
-﻿@model InventoryManagement.Models.CategoryModels.CategoryViewModel
+﻿@model InventoryManagement.Models.CategoryModels.UpdateCategoryRequest
 @{
-    ViewData["Title"] = "Cập nhật ngành hàng";
+    ViewData["Title"] = "Cập nhật nhóm hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form asp-action="Update" method="post">
+<form asp-action="Update" method="post" enctype="multipart/form-data">
     <input type="hidden" value="@Model.Id" asp-for="Id"/>
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
@@ -21,6 +21,16 @@
             <tr>
                 <td class="td1">Mô tả ngắn:</td>
                 <td class="td2"><textarea rows="8" cols="20" asp-for="Description" class="textbox" style="width:98%;">@Model.Description</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Ảnh:</td>
+                <td class="td2">
+                    <img src="@Model.Image" style="width: 60px" />
+                    <br />
+                    <input value="@Model.Image" asp-for="Image" type="text" class="textbox" placeholder="Link ảnh" style="width:80%;"><hr>
+                    <input asp-for="ImageFile" type="file" style="width:98%;">
+                    <div style="color:Red;">(Chỉ hỗ trợ ảnh có định dạng *.jpg, *.png và dùng lượng &lt; 1MB)</div>
+                </td>
             </tr>
             <tr>
                 <td class="td1">&nbsp;</td>

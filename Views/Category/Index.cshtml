@@ -1,7 +1,7 @@
 ﻿@using InventoryManagement.Models.CategoryModels
 @model List<CategoryViewModel>
 @{
-    ViewData["Title"] = "Danh mục ngành hàng";
+    ViewData["Title"] = "Danh mục nhóm hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -19,6 +19,7 @@
                 <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
                     <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td>Ảnh</td>
                             <td>Tên</td>
                             <td>Mô tả</td>
                             <td>&nbsp;Sửa&nbsp;</td>
@@ -29,6 +30,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td style="text-align: center;"><img style="width: 60px" src="@Html.DisplayFor(modelItem => item.Image)" /></td>
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                 <td align="center"><a href="@Url.Action("Update", "Category", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>

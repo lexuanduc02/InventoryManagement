@@ -1,4 +1,5 @@
-﻿@model InventoryManagement.Models.WarehouseModels.WarehouseViewModel
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.WarehouseModels.UpdateWarehouseRequest
 @{
     ViewData["Title"] = "Cập nhật kho hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,12 +20,22 @@
                 <td class="td2"><input value="@Model.Name" type="text" maxlength="150" asp-for="Name" class="textbox" style="width: 250px;"></td>
             </tr>
             <tr>
-                <td class="td1">Khả năng lưu chữ:</td>
-                <td class="td2"><input value="@Model.StorageCapacity" type="text" asp-for="StorageCapacity" class="textbox" style="width: 250px;"></td>
-            </tr>
-            <tr>
-                <td class="td1">Đơn vị tính:</td>
-                <td class="td2"><input value="@Model.Unit" type="text" maxlength="50" asp-for="Unit" class="textbox" style="width:250px;"></td>
+                <td class="td1"><div style="width:105px;">Trạng thái:</div></td>
+                <td class="td2" style="line-height:180%;">
+                    @{
+                        var capacityStatus = Enum.GetValues(typeof(WarehouseCapacityEnum));
+
+                        var i = 0;
+
+                        foreach (var status in capacityStatus)
+                        {
+                            <label>@Html.RadioButtonFor(x => x.WarehouseCapacity, status, Model.WarehouseCapacity == (WarehouseCapacityEnum)status)@status</label>
+                            <br />
+
+                            i++;
+                        }
+                    }
+                </td>
             </tr>
             <tr>
                 <td class="td1">Diện tích:</td>

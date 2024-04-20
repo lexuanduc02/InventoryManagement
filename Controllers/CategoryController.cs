@@ -45,9 +45,24 @@ namespace InventoryManagement.Controllers
 
         public async Task<IActionResult> Update(string id)
         {
-            var data = await _categoryService.Get(id);
+            var res = await _categoryService.Get(id);
 
-            return View(data.data);
+            if(!res.isSuccess)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var data = res.data;
+
+            var model = new UpdateCategoryRequest()
+            {
+                Id = id,
+                Name = data.Name,
+                Description = data.Description,
+                Image = data.Image,
+            };
+
+            return View(model);
         }
 
         [HttpPost]
