@@ -182,11 +182,30 @@ A.menuleft:hover {
 }
 
 .head {
-    width: 100%;
-    border-top: solid 2px #3c8dbc;
-    border-left: solid 2px #3c8dbc;
-    border-right: solid 2px #3c8dbc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #3c8dbc;
+    padding: 0 80px;
+}
+
+    .head .head-logo {
+        padding: 10px 0;
+    }
+
+.head-logo > img {
+    max-height: 55px;
+}
+
+.head .head-welcome > h1 {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.head .head-profile {
+    color: #ffffff;
+    font-family: Verdana;
+    font-size: 11px;
 }
 
 .head1 {
