@@ -8,7 +8,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Tổng hợp tồn kho tháng " + date.Month + " năm " + date.Year;
 }
-<form method="get" asp-action="Product" asp-controller="Report">
+<form method="get" asp-action="MonthlyProductReport" asp-controller="Warehouse">
     <table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
         <tbody>
             <tr class="tr-view">
@@ -25,10 +25,10 @@
                         <thead>
                             <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
                                 <td>Tên</td>
-                                <td>Đơn vị tính</td>
                                 <td>Tồn kho hiện tại</td>
                                 <td>Số lượng nhập trong tháng</td>
                                 <td>Số lượng bán trong tháng</td>
+                                <td>Đơn vị tính</td>
                                 <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
                             </tr>
                         </thead>
@@ -37,7 +37,6 @@
                             {
                                 <tr>
                                     <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Unit)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
                                     <td>
                                         <div class="difference-td">
@@ -70,6 +69,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Unit)</td>
                                     <td align="center"><a href="@Url.Action("Update", "Product", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 </tr>
                             }

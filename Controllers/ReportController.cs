@@ -5,36 +5,69 @@ namespace InventoryManagement.Controllers
 {
     public class ReportController : Controller
     {
-        //private readonly IReportService _reportService;
-        //private readonly IProductService _productService;
+        private readonly IReportService _reportService;
 
-        //public ReportController(IReportService reportService, 
-        //    IProductService productService)
-        //{
-        //    _reportService = reportService;
-        //    _productService = productService;
-        //}
+        public ReportController(IReportService reportService)
+        {
+            _reportService = reportService;
+        }
 
-        //[HttpGet("product")]
-        //public async Task<IActionResult> ProductReport()
-        //{
-        //    var res = await _productService.All();
+        public async Task<IActionResult> PurchaseReport(DateTime startDate, DateTime endDate)
+        {
+            if(startDate == DateTime.MinValue)
+                startDate = DateTime.Now;
 
-        //    return View(res.data);
-        //}
+            if (endDate == DateTime.MinValue)
+                endDate = startDate.AddMonths(-1);
 
-        //[HttpGet("product-monthly")]
-        //public async Task<IActionResult> MonthlyProductReport(DateTime date)
-        //{
-        //    if(date == DateTime.MinValue)
-        //    {
-        //        date = DateTime.Now;
-        //    }
+            var res = await _reportService.PurchaseReport(startDate, endDate);
 
-        //    var res = await _reportService.MonthlyProductReport(date);
+            if (!res.isSuccess)
+                return RedirectToAction("Index", "Home");
 
-        //    ViewBag.Date = date;
-        //    return View(res.data);
-        //}
+            return View(res.data);
+        }
+
+        public async Task<IActionResult> SaleReport(DateTime startDate, DateTime endDate)
+        {
+            if (startDate == DateTime.MinValue)
+                startDate = DateTime.Now;
+
+            if (endDate == DateTime.MinValue)
+                endDate = startDate.AddMonths(-1);
+
+            var res = await _reportService.SaleReport(startDate, endDate);
+
+            if (!res.isSuccess)
+                return RedirectToAction("Index", "Home");
+
+            return View(res.data);
+        }
+
+        public async Task<IActionResult> SaleReport2 (DateTime startDate, DateTime endDate)
+        {
+            if (startDate == DateTime.MinValue)
+                startDate = DateTime.Now;
+
+            if (endDate == DateTime.MinValue)
+                endDate = startDate.AddMonths(-1);
+
+            var res = await _reportService.SaleReport(startDate, endDate);
+
+            if (!res.isSuccess)
+                return RedirectToAction("Index", "Home");
+
+            return View(res.data);
+        }
+
+        public async Task<IActionResult> InventoryReport()
+        {
+            var res = await _reportService.InventoryReport();
+
+            if(!res.isSuccess)
+                return RedirectToAction("Index", "Home");
+
+            return View(res.data);
+        }
     }
 }

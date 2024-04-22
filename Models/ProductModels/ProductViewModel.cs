@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Commons.Extensions;
 
 namespace InventoryManagement.Models.MerchandiseModels
 {
@@ -15,6 +16,14 @@ namespace InventoryManagement.Models.MerchandiseModels
         public string Name { get; set; }
         public float Price { get; set; }
         public float Quantity { get; set; }
+
+        public string PriceToVND
+        {
+            get
+            {
+                return Price.FormatVietnameseCurrency();
+            }
+        }
 
         public string Unit { get; set; }
         public string? Description { get; set; }

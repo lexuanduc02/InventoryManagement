@@ -13,6 +13,11 @@ namespace InventoryManagement.Repositories
         {
         }
 
+        public Task<List<MonthlyProductReportViewModel>> InventoryReport(DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<MonthlyProductReportViewModel>> MonthlyProductReport(DateTime date)
         {
             var month = date.Month;
@@ -122,6 +127,49 @@ namespace InventoryManagement.Repositories
 
             var data = await _context.GetDbConnect().QueryAsync<MonthlyProductReportViewModel>(queryString);
                 
+            return data.ToList();
+        }
+
+        public async Task<List<ProductExportImportDetail>> PurchaseReport(DateTime startDate, DateTime endDate)
+        {
+            var queryString =
+                $"""
+                    SELECT Merchandises.Id, Merchandises.Name, Merchandises.Unit, PurchaseInvoices.InvoiceType,
+                	    SUM(MerchandisePurchaseInvoices.Quantity) AS Quantity,
+                	    SUM(MerchandisePurchaseInvoices.Quantity * MerchandisePurchaseInvoices.PurchasePrice) AS Total
+                    FROM
+                	    Merchandises
+                	    LEFT JOIN dbo.MerchandisePurchaseInvoices ON Merchandises.Id = MerchandisePurchaseInvoices.MerchandiseId
+                	    LEFT JOIN dbo.PurchaseInvoices ON MerchandisePurchaseInvoices.PurchaseInvoiceId = PurchaseInvoices.Id
+                    WHERE PurchaseInvoices.CreateAt >= '{endDate}'
+                		AND PurchaseInvoices.CreateAt <= '{startDate}'
+                    GROUP BY Merchandises.Id, Merchandises.Name, Merchandises.Unit, PurchaseInvoices.InvoiceType;
+                """;
+
+            var data = await _context.GetDbConnect().QueryAsync<ProductExportImportDetail>(queryString);
+
+            return data.ToList();
+        }
+
+        public async Task<List<ProductExportImportDetail>> SaleReport(DateTime startDate, DateTime endDate)
+        {
+            var queryString =
+                $"""
+                    SELECT Merchandises.Id, Merchandises.Name, Merchandises.Unit, SaleInvoices.InvoiceType,
+                	    SUM(MerchandiseSaleInvoices.Quantity) AS Quantity,
+                	    SUM(MerchandiseSaleInvoices.Quantity * MerchandiseSaleInvoices.SellingPrice) AS OriginalTotal,
+                	    SUM(MerchandiseSaleInvoices.Quantity * MerchandiseSaleInvoices.SellingPrice * (100 - MerchandiseSaleInvoices.Voucher)/100) AS Total
+                    FROM
+                	    Merchandises
+                	    LEFT JOIN dbo.MerchandiseSaleInvoices ON Merchandises.Id = MerchandiseSaleInvoices.MerchandiseId
+                	    LEFT JOIN dbo.SaleInvoices ON MerchandiseSaleInvoices.SaleInvoiceId = SaleInvoices.Id
+                    WHERE SaleInvoices.CreateAt >= '{endDate}'
+                		AND SaleInvoices.CreateAt <= '{startDate}'
+                    GROUP BY Merchandises.Id, Merchandises.Name, Merchandises.Unit, SaleInvoices.InvoiceType;
+                """;
+
+            var data = await _context.GetDbConnect().QueryAsync<ProductExportImportDetail>(queryString);
+
             return data.ToList();
         }
     }

@@ -3,30 +3,25 @@
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>@ViewData["Title"]</title>
-    <link href="/iconcp/favicon.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
-    <link href="/css/layout.css" rel="stylesheet" type="text/css" />
-    <link href="/css/site.css" rel="stylesheet" type="text/css" />
+    <link href="~/iconcp/favicon.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/site.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="form1">
-        <table class="head" cellpadding="0" cellspacing="0">
-            <tbody>
-                <tr>
-                    <td rowspan="2"><img src="/iconcp/logo.png" style="height:30px;padding:5px 0;margin-left:10px;"></td>
-                    <td class="head1">
-                        <p style="margin:10px 0 5px 0;">Xin chào, <b>admin</b>&nbsp;<a class="dtw" onclick="javascript:return confirm('Bạn thật sự muốn thoát không?')" href="index.aspx?do=logout">Thoát</a></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="head2">
-                        <h1>Welcome to Control Panel</h1>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="head d-flex">
+        <div class="head-logo"><img src="/iconcp/logo.png"></div>
+        <div class="head-welcome">
+            <h1>Welcome to Control Panel</h1>
+        </div>
+        <div class="head-profile">
+            <p style="margin:10px 0 5px 0;">Xin chào, <b>admin</b>&nbsp;<a class="dtw" href="#">Thoát</a></p>
+        </div>
+    </div>
 
+    <div id="form1">
         <table class="main-content" cellpadding="0" cellspacing="0">
             <tbody>
                 <tr>
@@ -58,10 +53,10 @@
                             <a class="menuleft" asp-controller="Warehouse" asp-action="UpdateWarehouse"><img class="imgmid" src="/iconcp/icon_pro.png">Kiểm kê kho</a>
 
                             <div class="title-left">Báo cáo thống kê</div>
-                            <a class="menuleft" asp-controller="Report" asp-action="Product"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo danh thu bán hàng</a>
-                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo tồn kho</a>
-                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_news.png"> Báo cáo nhập kho</a>
-                            <a class="menuleft" asp-controller="Report" asp-action="#"><img class="imgmid" src="/iconcp/icon_media.png"> Báo cáo xuất kho</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="SaleReport2"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo danh thu bán hàng</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="InventoryReport"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo tồn kho</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="PurchaseReport"><img class="imgmid" src="/iconcp/icon_news.png"> Báo cáo nhập kho</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="SaleReport"><img class="imgmid" src="/iconcp/icon_media.png"> Báo cáo xuất kho</a>
 
                             <div class="title-left">Khác</div>
                             <a class="menuleft" href="pass.aspx"><img class="imgmid" src="/iconcp/icon_pass.png"> Đổi mật khẩu</a>
@@ -101,7 +96,7 @@
     let history = new DataTable('.dtgrView', {
         responsive: true,
         processing: true,
-        lengthMenu: [15, 25, 50, 100],
+        lengthMenu: [5, 10],
     });
 
     $(document).ready(function () {
