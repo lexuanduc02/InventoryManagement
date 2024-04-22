@@ -5,36 +5,28 @@ namespace InventoryManagement.Controllers
 {
     public class ReportController : Controller
     {
-        //private readonly IReportService _reportService;
-        //private readonly IProductService _productService;
+        private readonly IReportService _reportService;
 
-        //public ReportController(IReportService reportService, 
-        //    IProductService productService)
-        //{
-        //    _reportService = reportService;
-        //    _productService = productService;
-        //}
+        public ReportController(IReportService reportService)
+        {
+            _reportService = reportService;
+        }
 
-        //[HttpGet("product")]
-        //public async Task<IActionResult> ProductReport()
-        //{
-        //    var res = await _productService.All();
+        public async Task<IActionResult> PurchaseReport(DateTime? startdate, DateTime? endDate)
+        {
+            if(startdate == null)
+                startdate = DateTime.Now;
 
-        //    return View(res.data);
-        //}
+            if(endDate == null) 
+                endDate = DateTime.MinValue;
 
-        //[HttpGet("product-monthly")]
-        //public async Task<IActionResult> MonthlyProductReport(DateTime date)
-        //{
-        //    if(date == DateTime.MinValue)
-        //    {
-        //        date = DateTime.Now;
-        //    }
+            var res = await _reportService.PurchaseReport(startdate, endDate);
 
-        //    var res = await _reportService.MonthlyProductReport(date);
+            if (!res.isSuccess)
+                return RedirectToAction("Index", "Home");
 
-        //    ViewBag.Date = date;
-        //    return View(res.data);
-        //}
+            return View(res.data);
+        }
+        
     }
 }

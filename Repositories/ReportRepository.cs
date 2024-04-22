@@ -124,5 +124,26 @@ namespace InventoryManagement.Repositories
                 
             return data.ToList();
         }
+
+        public async Task<List<ProductExportImportDetail>> PurchaseReport(DateTime? startDate, DateTime? endDate)
+        {
+            var queryString =
+                $"""
+                    SELECT Merchandises.Id, Merchandises.Name, Merchandises.Unit, PurchaseInvoices.InvoiceType,
+                	    SUM(MerchandisePurchaseInvoices.Quantity) AS Quantity,
+                	    SUM(MerchandisePurchaseInvoices.Quantity * MerchandisePurchaseInvoices.PurchasePrice) AS Total
+                    FROM
+                	    Merchandises
+                	    LEFT JOIN dbo.MerchandisePurchaseInvoices ON Merchandises.Id = MerchandisePurchaseInvoices.MerchandiseId
+                	    LEFT JOIN dbo.PurchaseInvoices ON MerchandisePurchaseInvoices.PurchaseInvoiceId = PurchaseInvoices.Id
+                    WHERE PurchaseInvoices.CreateAt >= '{endDate}'
+                		AND PurchaseInvoices.CreateAt <= '{startDate}'
+                    GROUP BY Merchandises.Id, Merchandises.Name, Merchandises.Unit, PurchaseInvoices.InvoiceType;
+                """;
+
+            var data = await _context.GetDbConnect().QueryAsync<ProductExportImportDetail>(queryString);
+
+            return data.ToList();
+        }
     }
 }
