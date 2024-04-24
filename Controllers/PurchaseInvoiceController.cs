@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
-    [Authorize(Policy = "parchase")]
+    [Authorize(Policy = "purchase")]
     public class PurchaseInvoiceController : Controller
     {
         private readonly IPurchaseInvoiceService _purchaseInvoiceService;
