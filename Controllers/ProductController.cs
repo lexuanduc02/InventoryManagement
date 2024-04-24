@@ -1,9 +1,11 @@
 ﻿using InventoryManagement.Models.MerchandiseModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "warehouse")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -22,12 +24,14 @@ namespace InventoryManagement.Controllers
             _reportService = reportService;
         }
 
+        [Authorize(Policy = "productAccess")]
         public async Task<IActionResult> All()
         {
             var res = await _productService.All();
             return Ok(res.data);
         }
 
+        [Authorize(Policy = "productAccess")]
         public async Task<IActionResult> Index()
         {
             var res = await _productService.All();
@@ -110,6 +114,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _productService.Delete(id);

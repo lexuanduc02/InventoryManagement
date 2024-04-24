@@ -1,10 +1,11 @@
-﻿using InventoryManagement.Models.ProductModels;
-using InventoryManagement.Models.WarehouseModels;
+﻿using InventoryManagement.Models.WarehouseModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "warehouse")]
     public class WarehouseController : Controller
     {
         private readonly IWarehouseService _warehouseService;
@@ -33,6 +34,7 @@ namespace InventoryManagement.Controllers
             return View(response.data);
         }
 
+        [Authorize(Policy = "admin")]
         public IActionResult Create()
         {
             return View();
@@ -94,6 +96,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> Delete(string id) 
         {   
             var res = await _warehouseService.Delete(id);
@@ -101,6 +104,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "warehouseReport")]
         [HttpGet("product")]
         public async Task<IActionResult> ProductReport()
         {
@@ -109,6 +113,7 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        [Authorize(Policy = "warehouseReport")]
         [HttpGet("product-monthly")]
         public async Task<IActionResult> MonthlyProductReport(DateTime date)
         {
@@ -123,6 +128,7 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        [Authorize(Policy = "updateWarehouse")]
         public async Task<IActionResult> UpdateWarehouse()
         {
             var res = await _purchaseInvoiceService.AllUnUpdateWarehouseInvoiceAsync();
@@ -132,6 +138,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Authorize(Policy = "updateWarehouse")]
         public async Task<IActionResult> ConfirmUpdateWarehouse(string id)
         {
             var getInvoiceRes = await _purchaseInvoiceService.GetAsync(id);
@@ -154,7 +161,9 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
-        [HttpPost()]
+
+        [HttpPost]
+        [Authorize(Policy = "updateWarehouse")]
         public async Task<IActionResult> UpdateWarehouse(UpdateInventoryRequest request)
         {
 

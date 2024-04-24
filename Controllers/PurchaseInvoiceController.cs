@@ -1,10 +1,12 @@
 ﻿using InventoryManagement.Commons.Enums;
 using InventoryManagement.Models.PurchaseInvoiceModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "parchase")]
     public class PurchaseInvoiceController : Controller
     {
         private readonly IPurchaseInvoiceService _purchaseInvoiceService;
@@ -140,6 +142,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _purchaseInvoiceService.DeleteAsync(id);

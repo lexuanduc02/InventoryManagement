@@ -7,8 +7,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Update</h1>
-
 <form asp-action="Update" method="post">
     <input type="hidden" value="@Model.Id" asp-for="Id"/>
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
@@ -16,7 +14,6 @@
             <tr class="tr-view">
                 <td colspan="2" class="td-view-left">
                     <input type="submit" value="Ghi nhận" id="btnAddU1" class="button">
-                    <input type="reset" class="button" value="Mặc định">
                 </td>
             </tr>
             <tr>
@@ -24,12 +21,31 @@
                 <td class="td2"><input type="text" maxlength="150" asp-for="FullName" class="textbox" style="width: 250px;"></td>
             </tr>
             <tr>
+                <td class="td1"><div style="width:105px;">Trạng thái:</div></td>
+                <td class="td2" style="line-height:180%;">
+                    @{
+                        var actives = Enum.GetValues(typeof(ActiveEnum));
+
+                        var i = 0;
+
+                        foreach (var active in actives)
+                        {
+                            var selected = Model.IsActive == (ActiveEnum)active;
+                            <label>@Html.RadioButtonFor(x => x.IsActive, active, Model.IsActive == (ActiveEnum)active)@active</label>
+                            <br />
+
+                            i++;
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
                 <td class="td1"><div style="width:105px;">Giới tính:</div></td>
                 <td class="td2" style="line-height:180%;">
                     @{
                         var genders = Enum.GetValues(typeof(GenderEnum));
 
-                        var i = 0;
+                        i = 0;
 
                         foreach (var gender in genders)
                         {
@@ -65,7 +81,7 @@
 
                         foreach (var role in roles)
                         {
-                            <label>@Html.RadioButtonFor(x => x.RoleId, role.Id, Model.RoleId == role.Id)@role.Name</label>
+                            <label>@Html.RadioButtonFor(x => x.RoleId, role.Id, Model.RoleId == role.Id)@role.Description</label>
                             <br />
                         }
                     }
@@ -75,7 +91,6 @@
                 <td class="td1">&nbsp;</td>
                 <td class="td1" style="text-align:left;">
                     <input type="submit" value="Ghi nhận" class="button" style="width:100px;">
-                    <input type="reset" class="button" value="Mặc định" style="width:100px;">
                 </td>
             </tr>
         </tbody>

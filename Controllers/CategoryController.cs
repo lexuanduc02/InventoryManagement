@@ -1,11 +1,15 @@
 ﻿using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+
+    [Authorize(Policy = "admin")]
     public class CategoryController : Controller
     {
+
         private readonly ICategoryService _categoryService;
 
         public CategoryController(ICategoryService categoryService)

@@ -158,7 +158,9 @@ namespace InventoryManagement.Services
                     return response;
                 }
 
-                _context.Merchandises.Remove(product);
+                product.IsActive = ActiveEnum.InActive;
+
+                _context.Merchandises.Update(product);
                 var saveData = await _context.SaveChangesAsync(true);
 
                 if (saveData != 1)

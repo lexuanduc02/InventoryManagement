@@ -10,6 +10,7 @@
     <tbody>
         <tr class="tr-view">
             <td class="td-view-left">
+                <a asp-action="RecoveryPasswordRequest" class="button btn-add">Yêu cầu lấy lại mật khẩu</a>
             </td>
             <td class="td-view-right">
                 <a asp-action="Create" class="button btn-add">Thêm mới</a>
@@ -26,29 +27,27 @@
                             <td>Ngày bắt đầu làm việc</td>
                             <td>Hiện</td>
                             <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
-                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Ẩn&nbsp;</td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            var activeEnums = Enum.GetValues(typeof(ActiveEnum));
-                            <tr>
+                            var style = "";
+                            var isLock = "";
+                            if(item.IsActive == ActiveEnum.InActive)
+                            {
+                                style = "background-color: #ff7f50";
+                                isLock = "display: none";
+                            }
+                            <tr style="@style">
                                 <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.RoleDescription)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
                                 <td>@Html.DisplayFor(modelItem => item.StartDateOfEmployment)</td>
-                                <td>
-                                    <select name="dtgrView$ctl03$drlAc" id="dtgrView_drlAc_0" class="textbox drl">
-                                        @for (int i = 0; i < activeEnums.Length; i++)
-                                        {
-                                            var selected = item.IsActive == (ActiveEnum)i ? "selected" : "";
-                                            <option value="@i" selected="@selected">@activeEnums.GetValue(i)</option>
-                                        }
-                                    </select>
-                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
                                 <td align="center"><a href="@Url.Action("Update", "User", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
-                                <td align="center"><a href="@Url.Action("Delete", "User", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Đối tác không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                                <td align="center"><a style="@isLock" href="@Url.Action("Delete", "User", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn khóa Nhân viên @item.FullName không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>
                         }
                     </tbody>

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -9,6 +11,7 @@
     <link href="~/css/site.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @RenderSection("Style", required: false)
 </head>
 <body>
     <div class="head d-flex">
@@ -17,7 +20,7 @@
             <h1>Welcome to Control Panel</h1>
         </div>
         <div class="head-profile">
-            <p style="margin:10px 0 5px 0;">Xin chào, <b>admin</b>&nbsp;<a class="dtw" href="#">Thoát</a></p>
+            <p style="margin:10px 0 5px 0;">Xin chào, <b>@User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value</b>&nbsp;<a class="dtw" asp-controller="Oauth" asp-action="Logout">/ Thoát</a></p>
         </div>
     </div>
 
@@ -59,8 +62,8 @@
                             <a class="menuleft" asp-controller="Report" asp-action="SaleReport"><img class="imgmid" src="/iconcp/icon_media.png"> Báo cáo xuất kho</a>
 
                             <div class="title-left">Khác</div>
-                            <a class="menuleft" href="pass.aspx"><img class="imgmid" src="/iconcp/icon_pass.png"> Đổi mật khẩu</a>
-                            <a class="menuleft" href="index.aspx?do=logout" onclick="javascript:return confirm('Bạn thật sự muốn thoát không?')"><img class="imgmid" src="iconcp/icon_logout.png"> Thoát</a>
+                            <a class="menuleft" href="@Url.Action("ChangePassword", "Oauth", new { returnUrl = Context.Request.Path})"><img class="imgmid" src="/iconcp/icon_pass.png"> Đổi mật khẩu</a>
+                            <a class="menuleft" asp-controller="Oauth" asp-action="Logout" onclick="javascript:return confirm('Bạn thật sự muốn thoát không?')"><img class="imgmid" src="iconcp/icon_logout.png"> Thoát</a>
                         </div>
                     </td>
                     <td class="main-content-right">

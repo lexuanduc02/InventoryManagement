@@ -1,8 +1,10 @@
 ﻿using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "report")]
     public class ReportController : Controller
     {
         private readonly IReportService _reportService;

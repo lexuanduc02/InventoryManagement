@@ -10,5 +10,7 @@ namespace InventoryManagement.Services.Contractors
         public Task<ServiceResponseModel<bool>> Create(CreateUserRequest request);
         public Task<ServiceResponseModel<bool>> Update(UpdateUserRequest request);
         public Task<ServiceResponseModel<bool>> Delete(string id);
+        public Task<ServiceResponseModel<List<UserViewModel>>> GetRecoveryPasswordsAsync();
+        public Task<ServiceResponseModel<bool>> ChangePasswordToDefaultAsync(string userId);
     }
 }

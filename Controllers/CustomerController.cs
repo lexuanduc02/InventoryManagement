@@ -1,11 +1,11 @@
-﻿using InventoryManagement.Domains.Entities;
-using InventoryManagement.Models.CustomerModels;
-using InventoryManagement.Models.PartnerModels;
+﻿using InventoryManagement.Models.CustomerModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "admin")]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;

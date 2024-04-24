@@ -23,6 +23,7 @@ namespace InventoryManagement.ModuleRegistrations
                 .AddScoped<IPurchaseInvoiceService, PurchaseInvoiceService>()
                 .AddScoped<IMerchandisePurchaseInvoiceService, MerchandisePurchaseInvoiceService>()
                 .AddScoped<IReportService, ReportService>()
+                .AddScoped<IOauthService, OauthService>()
             ;
 
             return services;
