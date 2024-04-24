@@ -16,6 +16,9 @@ namespace InventoryManagement.Domains.Entities
         public string FullName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Salt { get; set; }
+        public ChangePasswordEnum ChangePassword { get; set; } = ChangePasswordEnum.Unchanged;
+        public RecoveryPasswordEnum RecoveryPassword { get; set; } = RecoveryPasswordEnum.UnRequest;
         public DateTime? Dob { get; set; }
         public GenderEnum Sex { get; set; }
         public string PhoneNumber { get; set; }

@@ -8,6 +8,7 @@ namespace InventoryManagement.Models.UserModels
         public string FullName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; } = "nv@" + DateTime.Now.Year;
+        public string? Salt { get; set; }
         public DateTime? Dob { get; set; }
         public GenderEnum Sex { get; set; } = GenderEnum.Unknown;
         public string PhoneNumber { get; set; }

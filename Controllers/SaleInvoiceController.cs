@@ -1,10 +1,12 @@
 ﻿using InventoryManagement.Commons.Enums;
 using InventoryManagement.Models.SaleInvoiceModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "sale")]
     public class SaleInvoiceController : Controller
     {
         private readonly ISaleInvoiceService _saleInvoiceService;
@@ -125,6 +127,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _saleInvoiceService.DeleteAsync(id);

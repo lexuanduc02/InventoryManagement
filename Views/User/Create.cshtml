@@ -47,7 +47,7 @@
 
                         foreach (var role in roles)
                         {
-                            <label>@Html.RadioButtonFor(x => x.RoleId, role.Id)@role.Name</label>
+                            <label>@Html.RadioButtonFor(x => x.RoleId, role.Id)@role.Description</label>
                             <br />
                         }
                     }

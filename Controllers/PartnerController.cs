@@ -1,9 +1,11 @@
 ﻿using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "admin")]
     public class PartnerController : Controller
     {
         private readonly IPartnerService _partnerService;
@@ -26,6 +28,7 @@ namespace InventoryManagement.Controllers
             return View(response.data);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             var response = await _partnerService.All();

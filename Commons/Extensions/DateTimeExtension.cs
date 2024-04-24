@@ -1,6 +1,6 @@
 ﻿namespace InventoryManagement.Commons.Extensions
 {
-    public static class DateTimeExtention
+    public static class DateTimeExtension
     {
         public static string ToDateOnly(this DateTime dateTime)
         {

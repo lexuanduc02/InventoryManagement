@@ -8,6 +8,7 @@ namespace InventoryManagement.Models.UserModels
         public string RoleId { get; set; }
         public string FullName { get; set; }
         public string RoleName { get; set; }
+        public string RoleDescription { get; set; }
         public DateTime? Dob { get; set; }
         public GenderEnum Sex { get; set; }
         public string PhoneNumber { get; set; }
@@ -15,5 +16,6 @@ namespace InventoryManagement.Models.UserModels
         public string? Email { get; set; }
         public DateTime? StartDateOfEmployment { get; set; }
         public ActiveEnum IsActive { get; set; }
+        public ChangePasswordEnum ChangePassword { get; set; }
     }
 }

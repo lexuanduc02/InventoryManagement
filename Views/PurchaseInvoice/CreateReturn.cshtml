@@ -1,11 +1,11 @@
 ﻿@model InventoryManagement.Models.PurchaseInvoiceModels.CreatePurchaseInvoiceReturnRequest
 @{
-    ViewData["Title"] = "Tạo phiếu nhập kho";
+    ViewData["Title"] = "Tạo phiếu trả hàng NCC";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <form asp-action="CreateReturn" method="post">
-    <input type="hidden" asp-for="UserId" value="F48CF82D-EE9E-4C82-2ACE-08DC5ADE8E8E" />
+    <input type="hidden" asp-for="UserId" value="@User.Claims.FirstOrDefault(x => x.Type == System.Security.Claims.ClaimTypes.Sid)?.Value" />
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
             <tr class="tr-view">

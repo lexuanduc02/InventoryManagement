@@ -1,12 +1,11 @@
-﻿using Azure;
-using InventoryManagement.Models.UserModels;
-using InventoryManagement.Services;
+﻿using InventoryManagement.Models.UserModels;
 using InventoryManagement.Services.Contractors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InventoryManagement.Controllers
 {
+    [Authorize(Policy = "admin")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -82,13 +81,17 @@ namespace InventoryManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UpdateUserRequest request)
         {
-            if(!ModelState.IsValid) 
+            if(!ModelState.IsValid)
+            {
+                ViewBag.Roles = (await _roleService.All()).data;
                 return View(request);
+            }
 
             var response = await _userService.Update(request);
 
             if (!response.isSuccess)
             {
+                ViewBag.Roles = (await _roleService.All()).data;
                 ModelState.AddModelError("", response.Message != null ? response.Message : "");
                 return View(request);
             }
@@ -101,6 +104,20 @@ namespace InventoryManagement.Controllers
             var res = await _userService.Delete(id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> RecoveryPasswordRequest()
+        {
+            var res = await _userService.GetRecoveryPasswordsAsync();
+
+            return View(res.data);
+        }
+
+        public async Task<IActionResult> ChangePasswordToDefault(string id)
+        {
+            var res = await _userService.ChangePasswordToDefaultAsync(id);
+
+            return RedirectToAction(nameof(RecoveryPasswordRequest));
         }
     }
 }
