@@ -12,14 +12,20 @@ namespace InventoryManagement.Controllers
         private readonly IPurchaseInvoiceService _purchaseInvoiceService;
         private readonly IMerchandisePurchaseInvoiceService _merchandisePurchaseInvoiceService;
         private readonly IPartnerService _partnerService;
+        private readonly IPartialViewService _partialViewService;
+        private readonly IPdfService _pdfService;
 
         public PurchaseInvoiceController(IPurchaseInvoiceService purchaseInvoiceService, 
             IPartnerService partnerService,
-            IMerchandisePurchaseInvoiceService merchandisePurchaseInvoiceService)
+            IMerchandisePurchaseInvoiceService merchandisePurchaseInvoiceService,
+            IPartialViewService partialViewService,
+            IPdfService pdfService)
         {
             _purchaseInvoiceService = purchaseInvoiceService;
             _partnerService = partnerService;
             _merchandisePurchaseInvoiceService = merchandisePurchaseInvoiceService;
+            _partialViewService = partialViewService;
+            _pdfService = pdfService;
         }
 
         public async Task<IActionResult> Detail(string id)
@@ -186,6 +192,31 @@ namespace InventoryManagement.Controllers
             }
 
             return RedirectToAction(nameof(Return));
+        }
+
+        public async Task<IActionResult> ExportPdf(string id)
+        {
+            var getInvoiceRes = await _purchaseInvoiceService.GetAsync(id);
+            if (!getInvoiceRes.isSuccess || getInvoiceRes.data == null)
+                return RedirectToAction(nameof(Index));
+            var invoice = getInvoiceRes.data;
+
+            var getInvoiceDetailRes = await _merchandisePurchaseInvoiceService.GetByInvoiceAsync(id);
+            if (!getInvoiceDetailRes.isSuccess || getInvoiceDetailRes.data == null)
+                return RedirectToAction(nameof(Index));
+
+            var invoiceDetails = getInvoiceDetailRes.data;
+
+            var data = new DetailPurchaseInvoiceModel()
+            {
+                PurchaseInvoiceViewModel = invoice,
+                MerchandisePurchaseViewModels = invoiceDetails,
+            };
+
+            var html = await _partialViewService.RenderPartialToStringAsync("PurchaseInvoice", data);
+            var bytes = await _pdfService.HtmlToPdf(html);
+
+            return File(bytes, "application/pdf", "export.pdf");
         }
     }
 }

@@ -24,6 +24,8 @@ namespace InventoryManagement.ModuleRegistrations
                 .AddScoped<IMerchandisePurchaseInvoiceService, MerchandisePurchaseInvoiceService>()
                 .AddScoped<IReportService, ReportService>()
                 .AddScoped<IOauthService, OauthService>()
+                .AddScoped<IPartialViewService, PartialViewService>()
+                .AddScoped<IPdfService, PdfService>()
             ;
 
             return services;

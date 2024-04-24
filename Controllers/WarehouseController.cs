@@ -105,7 +105,7 @@ namespace InventoryManagement.Controllers
         }
 
         [Authorize(Policy = "warehouseReport")]
-        [HttpGet("product")]
+        [HttpGet("product-report")]
         public async Task<IActionResult> ProductReport()
         {
             var res = await _productService.All();

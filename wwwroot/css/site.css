@@ -611,6 +611,7 @@ input[type=checkbox], input[type=radio] {
     font-family: sans-serif;
     font-size: 0.8rem;
     letter-spacing: 1px;
+    width: fit-content;
 }
 
 .caption {
@@ -622,6 +623,7 @@ input[type=checkbox], input[type=radio] {
 .td {
     border: 1px solid rgb(160 160 160);
     padding: 8px 10px;
+    text-align: center;
 }
 
 .td {

@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Commons.Extensions;
 
 namespace InventoryManagement.Models.PurchaseInvoiceModels
 {
@@ -14,5 +15,29 @@ namespace InventoryManagement.Models.PurchaseInvoiceModels
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public float Total { get; set; }
+
+        public string TotalToVND
+        {
+            get
+            {
+                return Total.FormatVietnameseCurrency();
+            }
+        }
+
+        public string CreateAtString
+        {
+            get
+            {
+                return CreateAt.ToDateOnly();
+            }
+        }
+
+        public string UpdateAtString
+        {
+            get
+            {
+                return UpdateAt.ToDateOnly();
+            }
+        }
     }
 }
