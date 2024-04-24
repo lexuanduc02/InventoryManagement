@@ -30,7 +30,18 @@ namespace InventoryManagement.Services
             {
                 var data = await _context.MerchandisePurchaseInvoices
                     .Where(x => x.PurchaseInvoiceId.ToString() == invoiceId)
-                    .Select(x => _mapper.Map<MerchandisePurchaseViewModel>(x))
+                    .Include(x => x.Merchandise)
+                    .Select(x => new MerchandisePurchaseViewModel()
+                    {
+                        PurchaseInvoiceId = x.PurchaseInvoiceId.ToString(),
+                        MerchandiseId = x.MerchandiseId.ToString(),
+                        MerchandiseName = x.Merchandise.Name,
+                        IsActive = x.IsActive,
+                        MerchandisePrice = x.MerchandisePrice,
+                        Quantity = x.Quantity,
+                        Unit = x.Merchandise.Unit,
+                        PurchasePrice = x.PurchasePrice,
+                    })
                     .ToListAsync();
 
                 if (data != null)

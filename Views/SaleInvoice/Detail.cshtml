@@ -18,6 +18,7 @@
         <tr class="tr-view">
             <td colspan="2" class="td-view-left">
                 <a asp-action="Index" class="button btn-add">Danh sách phiếu</a>
+                <a href="@Url.Action("ExportPdf", "SaleInvoice", new { id = Model.SaleInvoiceViewModel.Id})" class="button btn-add">Xuất hóa đơn</a>
             </td>
         </tr>
         <tr>
@@ -53,7 +54,7 @@
                 <table id="merchandiseTable" class="table">
                     <thead class="thead">
                         <tr>
-                            <th class="th">Mã sản phẩm</th>
+                            <th class="th">Sản phẩm</th>
                             <th class="th">Số lượng</th>
                             @if (type != InvoiceTypeEnum.ReturnInvoice)
                             {
@@ -66,15 +67,14 @@
                     <tbody class="tbody">
                         @foreach (var item in detais)
                         {
-                            var fee = item.Quantity * item.SellingPrice * (100 - item.Voucher) / 100;
                             <tr>
-                                <td class="td">@item.MerchandiseId</td>
+                                <td class="td">@item.MerchandiseName</td>
                                 <td class="td">@item.Quantity</td>
                                 @if (type != InvoiceTypeEnum.ReturnInvoice)
                                 {
-                                    <td class="td">@item.SellingPrice VNĐ</td>
+                                    <td class="td">@item.SellingPriceToVND</td>
                                     <td class="td">@item.Voucher %</td>
-                                    <td class="td">@fee VNĐ</td>
+                                    <td class="td">@item.SubTotalToVND</td>
                                 }
                             </tr>
                         }
@@ -85,7 +85,7 @@
                             <tr>
                                 <th class="th"></th>
                                 <th class="th" colspan="3">Totals</th>
-                                <td class="td">@invoice.Total VNĐ</td>
+                                <td class="td">@invoice.TotalToVND</td>
                             </tr>
                         </tfoot>
                     }
