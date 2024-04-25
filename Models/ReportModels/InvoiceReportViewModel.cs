@@ -42,5 +42,6 @@ namespace InventoryManagement.Models.ReportModels
                 return OriginalTotalAmount.FormatVietnameseCurrency();
             }
         }
+
     }
 }

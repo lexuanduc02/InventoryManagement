@@ -742,7 +742,7 @@
                         <tr>
                             <td class="w-full align-top">
                                 <div>
-                                    <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png" class="h-12" />
+                                    <img src="/iconcp/logo.png" class="h-12" />
                                 </div>
                             </td>
 
@@ -779,12 +779,12 @@
                         <tr>
                             <td class="w-1/2 align-top">
                                 <div class="text-sm text-neutral-600">
-                                    <p class="font-bold">Company Infor</p>
-                                    <p>Number: 23456789</p>
-                                    <p>VAT: 23456789</p>
-                                    <p>6622 Abshire Mills</p>
-                                    <p>Port Orlofurt, 05820</p>
-                                    <p>United States</p>
+                                    <p class="font-bold">KPM Tech Co., Ltd.</p>
+                                    <p>Number: 0965405843</p>
+                                    <p>Lot CN 09-20 Ninh Hiep Industrial Park</p>
+                                    <p>National Highway 1A, Ninh Hiep Commune</p>
+                                    <p>Gia Lam District, Hanoi</p>
+                                    <p>Receiving Clerk: @Model.SaleInvoiceViewModel.UserName</p>
                                 </div>
                             </td>
                             <td class="w-1/2 align-top text-right">
@@ -813,9 +813,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{ 
+                            var index = 1;
+                        }
                         @foreach (var item in Model.MerchandiseSaleInvoiceViewModels)
                         {
-                            var index = 1;
                             <tr>
                                 <td class="border-b py-3 pl-3">@index</td>
                                 <td class="border-b py-3 pl-2">@item.MerchandiseName</td>
@@ -824,6 +826,7 @@
                                 <td class="border-b py-3 pl-2 text-center">@item.Voucher %</td>
                                 <td class="border-b py-3 pl-2 text-right">@item.SubTotalToVND</td>
                             </tr>
+                            index++;
                         }
                         <tr>
                             <td colspan="7">

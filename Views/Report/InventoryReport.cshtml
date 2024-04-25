@@ -4,6 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+    <tr class="tr-view">
+        <td class="td-view-left d-flex align-items-center">
+            <a href="@Url.Action("InventoryReportToPdf", "Report")" class="button btn-add">In báo cáo</a>
+        </td>
+        <td class="td-view-right">
+        </td>
+    </tr>
+</table>
+
 @foreach (var model in Model)
 {
     <div class="history-table-title">@Html.DisplayFor(modelItem => model.WarehouseName)</div>

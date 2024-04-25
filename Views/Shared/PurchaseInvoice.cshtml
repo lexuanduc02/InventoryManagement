@@ -742,7 +742,7 @@
                         <tr>
                             <td class="w-full align-top">
                                 <div>
-                                    <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png" class="h-12" />
+                                    <img src="/iconcp/logo.png" class="h-12" />
                                 </div>
                             </td>
 
@@ -805,9 +805,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{
+                            var index = 1;
+                        }
                         @foreach (var item in Model.MerchandisePurchaseViewModels)
                         {
-                            var index = 1;
                             <tr>
                                 <td class="border-b py-3 pl-3">@index</td>
                                 <td class="border-b py-3 pl-2">@item.MerchandiseName</td>
@@ -816,6 +818,7 @@
                                 <td class="border-b py-3 pl-2 text-center">@item.Unit</td>
                                 <td class="border-b py-3 pl-2 text-right">@item.SubTotalToVND</td>
                             </tr>
+                            index++;
                         }
                         <tr>
                             <td colspan="7">
