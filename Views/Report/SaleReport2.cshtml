@@ -9,6 +9,7 @@
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tr class="tr-view">
             <td class="td-view-right">
+                <a href="@Url.Action("ExportSaleReport2ToPdf", "Report", new { startDate = Model.StartDate, endDate = Model.EndDate})" class="button btn-add">In báo cáo</a>
             </td>
             <td class="td-view-left d-flex align-items-center">
                 <input type="submit" id="btnUpdate1" class="button" value="Lọc">

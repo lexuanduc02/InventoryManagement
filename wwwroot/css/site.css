@@ -187,7 +187,7 @@ A.menuleft:hover {
     justify-content: space-between;
     align-items: center;
     background-color: #3c8dbc;
-    padding: 0 80px;
+    padding: 0 40px;
 }
 
     .head .head-logo {
@@ -654,4 +654,26 @@ input[type=checkbox], input[type=radio] {
     font-weight: bold;
     background-color: #D6DEEC;
     margin-top:20px;
+}
+
+.home-heading {
+    background-image: url("/iconcp/438204089_1129075154979304_7165401801134632333_n.png");
+    background-origin: padding-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+
+.home-heading-content {
+    text-align: center;
+    color: #fff;
+    padding-top: 40px;
+    font-size: 40px;
+    text-transform: uppercase;
+}
+
+.home-sub-heading {
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
 }
