@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.WarehouseModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace InventoryManagement.Controllers
             _merchandisePurchaseInvoiceService = merchandisePurchaseInvoiceService;
         }
 
+        [Breadcrumb("", "Kho hàng")]
         public async Task<IActionResult> Index()
         {
             var response = await _warehouseService.All();
@@ -35,6 +37,7 @@ namespace InventoryManagement.Controllers
         }
 
         [Authorize(Policy = "admin")]
+        [Breadcrumb("Thêm mới", "Kho hàng")]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +61,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Kho hàng")]
         public async Task<IActionResult> Update(string id)
         {
             var res = await _warehouseService.Get(id);
@@ -106,6 +110,7 @@ namespace InventoryManagement.Controllers
 
         [Authorize(Policy = "warehouseReport")]
         [HttpGet("product-report")]
+        [Breadcrumb("Theo dõi số lượng tồn kho", "Kho hàng")]
         public async Task<IActionResult> ProductReport()
         {
             var res = await _productService.All();
@@ -115,6 +120,7 @@ namespace InventoryManagement.Controllers
 
         [Authorize(Policy = "warehouseReport")]
         [HttpGet("product-monthly")]
+        [Breadcrumb("Tổng hợp tồn kho", "Kho hàng")]
         public async Task<IActionResult> MonthlyProductReport(DateTime date)
         {
             if (date == DateTime.MinValue)
@@ -129,6 +135,7 @@ namespace InventoryManagement.Controllers
         }
 
         [Authorize(Policy = "updateWarehouse")]
+        [Breadcrumb("Kiểm kê kho", "Kho hàng")]
         public async Task<IActionResult> UpdateWarehouse()
         {
             var res = await _purchaseInvoiceService.AllUnUpdateWarehouseInvoiceAsync();
@@ -139,6 +146,7 @@ namespace InventoryManagement.Controllers
         }
 
         [Authorize(Policy = "updateWarehouse")]
+        [Breadcrumb("Kiểm kê kho", "Kho hàng")]
         public async Task<IActionResult> ConfirmUpdateWarehouse(string id)
         {
             var getInvoiceRes = await _purchaseInvoiceService.GetAsync(id);

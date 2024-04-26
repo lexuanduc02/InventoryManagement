@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.CustomerModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace InventoryManagement.Controllers
             _purchaseInvoiceService = purchaseInvoiceService;
         }
 
+        [Breadcrumb("", "Khách hàng")]
         public async Task<IActionResult> Index()
         {
             var res = await _customerService.All();
@@ -28,6 +30,7 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        [Breadcrumb("Thông tin chi tiết", "Khách hàng")]
         public async Task<IActionResult> Detail(string id)
         {
             var customer = await _customerService.GetAsync(id);
@@ -47,6 +50,7 @@ namespace InventoryManagement.Controllers
             return View(model);
         }
 
+        [Breadcrumb("Thêm mới", "Khách hàng")]
         public IActionResult Create() 
         { 
             return View();
@@ -62,6 +66,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction("Index");
         }
 
+        [Breadcrumb("Cập nhật", "Khách hàng")]
         public async Task<IActionResult> Update(string id) 
         {
             var customer = (await _customerService.GetAsync(id)).data;

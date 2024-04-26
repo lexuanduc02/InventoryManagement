@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -21,6 +22,7 @@ namespace InventoryManagement.Controllers
             _pdfService = pdfService;
         }
 
+        [Breadcrumb("Báo cáo nhập kho", "Báo cáo")]
         public async Task<IActionResult> PurchaseReport(DateTime startDate, DateTime endDate)
         {
             if(startDate == DateTime.MinValue)
@@ -53,6 +55,7 @@ namespace InventoryManagement.Controllers
             return File(bytes, "application/pdf", "inventory_inbound_Report.pdf");
         }
 
+        [Breadcrumb("Báo cáo xuất kho", "Báo cáo")]
         public async Task<IActionResult> SaleReport(DateTime startDate, DateTime endDate)
         {
             if (startDate == DateTime.MinValue)
@@ -85,6 +88,7 @@ namespace InventoryManagement.Controllers
             return File(bytes, "application/pdf", "inventory_outbound_Report.pdf");
         }
 
+        [Breadcrumb("Báo cáo doanh thu", "Báo cáo")]
         public async Task<IActionResult> SaleReport2 (DateTime startDate, DateTime endDate)
         {
             if (startDate == DateTime.MinValue)
@@ -122,6 +126,7 @@ namespace InventoryManagement.Controllers
             return File(bytes, "application/pdf", "revenue_report.pdf");
         }
 
+        [Breadcrumb("Báo cáo tồn kho", "Báo cáo")]
         public async Task<IActionResult> InventoryReport()
         {
             var res = await _reportService.InventoryReport();

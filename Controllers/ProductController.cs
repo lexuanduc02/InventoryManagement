@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.MerchandiseModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,12 +33,14 @@ namespace InventoryManagement.Controllers
         }
 
         [Authorize(Policy = "productAccess")]
+        [Breadcrumb("", "Sản phẩm")]
         public async Task<IActionResult> Index()
         {
             var res = await _productService.All();
             return View(res.data);
         }
-         
+
+        [Breadcrumb("Thêm mới", "Sản phẩm")]
         public async Task<IActionResult> Create()
         {
             var warehouses = await _warehouseService.All();
@@ -73,6 +76,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Sản phẩm")]
         public async Task<IActionResult> Update(string id)
         {
             var warehouses = await _warehouseService.All();

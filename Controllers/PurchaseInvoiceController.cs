@@ -1,6 +1,7 @@
 ﻿using InventoryManagement.Commons.Enums;
 using InventoryManagement.Models.PurchaseInvoiceModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace InventoryManagement.Controllers
             _pdfService = pdfService;
         }
 
+        [Breadcrumb("Thông tin chi tiết", "Phiếu nhập")]
         public async Task<IActionResult> Detail(string id)
         {
             var getInvoiceRes = await _purchaseInvoiceService.GetAsync(id);
@@ -50,6 +52,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("", "Phiếu nhập")]
         public async Task<IActionResult> Index()
         {
             var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.Invoice);
@@ -59,6 +62,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("Thêm mới", "Phiếu nhập")]
         public async Task<IActionResult> Create()
         {
             var partners = await _partnerService.All();
@@ -67,6 +71,7 @@ namespace InventoryManagement.Controllers
             return View();
         }
 
+        [Breadcrumb("Xác nhận nhận thông tin", "Phiếu nhập")]
         public async Task<IActionResult> Confirm(CreatePurchaseInvoiceRequest request)
         {
             if (!ModelState.IsValid)
@@ -98,6 +103,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Phiếu nhập")]
         public async Task<IActionResult> Update(string id)
         {
             var getInvoiceRes = await _purchaseInvoiceService.GetAsync(id);
@@ -156,6 +162,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Danh sách hoàn hàng", "Hoàn hàng")]
         public async Task<IActionResult> Return()
         {
             var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.ReturnInvoice);
@@ -165,6 +172,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("Tạo phiếu hoàn hàng", "Hoàn hàng")]
         public IActionResult CreateReturn()
         {
             return View();

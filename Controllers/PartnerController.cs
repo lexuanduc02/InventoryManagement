@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace InventoryManagement.Controllers
             _saleInvoiceService = saleInvoiceService;
         }
 
+        [Breadcrumb("", "Đối tác")]
         public async Task<IActionResult> Index()
         {
             var response = await _partnerService.All();
@@ -41,6 +43,7 @@ namespace InventoryManagement.Controllers
             return BadRequest();
         }
 
+        [Breadcrumb("Thông tin chi tiết", "Đối tác")]
         public async Task<IActionResult> Detail(string id)
         {
             var partner = await _partnerService.Get(id);
@@ -60,6 +63,7 @@ namespace InventoryManagement.Controllers
             return View(model);
         }
 
+        [Breadcrumb("Thêm mới", "Đối tác")]
         public IActionResult Create()
         {
             return View();
@@ -83,6 +87,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Đối tác")]
         public async Task<IActionResult> Update(string id)
         {
             var res = await _partnerService.Get(id);
