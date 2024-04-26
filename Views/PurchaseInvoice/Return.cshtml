@@ -20,7 +20,7 @@
                     <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
                             <td>Nhân viên lập</td>
-                            <td>Đối tác</td>
+                            <td>Khách hàng</td>
                             <td>Tình trạng</td>
                             <td>Ngày lập</td>
                             <td>Ngày sửa</td>
@@ -34,11 +34,15 @@
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.PartnerName)</td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Customer", new { id = item.CustomerId })">
+                                        @Html.DisplayFor(modelItem => item.CustomerName)
+                                    </a>
+                                </td>
                                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CreateAt)</td>
-                                <td>@Html.DisplayFor(modelItem => item.UpdateAt)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Total) VNĐ</td>
+                                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UpdateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalToVND) VNĐ</td>
                                 <td align="center"><a href="@Url.Action("Detail", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 <td align="center"><a href="@Url.Action("Delete", "PurchaseInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>

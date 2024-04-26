@@ -165,11 +165,8 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
-        public async Task<IActionResult> CreateReturn()
+        public IActionResult CreateReturn()
         {
-            var partners = await _partnerService.All();
-            ViewBag.Partners = partners.data;
-
             return View();
         }
 
@@ -178,9 +175,6 @@ namespace InventoryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var partners = await _partnerService.All();
-                ViewBag.Partners = partners.data;
-
                 return View(request);
             }
 

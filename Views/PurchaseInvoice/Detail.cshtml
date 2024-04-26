@@ -24,26 +24,41 @@
                 <td class="td2"><input readonly value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
             </tr>
             <tr>
-                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
-                <td class="td2"><input readonly value="@invoice.PartnerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                @{
+                    if (Model.PurchaseInvoiceViewModel.InvoiceType == InvoiceTypeEnum.Invoice)
+                    {
+                        <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+                        <td class="td2"><input readonly value="@invoice.PartnerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                    }
+                    else
+                    {
+                        <td class="td1"><div style="width:105px;">Khách hàng:</div></td>
+                        <td class="td2"><input readonly value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                    }
+                }
             </tr>
-            <tr>
-                <td class="td1">Phương thức thanh toán: </td>
-                <td class="td2">
-                    <select>
-                        <option value="null" disabled>Chọn phương thức thanh toán..........</option>
-                        @{
-                            var paymentMethods = Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>();
+            @{
+                if (Model.PurchaseInvoiceViewModel.InvoiceType == InvoiceTypeEnum.Invoice)
+                {
+                    <tr>
+                        <td class="td1">Phương thức thanh toán: </td>
+                        <td class="td2">
+                            <select>
+                                <option value="null" disabled>Chọn phương thức thanh toán..........</option>
+                                @{
+                                    var paymentMethods = Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>();
 
-                            foreach (var paymentMethod in paymentMethods)
-                            {
-                                var isSelect = invoice.PaymentMethod == paymentMethod;
-                                <option selected="@isSelect" value="@paymentMethod">@paymentMethod</option>
-                            }
-                        }
-                    </select>
-                </td>
-            </tr>
+                                    foreach (var paymentMethod in paymentMethods)
+                                    {
+                                        var isSelect = invoice.PaymentMethod == paymentMethod;
+                                        <option selected="@isSelect" value="@paymentMethod">@paymentMethod</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            }
             <tr>
                 <td class="td1">Trạng Thái: </td>
                 <td class="td2">
@@ -72,10 +87,17 @@
                             <tr>
                                 <th style="display: none"></th>
                                 <th class="th">Sản phẩm</th>
-                                <th class="th">Giá mua</th>
+                                @{
+                                    var colspan = 2;
+                                    @if (Model.PurchaseInvoiceViewModel.InvoiceType == InvoiceTypeEnum.Invoice)
+                                    {
+                                        colspan = 3;
+                                        <th class="th">Giá mua</th>
+                                    }
+                                }
                                 <th class="th">Số lượng</th>
                                 <th class="th">Đơn vị tính</th>
-                                <th class="th"></th>
+                                <th class="th">Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody class="tbody">
@@ -83,7 +105,10 @@
                             {
                                 <tr>
                                     <td class="td">@item.MerchandiseName</td>
-                                    <td class="td">@item.PurchasePriceToVND</td>
+                                    @if (Model.PurchaseInvoiceViewModel.InvoiceType == InvoiceTypeEnum.Invoice)
+                                    {
+                                        <td class="td">@item.PurchasePriceToVND</td>
+                                    }
                                     <td class="td">@item.Quantity</td>
                                     <td class="td">@item.Unit</td>
                                     <td class="td">@item.SubTotalToVND</td>
@@ -93,7 +118,7 @@
                         <tfoot class="tfoot">
                             <tr>
                                 <th class="th"></th>
-                                <th class="th" colspan="3">Totals</th>
+                                <th class="th" colspan="@colspan">Totals</th>
                                 <td class="td">@invoice.TotalToVND VNĐ</td>
                             </tr>
                         </tfoot>

@@ -1,6 +1,6 @@
 ﻿@model InventoryManagement.Models.PurchaseInvoiceModels.CreatePurchaseInvoiceReturnRequest
 @{
-    ViewData["Title"] = "Tạo phiếu trả hàng NCC";
+    ViewData["Title"] = "Tạo phiếu hoàn hàng từ KH";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,20 +15,8 @@
                 </td>
             </tr>
             <tr>
-                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
-                <td class="td2">
-                    <select class="select2" asp-for="PartnerId" style="width:200px;">
-                        <option value="null" selected disabled>Chọn đối tác..........</option>
-                        @{
-                            var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
-
-                            foreach (var partner in partners)
-                            {
-                                <option value="@partner.Id">@partner.FullName</option>
-                            }
-                        }
-                    </select>
-                </td>
+                <td class="td1"><div style="width:105px;">Số điện thoại:</div></td>
+                <td class="td2"><input type="text" asp-for="CustomerPhoneNumber" class="textbox" style="width:250px;"/></td>
             </tr>
             <tr>
                 <td class="td1">Ghi chú:</td>
@@ -47,13 +35,12 @@
                             <tr>
                                 <th style="display: none"></th>
                                 <th class="th">Tên sản phẩm</th>
-                                <th class="th">Giá mua</th>
                                 <th class="th">Số lượng</th>
                                 <th class="th">Đơn vị tính</th>
                                 <th class="th"></th>
                             </tr>
                         </thead>
-                        <tbody class="tbody hide-first"></tbody>
+                        <tbody class="tbody hide-first hide-second"></tbody>
                     </table>
                 </td>
             </tr>
@@ -146,16 +133,16 @@
                         var newCell = newRow.insertCell(i);
                         var input = document.createElement('input');
 
-                        input.type = ['hidden', 'text', 'number', 'number', 'text'][i];
-                        input.name = 'MerchandisePurchaseInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'PurchasePrice', 'Quantity', 'Unit'][i];
+                        input.type = ['hidden', 'hidden', 'text', 'number', 'text'][i];
+                        input.name = 'MerchandisePurchaseInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'PurchasePrice',  'Name', 'Quantity', 'Unit'][i];
 
-                        input.className = ['id hide', 'td name', 'td price', 'td quantity', 'td unit'][i];
+                        input.className = ['id hide', 'td price', 'td name', 'td quantity', 'td unit'][i];
 
                         newCell.appendChild(input);
                         cells.push(newCell);
 
                         var inputValue = document.getElementsByName(input.name)[0];
-                        inputValue.value = [foundProduct.id, foundProduct.name, parseFloat(foundProduct.price), quantity, foundProduct.unit][i];
+                        inputValue.value = [foundProduct.id, parseFloat(foundProduct.price), foundProduct.name, quantity, foundProduct.unit][i];
                     }
 
                     var removeButtonCell = newRow.insertCell(5);

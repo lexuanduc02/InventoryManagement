@@ -11,6 +11,7 @@ namespace InventoryManagement.Services.Contractors
         public Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> AllAsync(InvoiceTypeEnum invoiceType);
         public Task<ServiceResponseModel<SaleInvoiceViewModel>> GetAsync(string id);
         public Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> GetByCustomerIdAsync(string id, InvoiceTypeEnum invoiceType = InvoiceTypeEnum.Invoice);
+        public Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> GetReturnInvoiceByPartnerIdAsync(string id);
         public Task<ServiceResponseModel<bool>> UpdateAsync(UpdateSaleInvoiceRequest request);
         public Task<ServiceResponseModel<bool>> DeleteAsync(string id);
 

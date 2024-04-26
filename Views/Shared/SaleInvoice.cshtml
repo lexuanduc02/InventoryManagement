@@ -742,7 +742,7 @@
                         <tr>
                             <td class="w-full align-top">
                                 <div>
-                                    <img src="/iconcp/logo.png" class="h-12" />
+                                    <img src="https://danielwilliam.live/iconcp/logo.png" class="h-12" />
                                 </div>
                             </td>
 
@@ -789,10 +789,19 @@
                             </td>
                             <td class="w-1/2 align-top text-right">
                                 <div class="text-sm text-neutral-600">
-                                    <p class="font-bold">Customer Infor</p>
-                                    <p>Name: @Model.SaleInvoiceViewModel.CustomerName</p>
-                                    <p>Number: @Model.SaleInvoiceViewModel.CustomerPhoneNumber</p>
-                                    <p>Address:</p>
+                                    @{
+                                        if (Model.SaleInvoiceViewModel.InvoiceType == InventoryManagement.Commons.Enums.InvoiceTypeEnum.Invoice)
+                                        {
+                                            <p class="font-bold">Customer Infor</p>
+                                            <p>Name: @Model.SaleInvoiceViewModel.CustomerName</p>
+                                            <p>Number: @Model.SaleInvoiceViewModel.CustomerPhoneNumber</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="font-bold">Partner Infor</p>
+                                            <p>Name: @Model.SaleInvoiceViewModel.PartnerName</p>
+                                        }
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -879,8 +888,18 @@
                     <p>@Model.SaleInvoiceViewModel.UserName</p>
                 </div>
                 <div class="customer-signature">
-                    <p class="signature-heading">Customer Signature</p>
-                    <p>@Model.SaleInvoiceViewModel.CustomerName</p>
+                    @{
+                        if (Model.SaleInvoiceViewModel.InvoiceType == InventoryManagement.Commons.Enums.InvoiceTypeEnum.Invoice)
+                        {
+                            <p class="signature-heading">Customer Signature</p>
+                            <p>@Model.SaleInvoiceViewModel.CustomerName</p>
+                        }
+                        else
+                        {
+                            <p class="signature-heading">Partner Signature</p>
+                            <p>@Model.SaleInvoiceViewModel.PartnerName</p>
+                        }
+                    }
                 </div>
             </div>
 
@@ -898,11 +917,11 @@
                 </p>
             </div>
             <footer class="fixed bottom-0 left-0 bg-slate-100 w-full text-neutral-600 text-center text-xs py-3">
-                Supplier Company
+                KPM Tech Co., Ltd.
                 <span class="text-slate-300 px-2">|</span>
-                info@company.com
+                https://kpmtech.com.vn/
                 <span class="text-slate-300 px-2">|</span>
-                +1-202-555-0106
+                0965405843
             </footer>
         </div>
     </div>

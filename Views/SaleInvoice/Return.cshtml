@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<InventoryManagement.Models.SaleInvoiceModels.SaleInvoiceViewModel>
 
 @{
-    ViewData["Title"] = "Danh sách phiếu trả hàng";
+    ViewData["Title"] = "Danh sách phiếu trả hàng NCC";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -21,10 +21,10 @@
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
                             <td style="width:10px;"></td>
                             <td>Nhân viên lập</td>
-                            <td>Khách hàng</td>
-                            <td>Số điện thoại</td>
+                            <td>Đối tác</td>
                             <td>Tình trạng</td>
                             <td>Ngày lập</td>
+                            <td>Tổng tiền</td>
                             <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
                         </tr>
@@ -35,10 +35,12 @@
                             <tr>
                                 <td align="center"><input id="dtgrView_chkHot_0" type="checkbox" name="dtgrView$ctl03$chkHot"></td>
                                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CustomerPhoneNumber)</td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Partner", new { id = item.PartnerId})">@Html.DisplayFor(modelItem => item.PartnerName)</a>
+                                </td>
                                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                                <td>@Html.DisplayFor(modelItem => item.CreateAt)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalToVND)</td>
                                 <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 <td align="center"><a href="@Url.Action("Delete", "SaleInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
                             </tr>

@@ -102,14 +102,17 @@ namespace InventoryManagement.Services
                 var data = await _unitOfWork.ReportRepository.PurchaseReport(startDate, endDate);
 
                 var totalAmount = (float)0;
-                var originalTotalAmount = (float)0;
+                var totalReturnAmount = (float)0;
 
                 foreach ( var item in data)
                 {
-                    if(item.InvoiceType == Commons.Enums.InvoiceTypeEnum.Invoice)
+                    if (item.InvoiceType == Commons.Enums.InvoiceTypeEnum.Invoice)
                     {
                         totalAmount += item.Total;
-                        originalTotalAmount += item.Total;
+                    }
+                    else
+                    {
+                        totalReturnAmount += item.Total;
                     }
                 }
 
@@ -119,7 +122,7 @@ namespace InventoryManagement.Services
                     EndDate = endDate,
                     Details = data,
                     TotalAmount = totalAmount,
-                    OriginalTotalAmount = originalTotalAmount,
+                    TotalReturnAmount = totalReturnAmount
                 };
 
                 response.data = reportData;
@@ -147,6 +150,7 @@ namespace InventoryManagement.Services
 
                 var totalAmount = (float)0;
                 var originalTotalAmount = (float)0;
+                var totalReturnAmount = (float)0;
 
                 foreach (var item in data)
                 {
@@ -154,6 +158,9 @@ namespace InventoryManagement.Services
                     {
                         totalAmount += item.Total;
                         originalTotalAmount += item.OriginalTotal;
+                    } else
+                    {
+                        totalReturnAmount += item.Total;
                     }
                 }
 
@@ -163,6 +170,7 @@ namespace InventoryManagement.Services
                     EndDate = endDate,
                     Details = data,
                     TotalAmount = totalAmount,
+                    TotalReturnAmount = totalReturnAmount,
                     OriginalTotalAmount = originalTotalAmount,
                 };
 
