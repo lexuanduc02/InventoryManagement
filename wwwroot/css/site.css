@@ -17,8 +17,20 @@ body {
     font-size: 12px;
 }
 
+.breadcrumb {
+    margin-bottom: 0 !important;
+}
+
+.main-content-nav {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 3px;
+    border-bottom: #95b3de 1px solid;
+    margin-bottom: 10px;
+}
+
 form,
-#form1{
+#form1 {
     padding: 0px;
     margin: 0px auto 0px auto;
     width: 100%;
@@ -411,9 +423,6 @@ label.wait {
     .main-content-right .main-title {
         color: #3162a6;
         font-size: 15px !important;
-        border-bottom: #95b3de 1px solid;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
         font-weight: bold;
     }
 

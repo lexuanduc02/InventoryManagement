@@ -1,0 +1,34 @@
+﻿@using InventoryManagement.Models.CommonModels
+@{
+    if (ViewData["Breadcrumb"] != null)
+    {
+        var breadcrumbModel = ViewData["Breadcrumb"] as BreadcrumbViewModel;
+
+        if (!string.IsNullOrEmpty(breadcrumbModel.Path))
+        {
+            var segments = breadcrumbModel.Path.Split("/");
+
+            <div class="page-breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        @{
+                            <li class="breadcrumb"><a asp-controller="@breadcrumbModel.Controller" asp-action="Index">&nbsp> @segments[0]</a></li>
+                            if (segments.Length > 1)
+                            {
+                                for (var i = 1; i < segments.Length; i++)
+                                {
+                                    <li class="breadcrumb-item">
+                                        &nbsp> @segments[i]
+                                    </li>
+                                }
+                            }
+                        }
+                    </ol>
+                </nav>
+            </div>
+        }
+    }
+}

@@ -2,6 +2,7 @@
 using InventoryManagement.Models.SaleInvoiceModels;
 using InventoryManagement.Services;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SelectPdf;
@@ -30,6 +31,7 @@ namespace InventoryManagement.Controllers
             _partnerService = partnerService;
         }
 
+        [Breadcrumb("", "Hóa đơn xuất")]
         public async Task<IActionResult> Index()
         {
             var res = await _saleInvoiceService.AllAsync(InvoiceTypeEnum.Invoice);
@@ -39,6 +41,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("Chi tiết", "Hóa đơn xuất")]
         public async Task<IActionResult> Detail(string id)
         {
             var getInvoiceRes = await _saleInvoiceService.GetAsync(id);
@@ -64,6 +67,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("Thêm mới", "Hóa đơn xuất")]
         public IActionResult Create()
         {
             return View();
@@ -87,6 +91,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Xác nhận thông tin hóa đơn", "Hóa đơn xuất")]
         public IActionResult Confirm(CreateSaleInvoiceRequest request)
         {
             if(!ModelState.IsValid)
@@ -97,6 +102,7 @@ namespace InventoryManagement.Controllers
             return View(request);
         }
 
+        [Breadcrumb("Cập nhật", "Hóa đơn xuất")]
         public async Task<IActionResult> Update(string id)
         {
             var getInvoiceRes = await _saleInvoiceService.GetAsync(id);
@@ -155,6 +161,7 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
+        [Breadcrumb("Thêm mới", "Trả hàng NCC")]
         public async Task<IActionResult> CreateReturn()
         {
             var partners = await _partnerService.All();

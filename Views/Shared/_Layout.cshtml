@@ -29,7 +29,7 @@
             <tbody>
                 <tr>
                     <td class="main-content-left">
-                        <div style="border-bottom: #95b3de 1px solid; text-align:center; padding:5px;"><a asp-controller="Product" asp-action="Index">Control Panel Home</a></div>
+                        <div style="border-bottom: #95b3de 1px solid; text-align:center; padding:5px;"><a asp-controller="Home" asp-action="Index">Control Panel Home</a></div>
                         <div style="border-top: #ffffff 1px solid; height:10px;"><img src="/iconcp/null.gif"></div>
                         <div class="col-left">
                             <div class="title-left">Quản lý danh mục</div>
@@ -67,7 +67,10 @@
                         </div>
                     </td>
                     <td class="main-content-right">
-                        <h1 class="main-title"><span id="lblLink">@ViewData["Title"]</span></h1>
+                        <div class="main-content-nav">
+                            <h1 class="main-title"><span id="lblLink">@ViewData["Title"]</span></h1>
+                            @await Html.PartialAsync("~/Views/Shared/_Breadcrumb.cshtml")
+                        </div>
                         @RenderBody()
                     </td>
                 </tr>

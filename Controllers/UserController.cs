@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.UserModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace InventoryManagement.Controllers
             _roleService = roleService;
         }
 
+        [Breadcrumb("", "Nhân viên")]
         public async Task<IActionResult> Index()
         {
             var res = await _userService.All();
@@ -24,6 +26,7 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        [Breadcrumb("Thêm mới", "Nhân viên")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Roles = (await _roleService.All()).data;
@@ -51,6 +54,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Nhân viên")]
         public async Task<IActionResult> Update(string id) 
         {
             var res = await _userService.Get(id);

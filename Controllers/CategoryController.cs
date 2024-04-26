@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Models.CategoryModels;
 using InventoryManagement.Services.Contractors;
+using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace InventoryManagement.Controllers
             _categoryService = categoryService;
         }
 
+        [Breadcrumb("", "Nhóm hàng")]
         public async Task<IActionResult> Index()
         {
             var response = await _categoryService.All();
@@ -24,6 +26,7 @@ namespace InventoryManagement.Controllers
             return View(response.data);
         }
 
+        [Breadcrumb("Thêm mới", "Nhóm hàng")]
         public IActionResult Create() 
         { 
             return View();
@@ -47,6 +50,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Breadcrumb("Cập nhật", "Nhóm hàng")]
         public async Task<IActionResult> Update(string id)
         {
             var res = await _categoryService.Get(id);
