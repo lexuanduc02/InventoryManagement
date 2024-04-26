@@ -44,8 +44,8 @@
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                 <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.DisplayFor(modelItem => item.CreateAt)</td>
-                <td>@Html.DisplayFor(modelItem => item.Total) VNĐ</td>
+                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalToVND)</td>
                 <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
             </tr>
         }
@@ -57,7 +57,6 @@
     <thead>
         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
             <td>Nhân viên lập</td>
-            <td>Phương thức thanh toán</td>
             <td>Tình trạng</td>
             <td>Ngày lập</td>
             <td>Tổng tiền</td>
@@ -69,11 +68,10 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.DisplayFor(modelItem => item.CreateAt)</td>
-                <td>@Html.DisplayFor(modelItem => item.Total) VNĐ</td>
-                <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalToVND) VNĐ</td>
+                <td align="center"><a href="@Url.Action("Detail", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
             </tr>
         }
     </tbody>

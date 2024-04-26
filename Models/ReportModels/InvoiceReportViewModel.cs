@@ -8,6 +8,7 @@ namespace InventoryManagement.Models.ReportModels
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public float TotalAmount { get; set; }
+        public float TotalReturnAmount { get; set; }
         public float OriginalTotalAmount { get; set; }
         public List<ProductExportImportDetail> Details { get; set; }
 
@@ -32,6 +33,14 @@ namespace InventoryManagement.Models.ReportModels
             get
             {
                 return TotalAmount.FormatVietnameseCurrency();
+            }
+        }
+
+        public string TotalReturnAmountToVND
+        {
+            get
+            {
+                return TotalReturnAmount.FormatVietnameseCurrency();
             }
         }
 

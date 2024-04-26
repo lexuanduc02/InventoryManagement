@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Models.PurchaseInvoiceModels;
+using InventoryManagement.Models.SaleInvoiceModels;
 
 namespace InventoryManagement.Models.PartnerModels
 {
@@ -6,6 +7,6 @@ namespace InventoryManagement.Models.PartnerModels
     {
         public PartnerViewModel Partner { get; set; }
         public List<PurchaseInvoiceViewModel> PurchaseInvoices { get; set; }
-        public List<PurchaseInvoiceViewModel> ReturnInvoices { get; set; }
+        public List<SaleInvoiceViewModel> ReturnInvoices { get; set; }
     }
 }

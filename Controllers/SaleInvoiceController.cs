@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Commons.Enums;
 using InventoryManagement.Models.SaleInvoiceModels;
+using InventoryManagement.Services;
 using InventoryManagement.Services.Contractors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,19 @@ namespace InventoryManagement.Controllers
         private readonly IMerchandiseSaleInvoiceService _merchandiseSaleInvoiceService;
         private readonly IPartialViewService _partialViewService;
         private readonly IPdfService _pdfService;
+        private readonly IPartnerService _partnerService;
 
         public SaleInvoiceController(ISaleInvoiceService saleInvoiceService, 
             IMerchandiseSaleInvoiceService merchandiseSaleInvoiceService,
             IPartialViewService partialViewService,
-            IPdfService pdfService)
+            IPdfService pdfService,
+            IPartnerService partnerService)
         {
             _saleInvoiceService = saleInvoiceService;
             _merchandiseSaleInvoiceService = merchandiseSaleInvoiceService;
             _partialViewService = partialViewService;
             _pdfService = pdfService;
+            _partnerService = partnerService;
         }
 
         public async Task<IActionResult> Index()
@@ -151,8 +155,11 @@ namespace InventoryManagement.Controllers
             return View(data);
         }
 
-        public IActionResult CreateReturn()
+        public async Task<IActionResult> CreateReturn()
         {
+            var partners = await _partnerService.All();
+            ViewBag.Partners = partners.data;
+
             return View();
         }
 
@@ -161,6 +168,8 @@ namespace InventoryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var partners = await _partnerService.All();
+                ViewBag.Partners = partners.data;
                 return View(request);
             }
 
@@ -168,6 +177,8 @@ namespace InventoryManagement.Controllers
 
             if (!res.isSuccess)
             {
+                var partners = await _partnerService.All();
+                ViewBag.Partners = partners.data;
                 return View(request);
             }
 

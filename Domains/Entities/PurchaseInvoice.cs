@@ -12,8 +12,11 @@ namespace InventoryManagement.Domains.Entities
         public Guid UserId { get; set; }
         public User User { get; set; }
 
-        public Guid PartnerId { get; set; }
-        public Partner Partner { get; set; }
+        public Guid? PartnerId { get; set; }
+        public Partner? Partner { get; set; }
+
+        public Guid? CustomerId { get; set; }
+        public Customer? Customer { get; set; }
 
         public PaymentMethodEnum PaymentMethod { get; set; }
         public InvoiceStatusEnum Status { get; set; }

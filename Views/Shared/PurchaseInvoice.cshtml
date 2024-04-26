@@ -742,7 +742,7 @@
                         <tr>
                             <td class="w-full align-top">
                                 <div>
-                                    <img src="/iconcp/logo.png" class="h-12" />
+                                    <img src="https://danielwilliam.live/iconcp/logo.png" class="h-12" />
                                 </div>
                             </td>
 
@@ -785,6 +785,22 @@
                                     <p>National Highway 1A, Ninh Hiep Commune</p>
                                     <p>Gia Lam District, Hanoi</p>
                                     <p>Receiving Clerk: @Model.PurchaseInvoiceViewModel.UserName</p>
+                                </div>
+                            </td>
+                            <td class="w-1/2 align-top text-right">
+                                <div class="text-sm text-neutral-600">
+                                    @{
+                                        if (Model.PurchaseInvoiceViewModel.InvoiceType == InventoryManagement.Commons.Enums.InvoiceTypeEnum.ReturnInvoice)
+                                        {
+                                            <p class="font-bold">Customer Infor</p>
+                                            <p>Name: @Model.PurchaseInvoiceViewModel.CustomerName</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="font-bold">Partner Infor</p>
+                                            <p>Name: @Model.PurchaseInvoiceViewModel.PartnerName</p>
+                                        }
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -871,15 +887,24 @@
                     <p>@Model.PurchaseInvoiceViewModel.UserName</p>
                 </div>
                 <div class="customer-signature">
-                    <p class="signature-heading">Manager Signature</p>
-                    <p>......</p>
+                    @{
+                        if (Model.PurchaseInvoiceViewModel.InvoiceType == InventoryManagement.Commons.Enums.InvoiceTypeEnum.ReturnInvoice)
+                        {
+                            <p class="signature-heading">Customer Signature</p>
+                            <p>@Model.PurchaseInvoiceViewModel.CustomerName</p>
+                        }
+                        else
+                        {
+                            <p class="signature-heading">Manager Signature</p>
+                            <p>......</p>
+                        }
+                    }
                 </div>
             </div>
 
             <div class="px-14 text-sm text-neutral-700">
                 <p class="text-main font-bold">INVOICE DETAILS</p>
                 <p>Payment Method: @Model.PurchaseInvoiceViewModel.PaymentMethod</p>
-                </p>
             </div>
 
             <div class="px-14 py-10 text-sm text-neutral-700">

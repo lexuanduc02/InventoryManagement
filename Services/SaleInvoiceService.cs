@@ -47,12 +47,17 @@ namespace InventoryManagement.Services
                             from user in usi.DefaultIfEmpty()
                             join c in _context.Customers on sale.CustomerId equals c.Id into csi
                             from customer in csi.DefaultIfEmpty()
+                            join p in _context.Partners on sale.PartnerId equals p.Id into psi
+                            from partner in psi.DefaultIfEmpty()
                             where sale.IsActive == ActiveEnum.Active && sale.InvoiceType == invoiceType
-                            group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName , customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
+                            group new { merchandise, m, sale, user, customer, partner } 
+                            by new { sale.Id, user.FullName, cid = customer.Id, pid = partner.Id, pn = partner.FullName, pp = partner.PhoneNumber, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
                                 SaleInvoiceId = grouped.Key.Id,
                                 UserName = grouped.Key.FullName,
+                                PartnerName = grouped.Key.pn,
+                                PartnerId = grouped.Key.pid,
                                 CustomerName = grouped.Key.cm,
                                 CustomerPhoneNumber = grouped.Key.PhoneNumber,
                                 PaymentMethod = grouped.Key.PaymentMethod,
@@ -71,6 +76,8 @@ namespace InventoryManagement.Services
                         UserName = x.UserName,
                         CustomerName = x.CustomerName,
                         CustomerPhoneNumber= x.CustomerPhoneNumber,
+                        PartnerName = x.PartnerName,
+                        PartnerId = x.PartnerId.ToString(),
                         PaymentMethod = x.PaymentMethod,
                         Status = x.Status,
                         Note = x.Note,
@@ -188,28 +195,19 @@ namespace InventoryManagement.Services
 
             try
             {
-                var customer = await _customerService.GetByPhoneAsync(request.CustomerPhoneNumber.ToString());
+                var customer = await _context.Partners.FirstOrDefaultAsync(x => x.Id.ToString() == request.PartnerId);
 
-                if (customer.data == null)
+                if (customer == null)
                 {
-                    response.Message = "Không tìm thấy thông tin khác hàng";
+                    response.Message = "Không tìm thấy thông tin đối tác!";
                     return response;
                 }
-
-                var checkExitInvoice = _context.SaleInvoices.Where(x => x.CustomerId.ToString() == request.CustomerId);
-                if(!checkExitInvoice.Any()) 
-                {
-                    response.Message = "Khách hàng chưa mua hàng!";
-                    return response;
-                }
-
-                request.CustomerId = customer.data.Id.ToString();
 
                 var invoiceDetails = request.MerchandiseSaleInvoices;
                 var saleInvoice = new SaleInvoice()
                 {
                     UserId = new Guid(request.UserId),
-                    CustomerId = new Guid(request.CustomerId),
+                    PartnerId = new Guid(request.PartnerId),
                     Status = request.Status,
                     Note = request.Note,
                     CreateAt = request.CreateAt,
@@ -221,6 +219,7 @@ namespace InventoryManagement.Services
                         MerchandiseId = x.MerchandiseId,
                         Quantity = x.Quantity,
                         IsActive = x.IsActive,
+                        SellingPrice = x.SellingPrice,
                     }).ToList(),
                 };
 
@@ -234,7 +233,7 @@ namespace InventoryManagement.Services
                 var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
                 {
                     Id = x.MerchandiseId.ToString(),
-                    Quantity = x.Quantity,
+                    Quantity = -x.Quantity,
                 }).ToList();
 
                 var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);
@@ -293,9 +292,9 @@ namespace InventoryManagement.Services
             }
         }
 
-        public async Task<ServiceResponseModel<SaleInvoiceViewModel>> GetAsync(string id)
+        public async Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> GetReturnInvoiceByPartnerIdAsync(string id)
         {
-            var response = new ServiceResponseModel<SaleInvoiceViewModel>()
+            var response = new ServiceResponseModel<List<SaleInvoiceViewModel>>()
             {
                 isSuccess = false,
             };
@@ -309,17 +308,17 @@ namespace InventoryManagement.Services
                             from sale in msi.DefaultIfEmpty()
                             join u in _context.Users on sale.UserId equals u.Id into usi
                             from user in usi.DefaultIfEmpty()
-                            join c in _context.Customers on sale.CustomerId equals c.Id into csi
-                            from customer in csi.DefaultIfEmpty()
-                            where sale.IsActive == ActiveEnum.Active 
-                            && sale.Id.ToString() == id
-                            group new { merchandise, m, sale, user, customer } by new { sale.Id, user.FullName, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt, sale.InvoiceType } into grouped
+                            join p in _context.Partners on sale.PartnerId equals p.Id into psi
+                            from partner in psi.DefaultIfEmpty()
+                            where sale.PartnerId.ToString() == id
+                            && sale.InvoiceType == InvoiceTypeEnum.ReturnInvoice
+                            group new { merchandise, m, sale, user, partner } by new { sale.Id, user.FullName, cm = partner.FullName, partner.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt, sale.InvoiceType } into grouped
                             select new
                             {
                                 SaleInvoiceId = grouped.Key.Id,
                                 UserName = grouped.Key.FullName,
-                                CustomerName = grouped.Key.cm,
-                                CustomerPhoneNumber = grouped.Key.PhoneNumber,
+                                PartnerName = grouped.Key.cm,
+                                PartnerPhoneNumber = grouped.Key.PhoneNumber,
                                 PaymentMethod = grouped.Key.PaymentMethod,
                                 InvoiceType = grouped.Key.InvoiceType,
                                 Status = grouped.Key.Status,
@@ -335,8 +334,8 @@ namespace InventoryManagement.Services
                     {
                         Id = x.SaleInvoiceId.ToString(),
                         UserName = x.UserName,
-                        CustomerName = x.CustomerName,
-                        CustomerPhoneNumber = x.CustomerPhoneNumber,
+                        CustomerName = x.PartnerName,
+                        CustomerPhoneNumber = x.PartnerName,
                         PaymentMethod = x.PaymentMethod,
                         InvoiceType = x.InvoiceType,
                         Status = x.Status,
@@ -344,6 +343,80 @@ namespace InventoryManagement.Services
                         ShippingCarrier = x.ShippingCarrier,
                         CreateAt = x.CreateAt,
                         Total = x.Total,
+                    }).ToListAsync();
+
+                if (data != null)
+                {
+                    response.isSuccess = true;
+                    response.data = data;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                return response;
+            }
+        }
+
+        public async Task<ServiceResponseModel<SaleInvoiceViewModel>> GetAsync(string id)
+        {
+            var response = new ServiceResponseModel<SaleInvoiceViewModel>()
+            {
+                isSuccess = false,
+            };
+
+            try
+            {
+                var query = from m in _context.Merchandises
+                            join ms in _context.MerchandiseSaleInvoices on m.Id equals ms.MerchandiseId into mms
+                            from merchandise in mms.DefaultIfEmpty()
+                            join si in _context.SaleInvoices on merchandise.SaleInvoiceId equals si.Id into msi
+                            from sale in msi.DefaultIfEmpty()
+                            where sale.Id.ToString() == id
+                            join u in _context.Users on sale.UserId equals u.Id into usi
+                            from user in usi.DefaultIfEmpty()
+                            join c in _context.Customers on sale.CustomerId equals c.Id into csi
+                            from customer in csi.DefaultIfEmpty()
+                            join p in _context.Partners on sale.PartnerId equals p.Id into psi
+                            from partner in psi.DefaultIfEmpty()
+                            group new { merchandise, m, sale, user, customer, partner }
+                            by new { sale.InvoiceType, sale.Id, user.FullName, cid = customer.Id, pid = partner.Id, pn = partner.FullName, pp = partner.PhoneNumber, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
+                            select new
+                            {
+                                SaleInvoiceId = grouped.Key.Id,
+                                InvoiceType = grouped.Key.InvoiceType,
+                                UserName = grouped.Key.FullName,
+                                PartnerName = grouped.Key.pn,
+                                PartnerId = grouped.Key.pid,
+                                CustomerName = grouped.Key.cm,
+                                CustomerPhoneNumber = grouped.Key.PhoneNumber,
+                                PaymentMethod = grouped.Key.PaymentMethod,
+                                Status = grouped.Key.Status,
+                                Note = grouped.Key.Note,
+                                ShippingCarrier = grouped.Key.ShippingCarrier,
+                                CreateAt = grouped.Key.CreateAt,
+                                UpdateAt = grouped.Key.UpdateAt,
+                                Total = grouped.Sum(x => x.merchandise.Quantity * x.merchandise.SellingPrice * (100 - x.merchandise.Voucher) / 100)
+                            };
+
+                var data = await query
+                    .Select(x => new SaleInvoiceViewModel()
+                    {
+                        Id = x.SaleInvoiceId.ToString(),
+                        UserName = x.UserName,
+                        CustomerName = x.CustomerName,
+                        CustomerPhoneNumber = x.CustomerPhoneNumber,
+                        PartnerName = x.PartnerName,
+                        PartnerId = x.PartnerId.ToString(),
+                        PaymentMethod = x.PaymentMethod,
+                        Status = x.Status,
+                        Note = x.Note,
+                        ShippingCarrier = x.ShippingCarrier,
+                        CreateAt = x.CreateAt,
+                        UpdateAt = x.UpdateAt,
+                        Total = x.Total,
+                        InvoiceType = x.InvoiceType
                     }).FirstOrDefaultAsync();
 
                 if (data != null)

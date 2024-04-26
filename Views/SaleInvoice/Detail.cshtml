@@ -25,14 +25,26 @@
             <td class="td1"><div style="width:105px;">Người lập phiếu:</div></td>
             <td class="td2"><input value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
         </tr>
-        <tr>
-            <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
-            <td class="td2"><input value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
-        </tr>
-        <tr>
-            <td class="td1">Số điện thoại:</td>
-            <td class="td2"><input value="@invoice.CustomerPhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
-        </tr>
+        @{
+            if (Model.SaleInvoiceViewModel.InvoiceType == InvoiceTypeEnum.Invoice)
+            {
+                <tr>
+                    <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                    <td class="td2"><input value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                </tr>
+                <tr>
+                    <td class="td1">Số điện thoại:</td>
+                    <td class="td2"><input value="@invoice.CustomerPhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td class="td1"><div style="width:105px;">Tên đối tác:</div></td>
+                    <td class="td2"><input value="@invoice.PartnerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                </tr>
+            }
+        }
         <tr>
             <td class="td1">Ghi chú:</td>
             <td class="td2"><textarea rows="8" cols="20" class="textbox" style="width:98%;">@invoice.Note</textarea></td>
@@ -56,12 +68,16 @@
                         <tr>
                             <th class="th">Sản phẩm</th>
                             <th class="th">Số lượng</th>
-                            @if (type != InvoiceTypeEnum.ReturnInvoice)
-                            {
-                                <th class="th">Giá bán</th>
-                                <th class="th">Voucher</th>
-                                <th class="th">Thanh toán</th>
+                            @{
+                                var colspan = 1;
+                                if (type != InvoiceTypeEnum.ReturnInvoice)
+                                {
+                                    colspan = 3;
+                                    <th class="th">Giá bán</th>
+                                    <th class="th">Voucher</th>
+                                }
                             }
+                            <th class="th">Thanh toán</th>
                         </tr>
                     </thead>
                     <tbody class="tbody">
@@ -74,21 +90,18 @@
                                 {
                                     <td class="td">@item.SellingPriceToVND</td>
                                     <td class="td">@item.Voucher %</td>
-                                    <td class="td">@item.SubTotalToVND</td>
                                 }
+                                <td class="td">@item.SubTotalToVND</td>
                             </tr>
                         }
                     </tbody>
-                    @if (type != InvoiceTypeEnum.ReturnInvoice)
-                    {
-                        <tfoot class="tfoot">
-                            <tr>
-                                <th class="th"></th>
-                                <th class="th" colspan="3">Totals</th>
-                                <td class="td">@invoice.TotalToVND</td>
-                            </tr>
-                        </tfoot>
-                    }
+                    <tfoot class="tfoot">
+                        <tr>
+                            <th class="th"></th>
+                            <th class="th" colspan="@colspan">Totals</th>
+                            <td class="td">@invoice.TotalToVND</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </td>
         </tr>

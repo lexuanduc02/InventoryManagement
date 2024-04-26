@@ -45,7 +45,7 @@ namespace InventoryManagement.Controllers
         {
             var partner = await _partnerService.Get(id);
             var purchaseInvoice = await _purchaseInvoiceService.GetByPartnerIdAsync(id);
-            var returnInvoice = await _purchaseInvoiceService.GetByPartnerIdAsync(id, Commons.Enums.InvoiceTypeEnum.ReturnInvoice);
+            var returnInvoice = await _saleInvoiceService.GetReturnInvoiceByPartnerIdAsync(id);
 
             if (!partner.isSuccess || !purchaseInvoice.isSuccess || !returnInvoice.isSuccess)
                 return RedirectToAction(nameof(Index));

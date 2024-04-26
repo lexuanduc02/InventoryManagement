@@ -9,6 +9,7 @@
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tr class="tr-view">
             <td class="td-view-right">
+                <a href="@Url.Action("PurchaseReportToPdf", "Report", new { startDate = Model.StartDate, endDate = Model.EndDate})" class="button btn-add">In báo cáo</a>
             </td>
             <td class="td-view-left d-flex align-items-center">
                 <input type="submit" id="btnUpdate1" class="button" value="Lọc">
@@ -26,13 +27,17 @@
                 <td class="td2">@Html.DisplayFor(modelItem => modelItem.EndDateString) - @Html.DisplayFor(modelItem => modelItem.StartDateString)</td>
             </tr>
             <tr>
-                <td class="td1"><div style="width:105px;">Tổng tiền nhập:</div></td>
+                <td class="td1"><div style="width:105px;">Tổng tiền nhập từ NCC:</div></td>
                 <td class="td2">@Html.DisplayFor(modelItem => modelItem.TotalAmountToVND)</td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tổng tiền nhập từ KH:</div></td>
+                <td class="td2">@Html.DisplayFor(modelItem => modelItem.TotalReturnAmountToVND)</td>
             </tr>
         </tbody>
     </table>
 
-    <div class="history-table-title">Danh sách nhập hàng</div>
+    <div class="history-table-title">Báo cáo nhập hàng</div>
     <table class="table table-striped table-bordered dtgrView" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" style="border-style:None;width:100%;border-collapse:collapse;">
         <thead>
             <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
@@ -58,7 +63,7 @@
         </tbody>
     </table>
 
-    <div class="history-table-title">Danh sách trả NCC</div>
+    <div class="history-table-title">Báo cáo nhập hàng trả lại từ KH</div>
     <table class="table table-striped table-bordered dtgrView" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" style="border-style:None;width:100%;border-collapse:collapse;">
         <thead>
             <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">

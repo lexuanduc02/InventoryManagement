@@ -1,6 +1,6 @@
 ﻿@model InventoryManagement.Models.SaleInvoiceModels.CreateSaleReturnInvoiceRequest
 @{
-    ViewData["Title"] = "Tạo phiếu hoàn hàng";
+    ViewData["Title"] = "Trả hàng đối tác";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,42 +14,53 @@
                     <input type="reset" class="button" name="cmdReset" value="Mặc định">
                 </td>
             </tr>
-            <tr>
-                <td class="td1"><div style="width:105px;">Số khách hàng:</div></td>
-                <td class="td2"><input asp-for="CustomerPhoneNumber" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
-            </tr>
-            <tr>
-                <td class="td1">Ghi chú:</td>
-                <td class="td2"><textarea rows="4" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
-            </tr>
-            <tr>
-                <td class="td1">Danh sách sản phẩm: </td>
-                <td class="td2">
-                    <div class="add-product">
-                        <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
-                        <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
-                        <input type="number" placeholder="Số lượng" class="product-quan textbox" />
-                    </div>
-                    <table id="merchandiseTable" class="table">
-                        <thead class="thead">
-                            <tr>
-                                <th style="display: none"></th>
-                                <th class="th">Tên sản phẩm</th>
-                                <th class="th">Số lượng</th>
-                                <th class="th"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="tbody hide-first"></tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="td1">&nbsp;</td>
-                <td class="td1" style="text-align:left;">
-                    <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
-                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
-                </td>
-            </tr>
+        <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+        <td class="td2">
+            <select class="select2" asp-for="PartnerId" style="width:200px;">
+                <option value="null" selected disabled>Chọn đối tác..........</option>
+                @{
+                    var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
+
+                    foreach (var partner in partners)
+                    {
+                        <option value="@partner.Id">@partner.FullName</option>
+                    }
+                }
+            </select>
+        </td>
+        <tr>
+            <td class="td1">Ghi chú:</td>
+            <td class="td2"><textarea rows="4" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
+        </tr>
+        <tr>
+            <td class="td1">Danh sách sản phẩm: </td>
+            <td class="td2">
+                <div class="add-product">
+                    <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
+                    <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                    <input type="number" placeholder="Số lượng" class="product-quan textbox" />
+                </div>
+                <table id="merchandiseTable" class="table">
+                    <thead class="thead">
+                        <tr>
+                            <th style="display: none"></th>
+                            <th style="display: none"></th>
+                            <th class="th">Tên sản phẩm</th>
+                            <th class="th">Số lượng</th>
+                            <th class="th"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody hide-first hide-second"></tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1">&nbsp;</td>
+            <td class="td1" style="text-align:left;">
+                <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
+                <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+            </td>
+        </tr>
         </tbody>
     </table>
 </form>
@@ -127,23 +138,23 @@
                 var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
 
                 if (existingRow.length === 0 ) {
-                    for (var i = 0; i < 3; i++) {
+                    for (var i = 0; i < 4; i++) {
                         var newCell = newRow.insertCell(i);
                         var input = document.createElement('input');
 
-                        input.type = ['hidden', 'text', 'number', 'number'][i];
-                        input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'Quantity'][i];
+                        input.type = ['hidden', 'hidden', 'text', 'number', 'number'][i];
+                        input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'SellingPrice', 'Name', 'Quantity'][i];
 
-                        input.className = ['id hide', 'td name', 'td quantity'][i];
+                        input.className = ['id hide', 'SellingPrice hide', 'td name', 'td quantity'][i];
 
                         newCell.appendChild(input);
                         cells.push(newCell);
 
                         var inputValue = document.getElementsByName(input.name)[0];
-                        inputValue.value = [foundProduct.id, foundProduct.name, quantity, 0][i];
+                        inputValue.value = [foundProduct.id, parseFloat(foundProduct.price), foundProduct.name, quantity, 0][i];
                     }
 
-                    var removeButtonCell = newRow.insertCell(3);
+                    var removeButtonCell = newRow.insertCell(4);
                     var removeButton = document.createElement('button');
                     removeButton.type = 'button';
                     removeButton.classList.add('btnRemoveRow', 'button');

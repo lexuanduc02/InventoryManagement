@@ -9,13 +9,16 @@ namespace InventoryManagement.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
+        private readonly IPurchaseInvoiceService _purchaseInvoiceService;
         private readonly ISaleInvoiceService _saleInvoiceService;
 
         public CustomerController(ICustomerService customerService,
-            ISaleInvoiceService saleInvoiceService)
+            ISaleInvoiceService saleInvoiceService,
+            IPurchaseInvoiceService purchaseInvoiceService)
         {
             _customerService = customerService;
             _saleInvoiceService = saleInvoiceService;
+            _purchaseInvoiceService = purchaseInvoiceService;
         }
 
         public async Task<IActionResult> Index()
@@ -29,7 +32,7 @@ namespace InventoryManagement.Controllers
         {
             var customer = await _customerService.GetAsync(id);
             var invoices = await _saleInvoiceService.GetByCustomerIdAsync(id);
-            var returnInvoices = await _saleInvoiceService.GetByCustomerIdAsync(id, Commons.Enums.InvoiceTypeEnum.ReturnInvoice);
+            var returnInvoices = await _purchaseInvoiceService.GetReturnInvoiceByCustomerIdAsync(id);
 
             if (!customer.isSuccess || !invoices.isSuccess || !returnInvoices.isSuccess)
                 return RedirectToAction(nameof(Index));

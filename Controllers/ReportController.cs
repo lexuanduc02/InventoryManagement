@@ -1,6 +1,4 @@
-﻿using InventoryManagement.Models.SaleInvoiceModels;
-using InventoryManagement.Services;
-using InventoryManagement.Services.Contractors;
+﻿using InventoryManagement.Services.Contractors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -39,6 +37,22 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        public async Task<IActionResult> PurchaseReportToPdf(DateTime startDate, DateTime endDate)
+        {
+            if (startDate == DateTime.MinValue)
+                startDate = DateTime.Now;
+
+            if (endDate == DateTime.MinValue)
+                endDate = startDate.AddMonths(-1);
+
+            var res = await _reportService.PurchaseReport(startDate, endDate);
+
+            var html = await _partialViewService.RenderPartialToStringAsync("InventoryInboundReport", res.data);
+            var bytes = await _pdfService.HtmlToPdf(html);
+
+            return File(bytes, "application/pdf", "inventory_inbound_Report.pdf");
+        }
+
         public async Task<IActionResult> SaleReport(DateTime startDate, DateTime endDate)
         {
             if (startDate == DateTime.MinValue)
@@ -53,6 +67,22 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index", "Home");
 
             return View(res.data);
+        }
+
+        public async Task<IActionResult> SaleReportToPdf(DateTime startDate, DateTime endDate)
+        {
+            if (startDate == DateTime.MinValue)
+                startDate = DateTime.Now;
+
+            if (endDate == DateTime.MinValue)
+                endDate = startDate.AddMonths(-1);
+
+            var res = await _reportService.SaleReport(startDate, endDate);
+
+            var html = await _partialViewService.RenderPartialToStringAsync("InventoryOutboundReport", res.data);
+            var bytes = await _pdfService.HtmlToPdf(html);
+
+            return File(bytes, "application/pdf", "inventory_outbound_Report.pdf");
         }
 
         public async Task<IActionResult> SaleReport2 (DateTime startDate, DateTime endDate)
