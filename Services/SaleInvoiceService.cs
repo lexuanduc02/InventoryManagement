@@ -105,6 +105,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -190,6 +191,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -258,6 +260,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -504,6 +507,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 

@@ -98,6 +98,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Có lỗi trong quá trình thực hiện",
                 isSuccess = false,
             };
 
@@ -119,10 +120,12 @@ namespace InventoryManagement.Services
                 _context.Customers.Update(data);
                 var result = await _context.SaveChangesAsync();
 
-                if (result != 1)
-                    return response;
+                if (result != 0)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Xóa thành công";
+                }
 
-                response.isSuccess = true;
                 return response;
             }
             catch (Exception)
@@ -189,6 +192,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Cập nhật thất bại!",
                 isSuccess = false,
             };
 
@@ -213,6 +217,7 @@ namespace InventoryManagement.Services
                 if (result == 1)
                 {
                     response.isSuccess = true;
+                    response.Message = "Cập nhật thành công";
                     return response;
                 }
 

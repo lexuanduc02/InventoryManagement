@@ -67,6 +67,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Thêm mới thất bại",
                 isSuccess = false,
             };
 
@@ -83,6 +84,7 @@ namespace InventoryManagement.Services
                 if (result == 1)
                 {
                     response.isSuccess = true;
+                    response.Message = "Thêm mới thành công";
                     return response;
                 }
 
@@ -98,6 +100,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Xóa không thành công",
                 isSuccess = false,
             };
 
@@ -123,6 +126,7 @@ namespace InventoryManagement.Services
                     return response;
 
                 response.isSuccess = true;
+                response.Message = "Xóa thành công";
                 return response;
             }
             catch (Exception)
@@ -168,6 +172,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Cập nhật thất bại!",
                 isSuccess = false,
             };
 
@@ -192,6 +197,7 @@ namespace InventoryManagement.Services
                 if(result == 1)
                 {
                     response.isSuccess = true;
+                    response.Message = "Cập nhật thành công!";
                     return response;
                 }
 
@@ -238,7 +244,7 @@ namespace InventoryManagement.Services
                 if (updateProductResult.isSuccess)
                 {
                     response.isSuccess = true;
-                    response.Message = "Tạo phiếu thành công";
+                    response.Message = "Cập nhật thành công";
                     response.data = invoice.Id.ToString();
                 }
 

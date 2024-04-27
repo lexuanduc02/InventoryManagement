@@ -1,4 +1,7 @@
-﻿using InventoryManagement.Models.UserModels;
+﻿using Azure;
+using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.UserModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +24,12 @@ namespace InventoryManagement.Controllers
         [Breadcrumb("", "Nhân viên")]
         public async Task<IActionResult> Index()
         {
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             var res = await _userService.All();
 
             return View(res.data);
@@ -43,13 +52,19 @@ namespace InventoryManagement.Controllers
                 return View(request);
             }
 
-            var response = await _userService.Create(request);
+            var res = await _userService.Create(request);
 
-            if (!response.isSuccess)
+            if (!res.isSuccess)
             {
                 ViewBag.Roles = (await _roleService.All()).data;
                 return View(request);
             }
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -91,14 +106,20 @@ namespace InventoryManagement.Controllers
                 return View(request);
             }
 
-            var response = await _userService.Update(request);
+            var res = await _userService.Update(request);
 
-            if (!response.isSuccess)
+            if (!res.isSuccess)
             {
                 ViewBag.Roles = (await _roleService.All()).data;
-                ModelState.AddModelError("", response.Message != null ? response.Message : "");
+                ModelState.AddModelError("", res.Message != null ? res.Message : "");
                 return View(request);
             }
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -107,19 +128,36 @@ namespace InventoryManagement.Controllers
         {
             var res = await _userService.Delete(id);
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> RecoveryPasswordRequest()
         {
-            var res = await _userService.GetRecoveryPasswordsAsync();
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
 
+            var res = await _userService.GetRecoveryPasswordsAsync();
             return View(res.data);
         }
 
         public async Task<IActionResult> ChangePasswordToDefault(string id)
         {
             var res = await _userService.ChangePasswordToDefaultAsync(id);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(RecoveryPasswordRequest));
         }

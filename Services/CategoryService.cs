@@ -66,6 +66,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Thêm mới thất bại",
                 isSuccess = false,
             };
 
@@ -88,7 +89,7 @@ namespace InventoryManagement.Services
                         FileName = _slugHelper.GenerateSlug(request.Name),
                         With = 1920,
                         Height = 1080,
-                        Folder = "cateegories"
+                        Folder = "categories"
                     };
 
                     var uploadResult = await _imageService.AddImageAsync(image);
@@ -106,6 +107,7 @@ namespace InventoryManagement.Services
                 if (result == 1)
                 {
                     response.isSuccess = true;
+                    response.Message = "Thêm mới thành công";
                     return response;
                 }
 
@@ -121,6 +123,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Xóa không thành công",
                 isSuccess = false,
             };
 
@@ -146,6 +149,7 @@ namespace InventoryManagement.Services
                     return response;
 
                 response.isSuccess = true;
+                response.Message = "Xóa thành công";
                 return response;
             }
             catch (Exception)
@@ -189,6 +193,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Cập nhật thất bại",
                 isSuccess = false,
             };
 
@@ -232,6 +237,7 @@ namespace InventoryManagement.Services
                 if (result == 1)
                 {
                     response.isSuccess = true;
+                    response.Message = "Cập nhật thành công";
                     return response;
                 }
 

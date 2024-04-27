@@ -86,3 +86,15 @@ body {
     color: #fff;
     cursor: pointer;
 }
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.alert-error {
+    margin-bottom: 10px;
+}
+
+.validation-summary-errors ul {
+    list-style: none;
+}

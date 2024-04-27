@@ -1,4 +1,6 @@
-﻿using InventoryManagement.Models.CategoryModels;
+﻿using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CategoryModels;
+using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
@@ -23,26 +25,38 @@ namespace InventoryManagement.Controllers
         {
             var response = await _categoryService.All();
 
+            if (TempData["ToastNotify"] != null)
+            {
+                var tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             return View(response.data);
         }
 
         [Breadcrumb("Thêm mới", "Nhóm hàng")]
         public IActionResult Create() 
-        { 
+        {
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryRequest request)
         {
-            if(!ModelState.IsValid) 
+            if (!ModelState.IsValid) 
             {
                 return View(request);
             }
 
-            var response = await _categoryService.Create(request);
+            var res = await _categoryService.Create(request);
 
-            if (!response.isSuccess)
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
+            if (!res.isSuccess)
             {
                 return View(request);
             }
@@ -55,7 +69,13 @@ namespace InventoryManagement.Controllers
         {
             var res = await _categoryService.Get(id);
 
-            if(!res.isSuccess)
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
+            if (!res.isSuccess)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -79,11 +99,17 @@ namespace InventoryManagement.Controllers
             if (!ModelState.IsValid)
                 return View(request);
 
-            var response = await _categoryService.Update(request);
+            var res = await _categoryService.Update(request);
 
-            if (!response.isSuccess)
+            TempData.Put("ToastNotify", new ToastViewModel()
             {
-                ModelState.AddModelError("", response.Message != null ? response.Message : "");
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
+            if (!res.isSuccess)
+            {
+                ModelState.AddModelError("", res.Message != null ? res.Message : "");
                 return View(request);
             }
 
@@ -93,6 +119,12 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _categoryService.Delete(id);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }

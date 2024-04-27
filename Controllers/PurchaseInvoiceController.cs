@@ -1,4 +1,6 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.PurchaseInvoiceModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
@@ -55,11 +57,15 @@ namespace InventoryManagement.Controllers
         [Breadcrumb("", "Phiếu nhập")]
         public async Task<IActionResult> Index()
         {
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.Invoice);
 
-            var data = res.data;
-
-            return View(data);
+            return View(res.data);
         }
 
         [Breadcrumb("Thêm mới", "Phiếu nhập")]
@@ -94,6 +100,12 @@ namespace InventoryManagement.Controllers
             }
 
             var res = await _purchaseInvoiceService.CreateAsync(request);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             if (!res.isSuccess)
             {
@@ -151,6 +163,12 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction(nameof(Update), new { id = request.Id });
             }
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -159,6 +177,12 @@ namespace InventoryManagement.Controllers
         {
             var res = await _purchaseInvoiceService.DeleteAsync(id);
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -166,10 +190,7 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Return()
         {
             var res = await _purchaseInvoiceService.AllAsync(InvoiceTypeEnum.ReturnInvoice);
-
-            var data = res.data;
-
-            return View(data);
+            return View(res.data);
         }
 
         [Breadcrumb("Tạo phiếu hoàn hàng", "Hoàn hàng")]
@@ -192,6 +213,12 @@ namespace InventoryManagement.Controllers
             {
                 return View(request);
             }
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Return));
         }

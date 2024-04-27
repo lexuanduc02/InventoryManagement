@@ -1,4 +1,6 @@
-﻿using InventoryManagement.Models.PartnerModels;
+﻿using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.PartnerModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,12 @@ namespace InventoryManagement.Controllers
         [Breadcrumb("", "Đối tác")]
         public async Task<IActionResult> Index()
         {
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             var response = await _partnerService.All();
 
             return View(response.data);
@@ -51,7 +59,15 @@ namespace InventoryManagement.Controllers
             var returnInvoice = await _saleInvoiceService.GetReturnInvoiceByPartnerIdAsync(id);
 
             if (!partner.isSuccess || !purchaseInvoice.isSuccess || !returnInvoice.isSuccess)
+            {
+                TempData.Put("ToastNotify", new ToastViewModel()
+                {
+                    IsSuccess = false,
+                    Message = "Không tìm thấy thông tin!",
+                });
+
                 return RedirectToAction(nameof(Index));
+            }
 
             var model = new PartnerDetailViewModel()
             {
@@ -78,6 +94,12 @@ namespace InventoryManagement.Controllers
             }
 
             var response = await _partnerService.Create(request);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = response.isSuccess,
+                Message = response.Message,
+            });
 
             if (!response.isSuccess)
             {
@@ -121,6 +143,12 @@ namespace InventoryManagement.Controllers
 
             var response = await _partnerService.Update(request);
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = response.isSuccess,
+                Message = response.Message,
+            });
+
             if (!response.isSuccess)
             {
                 ModelState.AddModelError("", response.Message != null ? response.Message : "");
@@ -133,6 +161,12 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _partnerService.Delete(id);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }
