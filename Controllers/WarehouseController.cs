@@ -1,4 +1,7 @@
-﻿using InventoryManagement.Models.WarehouseModels;
+﻿using Azure;
+using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.WarehouseModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +34,12 @@ namespace InventoryManagement.Controllers
         [Breadcrumb("", "Kho hàng")]
         public async Task<IActionResult> Index()
         {
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             var response = await _warehouseService.All();
 
             return View(response.data);
@@ -57,6 +66,12 @@ namespace InventoryManagement.Controllers
             {
                 return View(request);
             }
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = response.isSuccess,
+                Message = response.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -97,6 +112,12 @@ namespace InventoryManagement.Controllers
                 return View(request);
             }
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = response.isSuccess,
+                Message = response.Message,
+            });
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -104,6 +125,12 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Delete(string id) 
         {   
             var res = await _warehouseService.Delete(id);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -176,6 +203,12 @@ namespace InventoryManagement.Controllers
         {
 
             var res = await _warehouseService.UpdateInventoryAsync(request);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction("index", "product");
         }

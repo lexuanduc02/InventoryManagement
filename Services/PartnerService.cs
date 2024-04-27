@@ -52,6 +52,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Có lỗi hệ thống trong quá trình thực hiện",
                 isSuccess = false,
             };
 
@@ -63,10 +64,11 @@ namespace InventoryManagement.Services
 
                 var result = await _context.SaveChangesAsync();
 
-                if (result != 1)
-                    return response;
-
-                response.isSuccess = true;
+                if (result != 0)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Thêm mới thành công";
+                }
 
                 return response;
             }
@@ -80,6 +82,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -101,10 +104,11 @@ namespace InventoryManagement.Services
                 _context.Partners.Update(data);
                 var result = await _context.SaveChangesAsync();
 
-                if (result != 1)
-                    return response;
-
-                response.isSuccess = true;
+                if (result != 0)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Xóa thành công";
+                }
                 return response;
             }
             catch (Exception)
@@ -148,6 +152,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Có lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -169,8 +174,9 @@ namespace InventoryManagement.Services
                 _context.Partners.Update(data);
                 var result = await _context.SaveChangesAsync();
 
-                if (result == 1)
+                if (result != 0)
                 {
+                    response.Message = "Cập nhật thành công";
                     response.isSuccess = true;
                     return response;
                 }

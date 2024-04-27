@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims
-@using Microsoft.AspNetCore.Http
+@using InventoryManagement.Models.CommonModels
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1">
@@ -11,6 +11,7 @@
     <link href="~/css/site.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     @RenderSection("Style", required: false)
 </head>
 <body>
@@ -49,7 +50,7 @@
                             <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Index"><img class="imgmid" src="/iconcp/icon_pro.png">Danh sách hóa đơn nhập</a>
                             <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Create"><img class="imgmid" src="/iconcp/icon_pro.png">Nhập kho bán hàng</a>
                             <a class="menuleft" asp-controller="PurchaseInvoice" asp-action="Return"><img class="imgmid" src="/iconcp/icon_pro.png">Nhập hàng trả lại từ KH</a>
-                            
+
                             <div class="title-left">Quản lý tồn kho</div>
                             <a class="menuleft" asp-controller="Warehouse" asp-action="ProductReport"><img class="imgmid" src="/iconcp/icon_pro.png">Theo dõi số lượng tồn kho</a>
                             <a class="menuleft" asp-controller="Warehouse" asp-action="MonthlyProductReport"><img class="imgmid" src="/iconcp/icon_pro.png">Tổng hợp tồn kho</a>
@@ -88,26 +89,35 @@
 </body>
 </html>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="/js/site.js"></script>
 
-<script>
-    let table = new DataTable('#dtgrView', {
-        responsive: true,
-        processing: true,
-        lengthMenu: [15, 25, 50, 100],
-    });
+@{
+    var toastNotify = ViewData["ToastNotify"] as ToastViewModel;
 
-    let history = new DataTable('.dtgrView', {
-        responsive: true,
-        processing: true,
-        lengthMenu: [5, 10],
-    });
+    if (toastNotify != null)
+    {
+        var message = toastNotify.Message;
+        switch (toastNotify.IsSuccess)
+        {
+            case true:
+                <script>
+                    toastr.success('@message');
+                </script>
+                break;
+            case false:
+                <script>
+                    toastr.error('@message');
+                </script>
+                break;
+            default:
+                break;
 
-    $(document).ready(function () {
-        $('.select2').select2();
-    });
-</script>
+        }
+    }
+}
 
 @RenderSection("Scripts", required: false)

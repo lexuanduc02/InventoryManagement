@@ -32,7 +32,8 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Login(LoginRequest request)
         {
             if(!ModelState.IsValid) 
-            { 
+            {
+                ModelState.AddModelError(string.Empty, "Vui lòng điền đầy đủ thông tin!");
                 return View(request);
             }
 
@@ -40,7 +41,7 @@ namespace InventoryManagement.Controllers
 
             if(!res.isSuccess)
             {
-                ModelState.AddModelError("LoginFailed", res.Message);
+                ModelState.AddModelError(string.Empty, res.Message);
                 return View(request);
             }
 
@@ -94,11 +95,18 @@ namespace InventoryManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Vui lòng điền đầy đủ thông tin!");
+                return View(request);
+            }
+
             var res = await _oauthService.ChangePasswordAsync(request);
 
             if(!res.isSuccess)
             {
-                return View(res);
+                ModelState.AddModelError(string.Empty, res.Message);
+                return View(request);
             }
 
             return RedirectToAction(nameof(Login), new { returnUrl = request.ReturnUrl });
@@ -123,12 +131,18 @@ namespace InventoryManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Vui lòng điền đầy đủ thông tin!");
+                return View(request);
+            }
+
             var res = await _oauthService.ForgotPasswordAsync(request);
 
-            if(!res.isSuccess)
+            if (!res.isSuccess)
             {
-                TempData["result"] = res.Message;
-                return View(res);
+                ModelState.AddModelError(string.Empty, res.Message);
+                return View(request);
             }
 
             return RedirectToAction(nameof(Login));

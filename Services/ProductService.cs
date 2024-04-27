@@ -79,6 +79,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -123,12 +124,13 @@ namespace InventoryManagement.Services
                 _context.Merchandises.Add(product);
                 var result = await _context.SaveChangesAsync();
 
-                if (result != 1)
+                if (result == 0)
                 {
                     await _imageService.DeleteImageAsync(_slugHelper.GenerateSlug(request.Name), "products");
                     return response;
                 }
-                
+
+                response.Message = "Thêm mới thành công";
                 response.isSuccess = true;
 
                 return response;
@@ -144,6 +146,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -232,6 +235,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -273,8 +277,11 @@ namespace InventoryManagement.Services
 
                 var result = await _context.SaveChangesAsync();
 
-                if(result == 1)
+                if(result != 0)
+                {
+                    response.Message = "Cập nhật thành công";
                     response.isSuccess = true;
+                }    
 
                 return response;
 

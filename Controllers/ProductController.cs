@@ -1,4 +1,7 @@
-﻿using InventoryManagement.Models.MerchandiseModels;
+﻿using Azure;
+using InventoryManagement.Commons.Extensions;
+using InventoryManagement.Models.CommonModels;
+using InventoryManagement.Models.MerchandiseModels;
 using InventoryManagement.Services.Contractors;
 using InventoryManagement.Ultility;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +39,12 @@ namespace InventoryManagement.Controllers
         [Breadcrumb("", "Sản phẩm")]
         public async Task<IActionResult> Index()
         {
+            if (TempData["ToastNotify"] != null)
+            {
+                ToastViewModel tempData = TempData.Get<ToastViewModel>("ToastNotify");
+                ViewData["ToastNotify"] = tempData;
+            }
+
             var res = await _productService.All();
             return View(res.data);
         }
@@ -67,6 +76,12 @@ namespace InventoryManagement.Controllers
             }
 
             var res = await _productService.Create(request);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             if (!res.isSuccess)
             {
@@ -112,6 +127,12 @@ namespace InventoryManagement.Controllers
 
             var res = await _productService.Update(request);
 
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
+
             if (!res.isSuccess)
                 return View(request);
 
@@ -122,6 +143,12 @@ namespace InventoryManagement.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var res = await _productService.Delete(id);
+
+            TempData.Put("ToastNotify", new ToastViewModel()
+            {
+                IsSuccess = res.isSuccess,
+                Message = res.Message,
+            });
 
             return RedirectToAction(nameof(Index));
         }

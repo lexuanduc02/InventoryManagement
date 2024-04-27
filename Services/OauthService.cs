@@ -75,6 +75,12 @@ namespace InventoryManagement.Services
 
             try
             {
+                if(request.NewPassword != request.ConfirmPassword)
+                {
+                    response.Message = "Mật khẩu mới không trùng khớp";
+                    return response;
+                }
+
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id.ToString() == request.UserId);
                 if (user == null)
                 {

@@ -113,6 +113,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -128,10 +129,11 @@ namespace InventoryManagement.Services
 
                 var result = await _context.SaveChangesAsync();
 
-                if (result != 1)
-                    return response;
-
-                response.isSuccess = true;
+                if (result != 0)
+                {
+                    response.isSuccess = true;
+                    response.Message = "Thêm nhân viên thành công";
+                }
                 return response;
             }
             catch (Exception)
@@ -259,6 +261,7 @@ namespace InventoryManagement.Services
         {
             var response = new ServiceResponseModel<bool>()
             {
+                Message = "Lỗi hệ thống",
                 isSuccess = false,
             };
 
@@ -278,8 +281,11 @@ namespace InventoryManagement.Services
 
                 var result = await _context.SaveChangesAsync();
 
-                if(result == 1)
+                if (result != 0)
+                {
+                    response.Message = "Cập nhật thành công";
                     response.isSuccess = true;
+                }
 
                 return response;
             }
