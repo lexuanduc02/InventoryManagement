@@ -317,13 +317,25 @@ namespace InventoryManagement.Services
                             from customer in csi.DefaultIfEmpty()
                             where purchase.Id.ToString() == id
                             group new { merchandise, m, purchase, user, partner, customer }
-                            by new { invoiceType = purchase.InvoiceType, cn = customer.FullName, ci = customer.Id, purchase.Id, user.FullName, pm = partner.FullName, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
+                            by new { invoiceType = purchase.InvoiceType, 
+                                cn = customer.FullName, 
+                                ci = customer.Id, 
+                                purchase.Id, 
+                                user.FullName, 
+                                pm = partner.FullName, 
+                                pcn = partner.Company,
+                                purchase.PaymentMethod, 
+                                purchase.Status, 
+                                purchase.Note, 
+                                purchase.CreateAt, 
+                                purchase.UpdateAt } into grouped
                             select new
                             {
                                 PurchaseInvoiceId = grouped.Key.Id,
                                 InvoiceType = grouped.Key.invoiceType,
                                 UserName = grouped.Key.FullName,
                                 PartnerName = grouped.Key.pm,
+                                CompanyName = grouped.Key.pcn,
                                 CustomerName = grouped.Key.cn,
                                 CustomerId = grouped.Key.ci,
                                 PaymentMethod = grouped.Key.PaymentMethod,
@@ -341,6 +353,7 @@ namespace InventoryManagement.Services
                         InvoiceType = x.InvoiceType,
                         UserName = x.UserName,
                         PartnerName = x.PartnerName,
+                        CompanyName = x.CompanyName,
                         CustomerName = x.CustomerName,
                         CustomerId = x.CustomerId.ToString(),
                         PaymentMethod = x.PaymentMethod,

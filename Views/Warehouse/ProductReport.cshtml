@@ -13,7 +13,7 @@
                     <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
                             <td>Tên sản phẩm</td>
-                            <td>Giá</td>
+                            <td>Giá bán</td>
                             <td>Số lượng</td>
                             <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
@@ -26,7 +26,7 @@
                             var style = item.Quantity <= 10 ? "background-color: #f81717; color: #fff" : "";
                             <tr style="@style">
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Price) VNĐ</td>
+                                <td>@Html.DisplayFor(modelItem => item.PriceToVND)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Quantity) @Html.DisplayFor(modelItem => item.Unit)</td>
                                 <td align="center"><a href="@Url.Action("Update", "Product", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
                                 <td align="center"><a href="@Url.Action("Delete", "Product", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Sản phẩm không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>

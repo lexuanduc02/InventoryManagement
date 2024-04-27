@@ -10,6 +10,7 @@ namespace InventoryManagement.Models.PurchaseInvoiceModels
 
         public string PartnerId { get; set; }
         public string PartnerName { get; set; }
+        public string CompanyName { get; set; }
 
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }

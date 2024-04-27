@@ -51,13 +51,29 @@ namespace InventoryManagement.Services
                             from partner in psi.DefaultIfEmpty()
                             where sale.IsActive == ActiveEnum.Active && sale.InvoiceType == invoiceType
                             group new { merchandise, m, sale, user, customer, partner } 
-                            by new { sale.Id, user.FullName, cid = customer.Id, pid = partner.Id, pn = partner.FullName, pp = partner.PhoneNumber, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
+                            by new { sale.Id, 
+                                user.FullName, 
+                                cid = customer.Id, 
+                                pid = partner.Id, 
+                                pn = partner.FullName, 
+                                pp = partner.PhoneNumber, 
+                                pcn = partner.Company,
+                                cm = customer.FullName, 
+                                customer.PhoneNumber, 
+                                sale.PaymentMethod, 
+                                sale.Status, 
+                                sale.Note, 
+                                sale.ShippingCarrier, 
+                                sale.CreateAt, 
+                                sale.UpdateAt 
+                            } into grouped
                             select new
                             {
                                 SaleInvoiceId = grouped.Key.Id,
                                 UserName = grouped.Key.FullName,
                                 PartnerName = grouped.Key.pn,
                                 PartnerId = grouped.Key.pid,
+                                PartnerCompany = grouped.Key.pcn,
                                 CustomerName = grouped.Key.cm,
                                 CustomerPhoneNumber = grouped.Key.PhoneNumber,
                                 PaymentMethod = grouped.Key.PaymentMethod,
@@ -78,6 +94,7 @@ namespace InventoryManagement.Services
                         CustomerPhoneNumber= x.CustomerPhoneNumber,
                         PartnerName = x.PartnerName,
                         PartnerId = x.PartnerId.ToString(),
+                        PartnerCompany = x.PartnerCompany,
                         PaymentMethod = x.PaymentMethod,
                         Status = x.Status,
                         Note = x.Note,
@@ -384,7 +401,7 @@ namespace InventoryManagement.Services
                             join p in _context.Partners on sale.PartnerId equals p.Id into psi
                             from partner in psi.DefaultIfEmpty()
                             group new { merchandise, m, sale, user, customer, partner }
-                            by new { sale.InvoiceType, sale.Id, user.FullName, cid = customer.Id, pid = partner.Id, pn = partner.FullName, pp = partner.PhoneNumber, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
+                            by new { sale.InvoiceType, sale.Id, user.FullName, cid = customer.Id, pid = partner.Id, pn = partner.FullName, pp = partner.PhoneNumber, pcn = partner.Company, cm = customer.FullName, customer.PhoneNumber, sale.PaymentMethod, sale.Status, sale.Note, sale.ShippingCarrier, sale.CreateAt, sale.UpdateAt } into grouped
                             select new
                             {
                                 SaleInvoiceId = grouped.Key.Id,
@@ -392,6 +409,7 @@ namespace InventoryManagement.Services
                                 UserName = grouped.Key.FullName,
                                 PartnerName = grouped.Key.pn,
                                 PartnerId = grouped.Key.pid,
+                                ParnerCompany = grouped.Key.pcn,
                                 CustomerName = grouped.Key.cm,
                                 CustomerPhoneNumber = grouped.Key.PhoneNumber,
                                 PaymentMethod = grouped.Key.PaymentMethod,
@@ -412,6 +430,7 @@ namespace InventoryManagement.Services
                         CustomerPhoneNumber = x.CustomerPhoneNumber,
                         PartnerName = x.PartnerName,
                         PartnerId = x.PartnerId.ToString(),
+                        PartnerCompany = x.ParnerCompany,
                         PaymentMethod = x.PaymentMethod,
                         Status = x.Status,
                         Note = x.Note,

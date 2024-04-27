@@ -36,7 +36,7 @@
                                 <td align="center"><input id="dtgrView_chkHot_0" type="checkbox" name="dtgrView$ctl03$chkHot"></td>
                                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                                 <td>
-                                    <a href="@Url.Action("Detail", "Partner", new { id = item.PartnerId})">@Html.DisplayFor(modelItem => item.PartnerName)</a>
+                                    <a href="@Url.Action("Detail", "Partner", new { id = item.PartnerId})">@Html.DisplayFor(modelItem => item.PartnerCompany)</a>
                                 </td>
                                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                 <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>

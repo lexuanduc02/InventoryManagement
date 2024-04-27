@@ -39,7 +39,7 @@
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td><a href="@Url.Action("update", "category", new { id = item.CategoryId })">@Html.DisplayFor(modelItem => item.CategoryName)</a></td>
                                 <td><a href="@Url.Action("update", "warehouse", new { id = item.WarehouseId })">@Html.DisplayFor(modelItem => item.WarehouseName)</a></td>
-                                <td>@Html.DisplayFor(modelItem => item.Price) VNĐ</td>
+                                <td>@Html.DisplayFor(modelItem => item.PriceToVND) VNĐ</td>
                                 <td>@Html.DisplayFor(modelItem => item.Quantity) @Html.DisplayFor(modelItem => item.Unit)</td>
                                 <td>
                                     <select name="dtgrView$ctl03$drlAc" id="dtgrView_drlAc_0" class="textbox drl">

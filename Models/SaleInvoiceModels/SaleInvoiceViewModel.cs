@@ -14,6 +14,7 @@ namespace InventoryManagement.Models.SaleInvoiceModels
 
         public string? PartnerName { get; set; }
         public string? PartnerId { get; set; }
+        public string? PartnerCompany { get; set; }
 
         public PaymentMethodEnum? PaymentMethod { get; set; }
         public InvoiceStatusEnum Status { get; set; }
