@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="/js/site.js"></script>
     @RenderSection("Style", required: false)
 </head>
 <body>
@@ -57,7 +62,7 @@
                             <a class="menuleft" asp-controller="Warehouse" asp-action="UpdateWarehouse"><img class="imgmid" src="/iconcp/icon_pro.png">Kiểm kê kho</a>
 
                             <div class="title-left">Báo cáo thống kê</div>
-                            <a class="menuleft" asp-controller="Report" asp-action="SaleReport2"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo danh thu bán hàng</a>
+                            <a class="menuleft" asp-controller="Report" asp-action="SaleReport2"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo doanh thu bán hàng</a>
                             <a class="menuleft" asp-controller="Report" asp-action="InventoryReport"><img class="imgmid" src="/iconcp/icon_pro.png">Báo cáo tồn kho</a>
                             <a class="menuleft" asp-controller="Report" asp-action="PurchaseReport"><img class="imgmid" src="/iconcp/icon_news.png"> Báo cáo nhập kho</a>
                             <a class="menuleft" asp-controller="Report" asp-action="SaleReport"><img class="imgmid" src="/iconcp/icon_media.png"> Báo cáo xuất kho</a>
@@ -88,12 +93,6 @@
     </div>
 </body>
 </html>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<script src="/js/site.js"></script>
 
 @{
     var toastNotify = ViewData["ToastNotify"] as ToastViewModel;
