@@ -27,6 +27,7 @@
                             <td>Tổng tiền</td>
                             <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
                             <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;In&nbsp;</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,9 +43,10 @@
                                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                 <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
                                 <td>@Html.DisplayFor(modelItem => item.UpdateAtString)</td>
-                                <td>@Html.DisplayFor(modelItem => item.TotalToVND) VNĐ</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalToVND)</td>
                                 <td align="center"><a href="@Url.Action("Detail", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
                                 <td align="center"><a href="@Url.Action("Delete", "PurchaseInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("ExportPdf", "PurchaseInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn in Hóa đơn này không?');"><img border="0" src="/iconcp/up.png"></a></td>
                             </tr>
                         }
                     </tbody>

@@ -55,7 +55,11 @@
                 <td class="td2">
                     <div class="add-product">
                         <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
-                        <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+
+                        <select class="select2 product-id textbox" style="width:200px;" id="select-product">
+                            <option value="null" selected disabled>Chọn sản phẩm..........</option>
+                        </select>
+
                         <input type="number" placeholder="Số lượng" class="product-quan textbox" />
                     </div>
                     <table id="merchandiseTable" class="table">
@@ -129,11 +133,29 @@
         getProductLists().then(function (jsonData) {
             // Push the JSON data to productLists array
             productLists = jsonData;
+
+            productLists.forEach(function (product) {
+                // Get the first 7 characters of the product ID
+                var idShort = product.id.substring(0, 7);
+
+                // Create a text combining product name and first 7 characters of product ID
+                var text = product.name + " - " + idShort;
+
+                // Create a new option element with the combined text
+                var option = $("<option>").attr("value", product.id).text(text);
+
+                console.log(option);
+
+                // Append the option to the select element
+                $("#select-product").append(option);
+            });
         }).catch(function (error) {
             // Handle errors
             console.error("Error fetching product lists:", error);
             alert("Đã xảy ra lỗi trong quá trình thực hiện, vui lòng thử lại!");
         });
+
+        console.log(productLists);
 
         $("#btnAddRow").click(function () {
             var productId = $(".product-id.textbox").val();
@@ -157,7 +179,7 @@
 
                 var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
 
-                if (existingRow.length === 0 ) {
+                if (existingRow.length === 0) {
                     for (var i = 0; i < 5; i++) {
                         var newCell = newRow.insertCell(i);
                         var input = document.createElement('input');
@@ -192,6 +214,24 @@
                 alert("Product not found!");
             }
         }
+
+        //function populateProductOptions() {
+        //    productLists.forEach(function (product) {
+        //        // Get the first 7 characters of the product ID
+        //        var idShort = product.id.substring(0, 7);
+
+        //        // Create a text combining product name and first 7 characters of product ID
+        //        var text = product.name + " - " + idShort;
+
+        //        // Create a new option element with the combined text
+        //        var option = $("<option>").attr("value", product.id).text(text);
+
+        //        console.log(option);
+
+        //        // Append the option to the select element
+        //        $("#select-product").append(option);
+        //    });
+        //}
     </script>
 }
 

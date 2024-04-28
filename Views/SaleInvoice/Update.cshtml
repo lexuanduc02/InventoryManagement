@@ -79,6 +79,7 @@
                         <thead class="thead">
                             <tr>
                                 <th class="th">Mã sản phẩm</th>
+                                <th class="th">Sản phẩm</th>
                                 <th class="th">Giá bán</th>
                                 <th class="th">Số lượng</th>
                                 <th class="th">Voucher</th>
@@ -91,17 +92,19 @@
                                 var fee = item.Quantity * item.SellingPrice * (100 - item.Voucher) / 100;
                                 <tr>
                                     <td class="td">@item.MerchandiseId</td>
-                                    <td class="td">@item.SellingPrice</td>
+                                    <td class="td">@item.MerchandiseName</td>
+                                    <td class="td">@item.SellingPriceToVND</td>
                                     <td class="td">@item.Quantity</td>
                                     <td class="td">@item.Voucher %</td>
-                                    <td class="td">@fee</td>
+                                    <td class="td">@item.SubTotalToVND</td>
                                 </tr>
                             }
                         </tbody>
                         <tfoot class="tfoot">
                             <tr>
-                                <th class="th">Totals</th>
-                                <td class="td" colspan="4">@invoice.Total VNĐ</td>
+                                <th class="th"></th>
+                                <th class="th" colspan="4">Totals</th>
+                                <td class="td">@invoice.TotalToVND </td>
                             </tr>
                         </tfoot>
                     </table>

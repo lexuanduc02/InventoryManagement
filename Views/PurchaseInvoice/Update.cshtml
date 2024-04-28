@@ -82,19 +82,19 @@
                                 <th class="th">Giá mua</th>
                                 <th class="th">Số lượng</th>
                                 <th class="th">Đơn vị tính</th>
-                                <th class="th"></th>
+                                <th class="th">Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody class="tbody">
                             @foreach (var item in Model.MerchandisePurchaseViewModels)
                             {
-                                var fee = item.Quantity * item.PurchasePrice;
                                 <tr>
-                                    <td class="td">@item.MerchandiseId</td>
-                                    <td class="td">@item.PurchasePrice</td>
+                                    <td class="td" style="display: none">@item.MerchandiseId</td>
+                                    <td class="td">@item.MerchandiseName</td>
+                                    <td class="td">@item.PurchasePriceToVND</td>
                                     <td class="td">@item.Quantity</td>
                                     <td class="td">@item.Unit %</td>
-                                    <td class="td">@fee</td>
+                                    <td class="td">@item.SubTotalToVND</td>
                                 </tr>
                             }
                         </tbody>

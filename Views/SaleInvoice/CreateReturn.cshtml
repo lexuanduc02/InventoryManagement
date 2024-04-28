@@ -14,20 +14,22 @@
                     <input type="reset" class="button" name="cmdReset" value="Mặc định">
                 </td>
             </tr>
-        <td class="td1"><div style="width:105px;">Đối tác:</div></td>
-        <td class="td2">
-            <select class="select2" asp-for="PartnerId" style="width:200px;">
-                <option value="null" selected disabled>Chọn đối tác..........</option>
-                @{
-                    var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
+            <tr>
+                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+                <td class="td2">
+                    <select class="select2" asp-for="PartnerId" style="width:200px;">
+                        <option value="null" selected disabled>Chọn đối tác..........</option>
+                        @{
+                            var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
 
-                    foreach (var partner in partners)
-                    {
-                        <option value="@partner.Id">@partner.Company</option>
-                    }
-                }
-            </select>
-        </td>
+                            foreach (var partner in partners)
+                            {
+                                <option value="@partner.Id">@partner.Company</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
         <tr>
             <td class="td1">Ghi chú:</td>
             <td class="td2"><textarea rows="4" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
@@ -37,7 +39,9 @@
             <td class="td2">
                 <div class="add-product">
                     <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
-                    <input type="text" placeholder="Nhập mã sản phẩm" class="product-id textbox" />
+                    <select class="select2 product-id textbox" style="width:200px;" id="select-product">
+                        <option value="null" selected disabled>Chọn sản phẩm..........</option>
+                    </select>
                     <input type="number" placeholder="Số lượng" class="product-quan textbox" />
                 </div>
                 <table id="merchandiseTable" class="table">
@@ -110,6 +114,22 @@
         getProductLists().then(function (jsonData) {
             // Push the JSON data to productLists array
             productLists = jsonData;
+
+            productLists.forEach(function (product) {
+                // Get the first 7 characters of the product ID
+                var idShort = product.id.substring(0, 7);
+
+                // Create a text combining product name and first 7 characters of product ID
+                var text = product.name + " - " + idShort;
+
+                // Create a new option element with the combined text
+                var option = $("<option>").attr("value", product.id).text(text);
+
+                console.log(option);
+
+                // Append the option to the select element
+                $("#select-product").append(option);
+            });
         }).catch(function (error) {
             // Handle errors
             console.error("Error fetching product lists:", error);
