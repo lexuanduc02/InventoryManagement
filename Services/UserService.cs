@@ -42,6 +42,7 @@ namespace InventoryManagement.Services
                     {
                         Id = x.u.Id.ToString(),
                         FullName = x.u.FullName,
+                        UserName = x.u.Username,
                         RoleId = x.RoleId.ToString(),
                         RoleName = x.RoleName,
                         RoleDescription = x.RoleDescription,

@@ -61,12 +61,13 @@ namespace InventoryManagement.Services
                             where purchase.IsActive == ActiveEnum.Active 
                             && purchase.InvoiceType == invoiceType
                             group new { merchandise, m, purchase, user, partner, customer } 
-                            by new { cn = customer.FullName, ci = customer.Id, purchase.Id, user.FullName, pm = partner.FullName, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
+                            by new { cpn = partner.Company, cn = customer.FullName, ci = customer.Id, purchase.Id, user.FullName, pm = partner.FullName, purchase.PaymentMethod, purchase.Status, purchase.Note, purchase.CreateAt, purchase.UpdateAt } into grouped
                             select new
                             {
                                 PurchaseInvoiceId = grouped.Key.Id,
                                 UserName = grouped.Key.FullName,
                                 PartnerName = grouped.Key.pm,
+                                Companyname = grouped.Key.cpn,
                                 CustomerName = grouped.Key.cn,
                                 CustomerId = grouped.Key.ci,
                                 PaymentMethod = grouped.Key.PaymentMethod,
@@ -83,6 +84,7 @@ namespace InventoryManagement.Services
                         Id = x.PurchaseInvoiceId.ToString(),
                         UserName = x.UserName,
                         PartnerName = x.PartnerName,
+                        CompanyName = x.Companyname,
                         CustomerName = x.CustomerName,
                         CustomerId = x.CustomerId.ToString(),
                         PaymentMethod = x.PaymentMethod,

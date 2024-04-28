@@ -22,6 +22,7 @@
                     <thead>
                         <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
                             <td>Họ tên</td>
+                            <td>Tên đăng nhập</td>
                             <td>Chức vụ</td>
                             <td>SĐT</td>
                             <td>Ngày bắt đầu làm việc</td>
@@ -42,6 +43,7 @@
                             }
                             <tr style="@style">
                                 <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.RoleDescription)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
                                 <td>@Html.DisplayFor(modelItem => item.StartDateOfEmployment)</td>

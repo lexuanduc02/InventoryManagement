@@ -225,8 +225,6 @@ namespace InventoryManagement.Services
                         return response;
 
                     request.Image = uploadResult.data.SecureUrl.AbsoluteUri;
-
-                    await _imageService.DeleteImageAsync(_slugHelper.GenerateSlug(data.Name), "products");
                 }
 
                 _mapper.Map(request, data);

@@ -35,7 +35,10 @@
                         {
                             var activeEnums = Enum.GetValues(typeof(ActiveEnum));
                             <tr>
-                                <td style="text-align: center;"><img style="width: 60px" src="@Html.DisplayFor(modelItem => item.Image)" /></td>
+                                <td style="text-align: center;"><img style="width: 60px" 
+                                                                     src="@Html.DisplayFor(modelItem => item.Image)" 
+                                                                     alt="@item.Name"/>
+                                </td>
                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                 <td><a href="@Url.Action("update", "category", new { id = item.CategoryId })">@Html.DisplayFor(modelItem => item.CategoryName)</a></td>
                                 <td><a href="@Url.Action("update", "warehouse", new { id = item.WarehouseId })">@Html.DisplayFor(modelItem => item.WarehouseName)</a></td>

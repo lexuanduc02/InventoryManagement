@@ -7,6 +7,7 @@ namespace InventoryManagement.Models.UserModels
         public string Id { get; set; }
         public string RoleId { get; set; }
         public string FullName { get; set; }
+        public string UserName { get; set; }
         public string RoleName { get; set; }
         public string RoleDescription { get; set; }
         public DateTime? Dob { get; set; }

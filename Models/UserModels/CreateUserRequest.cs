@@ -13,7 +13,7 @@ namespace InventoryManagement.Models.UserModels
         public GenderEnum Sex { get; set; } = GenderEnum.Unknown;
         public string PhoneNumber { get; set; }
         public string? Address { get; set; }
-        public string? Email { get; set; }
+        public string Email { get; set; }
         public DateTime? StartDateOfEmployment { get; set; } = DateTime.UtcNow;
         public ActiveEnum IsActive { get; set; } = ActiveEnum.Active;
     }
