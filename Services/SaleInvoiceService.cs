@@ -252,7 +252,7 @@ namespace InventoryManagement.Services
                 var updateQuantityList = request.MerchandiseSaleInvoices.Select(x => new UpdateProductQuantityRequest()
                 {
                     Id = x.MerchandiseId.ToString(),
-                    Quantity = -x.Quantity,
+                    Quantity = x.Quantity,
                 }).ToList();
 
                 var updateProductResult = await _productService.UpdateQuantityAsync(updateQuantityList);

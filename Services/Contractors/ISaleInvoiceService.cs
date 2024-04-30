@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Commons.Enums;
+using InventoryManagement.Domains.Entities;
 using InventoryManagement.Models.CommonModels;
 using InventoryManagement.Models.SaleInvoiceModels;
 
@@ -14,6 +15,5 @@ namespace InventoryManagement.Services.Contractors
         public Task<ServiceResponseModel<List<SaleInvoiceViewModel>>> GetReturnInvoiceByPartnerIdAsync(string id);
         public Task<ServiceResponseModel<bool>> UpdateAsync(UpdateSaleInvoiceRequest request);
         public Task<ServiceResponseModel<bool>> DeleteAsync(string id);
-
     }
 }

@@ -18,13 +18,14 @@ namespace InventoryManagement.Controllers
             _oauthService = oauthService;
         }
 
-        public IActionResult Login(string? ReturnUrl)
+        public async Task<IActionResult> Login(string? ReturnUrl)
         {
             var model = new LoginRequest()
             {
                 ReturnUrl = ReturnUrl
             };
 
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View(model);
         }
 

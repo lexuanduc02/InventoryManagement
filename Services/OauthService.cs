@@ -129,12 +129,11 @@ namespace InventoryManagement.Services
 
             try
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email 
-                                                && x.PhoneNumber == request.PhoneNumber);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
                 if (user == null)
                 {
-                    response.Message = "Thông tin yêu cầu không đúng";
+                    response.Message = "Số điện thoại chưa được đăng ký!";
                     return response;    
                 }
 

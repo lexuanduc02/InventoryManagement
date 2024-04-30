@@ -221,7 +221,8 @@ namespace InventoryManagement.Services
 
             try
             {
-                var invoice = await _context.PurchaseInvoices.FirstOrDefaultAsync(x => x.Id.ToString() == request.PurchaseInvoiceViewModel.Id);
+                var invoice = await _context.PurchaseInvoices
+                    .FirstOrDefaultAsync(x => x.Id.ToString() == request.PurchaseInvoiceViewModel.Id);
 
                 if(invoice == null)
                 {
@@ -233,11 +234,15 @@ namespace InventoryManagement.Services
                 await _context.SaveChangesAsync();
 
                 _context.PurchaseInvoices.Update(invoice);
-                var updateProductsQuan = request.MerchandisePurchaseViewModels.Select(x => new UpdateProductQuantityRequest()
-                {
-                    Id = x.MerchandiseId.ToString(),
-                    Quantity = x.Quantity,
-                }).ToList();
+
+                var updateProductsQuan = new List<UpdateProductQuantityRequest>();
+
+                updateProductsQuan = request.MerchandisePurchaseViewModels
+                    .Select(x => new UpdateProductQuantityRequest()
+                    {
+                        Id = x.MerchandiseId.ToString(),
+                        Quantity = x.Quantity,
+                    }).ToList();
 
                 var updateProductResult = await _productService.UpdateQuantityAsync(updateProductsQuan);
 

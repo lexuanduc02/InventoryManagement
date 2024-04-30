@@ -201,7 +201,6 @@ namespace InventoryManagement.Controllers
         [Authorize(Policy = "updateWarehouse")]
         public async Task<IActionResult> UpdateWarehouse(UpdateInventoryRequest request)
         {
-
             var res = await _warehouseService.UpdateInventoryAsync(request);
 
             TempData.Put("ToastNotify", new ToastViewModel()

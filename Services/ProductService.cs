@@ -310,7 +310,7 @@ namespace InventoryManagement.Services
                 // Updating quantities based on requests
                 foreach (var request in requests)
                 {
-                    var product = products.FirstOrDefault(p => p.Id.ToString() == request.Id);
+                    var product = products.FirstOrDefault(p => p.Id.ToString() == request.Id.ToLower());
                     if (product != null)
                     {
                         product.Quantity += request.Quantity;

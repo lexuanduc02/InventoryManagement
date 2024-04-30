@@ -198,8 +198,10 @@ namespace InventoryManagement.Services
 
             try
             {
+                var customerId = request.Id;
                 var data = await _context.Customers
-                    .FirstOrDefaultAsync(x => x.Id.ToString() == request.Id || x.IsActive == ActiveEnum.Active);
+                    .Where(x => x.Id.ToString() == customerId && x.IsActive == ActiveEnum.Active)
+                    .FirstOrDefaultAsync();
 
                 if (data == null)
                 {

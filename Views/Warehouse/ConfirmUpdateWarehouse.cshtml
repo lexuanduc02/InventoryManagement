@@ -10,22 +10,51 @@
     var invoiceDetails = Model.MerchandisePurchaseViewModels;
 }
 
-<form asp-action="UpdateWarehouse" method="post">
+<form asp-action="UpdateWarehouse" asp-controller="Warehouse" method="post">
     <input type="hidden" asp-for="@Model.PurchaseInvoiceViewModel.Id" />
     <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
         <tbody>
+            @{
+                var invoiceType = "";
+                if (invoice.InvoiceType == InvoiceTypeEnum.Invoice)
+                {
+                    invoiceType = "Hóa đơn nhập hàng từ NCC";
+                }
+                else
+                {
+                    invoiceType = "Hóa đơn nhập hàng từ KH";
+                }
+            }
             <tr class="tr-view">
                 <td colspan="2" class="td-view-left">
-                    <input type="submit" name="btnAddU1" value="Cập nhật" id="btnAddU1" class="button">
+                    <input type="submit" name="btnAddU1" value="Cập nhật kho" id="btnAddU1" class="button">
                 </td>
             </tr>
             <tr>
+                <td class="td1"><div style="width:105px;">Loại hóa đơn:</div></td>
+                <td class="td2"><input readonly value="@invoiceType" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            @if (invoice.InvoiceType == InvoiceTypeEnum.Invoice)
+            {
+                <tr>
+                    <td class="td1"><div style="width:105px;">Nhà cung cấp:</div></td>
+                    <td class="td2"><input readonly value="@invoice.CompanyName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                    <td class="td2"><input readonly value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                </tr>
+            }
+            <tr>
                 <td class="td1"><div style="width:105px;">Ngày lập:</div></td>
-                <td class="td2"><input readonly value="@invoice.CreateAt" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                <td class="td2"><input readonly value="@invoice.CreateAtString" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td class="td1"><div style="width:105px;">Ngày sửa gần nhất:</div></td>
-                <td class="td2"><input readonly value="@invoice.UpdateAt" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+                <td class="td2"><input readonly value="@invoice.UpdateAtString" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
             </tr>
             <tr>
                 <td class="td1">Ghi chú:</td>
@@ -38,6 +67,7 @@
                         <thead class="thead">
                             <tr>
                                 <th class="th">Mã sản phẩm</th>
+                                <th class="th">Tên sản phẩm</th>
                                 <th class="th">Giá mua</th>
                                 <th class="th">Số lượng</th>
                             </tr>
@@ -53,7 +83,10 @@
                                         <input type="hidden" readonly name="MerchandisePurchaseViewModels[@index].MerchandiseId" value="@item.MerchandiseId" />
                                     </td>
                                     <td class="td">
-                                        @item.PurchasePrice
+                                        @item.MerchandiseName
+                                    </td>
+                                    <td class="td">
+                                        @item.PurchasePriceToVND
                                         <input type="hidden" readonly name="MerchandisePurchaseViewModels[@index].PurchasePrice" value="@item.PurchasePrice" />
                                     </td>
                                     <td class="td">
