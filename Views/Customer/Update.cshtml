@@ -1,0 +1,61 @@
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.CustomerModels.UpdateCustomerRequest
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Update" method="post">
+    <input type="hidden" value="@Model.Id"/>
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                <td class="td2"><input value="@Model.FullName" type="text" maxlength="150" asp-for="FullName" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Địa chỉ:</div></td>
+                <td class="td2"><input value="@Model.Address" type="text" maxlength="150" asp-for="Address" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">SĐT:</div></td>
+                <td class="td2"><input value="@Model.PhoneNumber" type="tel" maxlength="150" asp-for="PhoneNumber" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Email:</div></td>
+                <td class="td2"><input value="@Model.Email" type="email" maxlength="150" asp-for="Email" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Trạng Thái:</div></td>
+                <td class="td2" style="line-height:180%;">
+                    @{
+                        var activeEnums = Enum.GetValues(typeof(ActiveEnum));
+
+                        for (int i = 0; i < activeEnums.Length; i++)
+                        {
+                            var check = Model.IsActive == (ActiveEnum)i ? "checked" : "";
+                            var text = ActiveEnum.Active == (ActiveEnum)i ? "Hiện" : "Ẩn";
+                            <input asp-for="IsActive" value="@i" checked="@check" tabindex="1" type="radio"><label asp-for="IsActive">@text</label><br>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" value="Ghi nhận" class="button" style="width:100px;">
+                    <input type="reset" class="button" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+

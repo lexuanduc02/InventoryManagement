@@ -1,0 +1,55 @@
+﻿@model IEnumerable<InventoryManagement.Models.SaleInvoiceModels.SaleInvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách phiếu trả hàng NCC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr class="tr-view">
+            <td class="td-view-left">
+            </td>
+            <td class="td-view-right">
+                <a asp-action="CreateReturn" class="button btn-add">Thêm mới</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td style="width:10px;"></td>
+                            <td>Nhân viên lập</td>
+                            <td>Đối tác</td>
+                            <td>Tình trạng</td>
+                            <td>Ngày lập</td>
+                            <td>Tổng tiền</td>
+                            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;In&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td align="center"><input id="dtgrView_chkHot_0" type="checkbox" name="dtgrView$ctl03$chkHot"></td>
+                                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Partner", new { id = item.PartnerId})">@Html.DisplayFor(modelItem => item.PartnerCompany)</a>
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalToVND)</td>
+                                <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+                                <td align="center"><a href="@Url.Action("Delete", "SaleInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("ExportPdf", "SaleInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn in Hóa đơn này không?');"><img border="0" src="/iconcp/up.png"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

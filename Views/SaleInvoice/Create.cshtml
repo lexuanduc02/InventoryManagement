@@ -1,0 +1,225 @@
+﻿@using System.Security.Claims
+@model InventoryManagement.Models.SaleInvoiceModels.CreateSaleInvoiceRequest
+@{
+    ViewData["Title"] = "Tạo hóa đơn bán hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Confirm" asp-controller="SaleInvoice" method="post">
+    <input type="hidden" asp-for="UserId" value="@User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value"/>
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Xác nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                <td class="td2"><input asp-for="Customer.FullName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Số điện thoại:</td>
+                <td class="td2"><input asp-for="Customer.PhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Email:</td>
+                <td class="td2"><input asp-for="Customer.Email" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Phương thức thanh toán: </td>
+                <td class="td2">
+                    <select asp-for="PaymentMethod" tabindex="1">
+                        @{
+                            var paymentEnums = Enum.GetValues(typeof(InventoryManagement.Commons.Enums.PaymentMethodEnum));
+
+                            foreach (var paymentMethod in paymentEnums)
+                            {
+                                var value = (int)paymentMethod;
+                                <option value="@value">@paymentMethod</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="Note" class="textbox" style="width:98%;"></textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Thông tin đơn vị vận chuyển:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="ShippingCarrier" class="textbox" style="width:98%;"></textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <div class="add-product">
+                        <input type="button" name="btnAddU2" value="Thêm" id="btnAddRow" class="button" style="width:100px;" />
+                        <select class="select2 product-id textbox" style="width:200px;" id="select-product">
+                            <option value="null" selected disabled>Chọn sản phẩm..........</option>
+                        </select>
+                        <input type="number" placeholder="Số lượng" class="product-quan textbox" />
+                    </div>
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th style="display: none"></th>
+                                <th class="th">Tên sản phẩm</th>
+                                <th class="th">Giá bán</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Voucher</th>
+                                <th class="th"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody hide-first"></tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" name="btnAddU2" value="Xác nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('merchandiseTable').addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnRemoveRow')) {
+                    var row = e.target.parentNode.parentNode;
+                    var productId = row.querySelector('.id').value;
+                    var quantity = row.querySelector('.quantity').value;
+
+                    productLists.forEach(e => {
+                        if (e.id === productId) {
+                            e.quantity += parseInt(quantity);
+                        }
+                    });
+
+                    row.parentNode.removeChild(row);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var productLists = [];
+
+        // Define getProductLists function
+        function getProductLists() {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/product/all',
+                    dataType: "json",
+                    type: "GET",
+                    success: function (jsonObject, status) {
+                        resolve(jsonObject); // Resolve the Promise with the jsonObject
+                    },
+                    error: function (xhr, status, error) {
+                        reject(error); // Reject the Promise with the error message
+                    }
+                });
+            });
+        }
+
+        // Call getProductLists function and push the JSON data to productLists
+        getProductLists().then(function (jsonData) {
+            // Push the JSON data to productLists array
+            productLists = jsonData;
+
+            productLists.forEach(function (product) {
+                // Get the first 7 characters of the product ID
+                var idShort = product.id.substring(0, 7);
+
+                // Create a text combining product name and first 7 characters of product ID
+                var text = product.name + " - " + idShort;
+
+                // Create a new option element with the combined text
+                var option = $("<option>").attr("value", product.id).text(text);
+
+                console.log(option);
+
+                // Append the option to the select element
+                $("#select-product").append(option);
+            });
+        }).catch(function (error) {
+            // Handle errors
+            console.error("Error fetching product lists:", error);
+        });
+
+        $("#btnAddRow").click(function () {
+            var productId = $(".product-id.textbox").val();
+            var quantity = $(".product-quan.textbox").val();
+            // Iterate over the productLists array to find the matching product
+            addProduct(productId, parseInt(quantity))
+        });
+
+        function addProduct(productId, quantity) {
+            var foundProduct = productLists.find(function (product) {
+                return product.id === productId;
+            });
+
+            if (foundProduct) {
+                $(".product-quan.textbox").val("");
+                if (foundProduct.quantity < quantity) {
+                    alert(`Sản phẩm còn lại ${foundProduct.quantity} ${foundProduct.unit}`);
+                    return;
+                }
+
+                foundProduct.quantity -= quantity;
+
+                $(".product-id.textbox").val("");
+
+                var table = document.getElementById('merchandiseTable').getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow(table.rows.length);
+                var cells = [];
+
+                var existingRow = $('.id').filter(function () { return this.value == `${foundProduct.id}` });
+
+                if (existingRow.length === 0 ) {
+                    for (var i = 0; i < 5; i++) {
+                        var newCell = newRow.insertCell(i);
+                        var input = document.createElement('input');
+
+                        input.type = ['hidden', 'text', 'number', 'number', 'number'][i];
+                        input.name = 'MerchandiseSaleInvoices[' + (table.rows.length - 1) + '].' + ['MerchandiseId', 'Name', 'SellingPrice', 'Quantity', 'Voucher'][i];
+
+                        input.className = ['id hide', 'td name', 'td price', 'td quantity', 'td voucher'][i];
+
+                        newCell.appendChild(input);
+                        cells.push(newCell);
+
+                        var inputValue = document.getElementsByName(input.name)[0];
+                        inputValue.value = [foundProduct.id, foundProduct.name, parseFloat(foundProduct.price), quantity, 0][i];
+                    }
+
+                    var removeButtonCell = newRow.insertCell(5);
+                    var removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.classList.add('btnRemoveRow', 'button');
+                    removeButton.textContent = 'Xóa';
+                    removeButtonCell.appendChild(removeButton);
+                } else {
+                    var existingProduct = existingRow.parent().parent();
+                    var existingQuantityInput = $(existingProduct).find('.quantity');
+                    var existingQuantity = parseInt(existingQuantityInput.val());
+
+                    existingQuantity += quantity;
+                    existingQuantityInput.val(existingQuantity);
+                }
+            } else {
+                alert("Product not found");
+            }
+        }
+    </script>
+}
+
+
+
+

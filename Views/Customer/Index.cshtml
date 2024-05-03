@@ -1,0 +1,50 @@
+﻿@model List<InventoryManagement.Models.CustomerModels.CustomerViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr class="tr-view">
+            <td class="td-view-left">
+            </td>
+            <td class="td-view-right">
+                <a asp-action="Create" class="button btn-add">Thêm mới</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td>Tên</td>
+                            <td>Địa chỉ</td>
+                            <td>SĐT</td>
+                            <td>Email</td>
+                            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td align="center"><a href="@Url.Action("Detail", "Customer", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+                                <td align="center"><a href="@Url.Action("Update", "Customer", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("Delete", "Customer", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Khách hàng không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

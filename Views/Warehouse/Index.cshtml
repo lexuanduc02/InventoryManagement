@@ -1,0 +1,47 @@
+﻿@model List<InventoryManagement.Models.WarehouseModels.WarehouseViewModel>
+@{
+    ViewData["Title"] = "Danh mục kho hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr class="tr-view">
+            <td class="td-view-left">
+            </td>
+            <td class="td-view-right">
+                <a asp-action="Create" class="button btn-add">Thêm mới</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td>Tên</td>
+                            <td>Mô tả</td>
+                            <td>Diện tích</td>
+                            <td>Trạng thái kho</td>
+                            <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Area) m<sup>2</sup></td>
+                                <td>@Html.DisplayFor(modelItem => item.WarehouseCapacityString)</td>
+                                <td align="center"><a href="@Url.Action("Update", "Warehouse", new { id = item.Id })"><img border="0" src="iconcp/icon_edit.gif"></a></td>
+                                <td align="center"><a onclick="javascript:return confirm('Nếu bạn xoá menu (Danh mục sản phẩm) thì toàn bộ menu cấp 2 thuộc menu (Danh mục sản phẩm) sẽ bị xoá theo. Bạn chắc chắn muốn xoá menu (Danh mục sản phẩm) không?');" href="@Url.Action("Delete", "Warehouse", new { id = item.Id })"><img border="0" src="iconcp/icon_delete.gif"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

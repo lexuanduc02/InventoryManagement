@@ -1,0 +1,82 @@
+﻿@model InventoryManagement.Models.PartnerModels.PartnerDetailViewModel
+@{
+    ViewData["Title"] = "Thông tin nhà cung cấp " + Model.Partner.Company;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+    <tbody>
+        <tr>
+            <td class="td1"><div style="width:105px;">Tên công ty:</div></td>
+            <td class="td2"><input value="@Model.Partner.Company" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Tên nhân viên đại diện:</div></td>
+            <td class="td2"><input value="@Model.Partner.FullName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Địa chỉ:</div></td>
+            <td class="td2"><input value="@Model.Partner.Address" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Hotline:</div></td>
+            <td class="td2"><input value="@Model.Partner.PhoneNumber" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+        <tr>
+            <td class="td1"><div style="width:105px;">Email:</div></td>
+            <td class="td2"><input value="@Model.Partner.Email" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="history-table-title">Lịch sử nhập hàng</div>
+<table class="table table-striped table-bordered dtgrView" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" style="border-style:None;width:100%;border-collapse:collapse;">
+    <thead>
+        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+            <td>Nhân viên lập</td>
+            <td>Tình trạng</td>
+            <td>Ngày lập</td>
+            <td>Tổng tiền</td>
+            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PurchaseInvoices)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalToVND) VNĐ</td>
+                <td align="center"><a href="@Url.Action("Detail", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="history-table-title">Lịch sử trả hàng</div>
+<table class="table table-striped table-bordered dtgrView" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" style="border-style:None;width:100%;border-collapse:collapse;">
+    <thead>
+        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+            <td>Nhân thực hiện</td>
+            <td>Tình trạng</td>
+            <td>Ngày lập</td>
+            <td>Tổng tiền</td>
+            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ReturnInvoices)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalToVND) VNĐ</td>
+                <td align="center"><a href="@Url.Action("Detail", "SaleInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

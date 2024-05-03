@@ -1,0 +1,57 @@
+﻿@model List<InventoryManagement.Models.PurchaseInvoiceModels.PurchaseInvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách hóa đơn nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblView" style="width:100%;" cellpadding="0" cellspacing="0">
+    <tbody>
+        <tr class="tr-view">
+            <td class="td-view-left">
+            </td>
+            <td class="td-view-right">
+                <a asp-action="Create" class="button btn-add">Thêm mới</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table class="table table-striped table-bordered" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" id="dtgrView" style="border-style:None;width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                            <td>Nhân viên lập</td>
+                            <td>Đối tác</td>
+                            <td>Phương thức thanh toán</td>
+                            <td>Tình trạng</td>
+                            <td>Ngày lập</td>
+                            <td>Ngày sửa</td>
+                            <td>Tổng tiền</td>
+                            <td style="width:10px;">&nbsp;Chi tiết&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Sửa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;Xóa&nbsp;</td>
+                            <td style="width:10px;">&nbsp;In&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CreateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UpdateAtString)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TotalToVND)</td>
+                                <td align="center"><a href="@Url.Action("Detail", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/preview.png"></a></td>
+                                <td align="center"><a href="@Url.Action("Update", "PurchaseInvoice", new { id = item.Id })"><img border="0" src="/iconcp/icon_edit.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("Delete", "PurchaseInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn xoá Hóa đơn này không?');"><img border="0" src="/iconcp/icon_delete.gif"></a></td>
+                                <td align="center"><a href="@Url.Action("ExportPdf", "PurchaseInvoice", new { id = item.Id })" onclick="javascript:return confirm('Bạn chắc chắn muốn in Hóa đơn này không?');"><img border="0" src="/iconcp/up.png"></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

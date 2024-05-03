@@ -1,0 +1,43 @@
+﻿@model InventoryManagement.Models.OauthModels.LoginRequest
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>
+        Login Administrator
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="/css/login.css" rel="stylesheet" />
+    <link href="/iconcp/favicon.png" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+</head>
+<body class="login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="/iconcp/logo.png" style="height: 30px; vertical-align: middle; display: inline-block; float: left;" alt="" />
+            <span style="display: inline-block; float: left; margin: 5px 0 0 15px;">Administrator</span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="login-box-body">
+            <form method="post" asp-controller="Oauth" asp-action="Login" id="form1">
+                <input type="hidden" asp-for="@Model.ReturnUrl" value="@Model.ReturnUrl" />
+                <div class="form-group">
+                    <input asp-for="@Model.Username" type="text" class="form-control" placeholder="Tên đăng nhập" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="@Model.Password" type="password" class="form-control" placeholder="Mật khẩu" />
+                </div>
+                <div class="form-group" style="border-top: 1px solid #ddd; padding-top: 15px; text-align: right; margin-bottom: 5px;">
+                    <a asp-action="ForgotPassword" asp-controller="Oauth" style="color: #188dd9; display: inline-block; float: left;">Quên mật khẩu?</a>
+                    <input type="submit" name="Button1" value="Đăng nhập" id="Button1" class="btn" />
+                </div>
+            </form>
+            <div class="alert-error text-danger" asp-validation-summary="ModelOnly"></div>
+        </div>
+    </div>
+</body>
+</html>
+

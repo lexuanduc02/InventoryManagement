@@ -1,0 +1,116 @@
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.SaleInvoiceModels.UpdateSaleInvoiceRequest
+@{
+    ViewData["Title"] = "Cập nhật thông tin hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-action="Update" asp-controller="SaleInvoice" method="post">
+    <input type="hidden" asp-for="@Model.SaleInvoiceViewModel.Id" value="@Model.SaleInvoiceViewModel.Id" />
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        @{
+            var invoice = Model.SaleInvoiceViewModel;
+            var detais = Model.MerchandiseSaleInvoiceViewModels;
+        }
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Người lập phiếu:</div></td>
+                <td class="td2"><input readonly asp-for="@Model.SaleInvoiceViewModel.UserName" value="@invoice.UserName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Tên khách hàng:</div></td>
+                <td class="td2"><input readonly asp-for="@Model.SaleInvoiceViewModel.CustomerName" value="@invoice.CustomerName" type="text" maxlength="150" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Số điện thoại:</td>
+                <td class="td2"><input readonly asp-for="@Model.SaleInvoiceViewModel.CustomerPhoneNumber" value="@invoice.CustomerPhoneNumber" type="text" class="textbox" style="width: 250px;"></td>
+            </tr>
+            <tr>
+                <td class="td1">Phương thức thanh toán: </td>
+                <td class="td2">
+                    <select asp-for="@Model.SaleInvoiceViewModel.PaymentMethod">
+                        <option value="null" disabled>Chọn phương thức thanh toán..........</option>
+                        @{
+                            var paymentMethods = Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>();
+
+                            foreach (var paymentMethod in paymentMethods)
+                            {
+                                var isSelect = invoice.PaymentMethod == paymentMethod;
+                                <option selected="@isSelect" value="@paymentMethod">@paymentMethod</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Trạng Thái: </td>
+                <td class="td2">
+                    <select asp-for="@Model.SaleInvoiceViewModel.Status">
+                        @{
+                            var status = Enum.GetValues(typeof(InvoiceStatusEnum)).Cast<InvoiceStatusEnum>();
+
+                            foreach (var item in status)
+                            {
+                                var isSelect = invoice.Status == item;
+                                <option selected="@isSelect" value="@item">@item</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea asp-for="@Model.SaleInvoiceViewModel.Note" rows="8" cols="20" class="textbox" style="width:98%;">@invoice.Note</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Thông tin đơn vị vận chuyển:</td>
+                <td class="td2"><textarea asp-for="@Model.SaleInvoiceViewModel.ShippingCarrier" rows="8" cols="20" class="textbox" style="width:98%;">@invoice.ShippingCarrier</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th class="th">Mã sản phẩm</th>
+                                <th class="th">Sản phẩm</th>
+                                <th class="th">Giá bán</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Voucher</th>
+                                <th class="th">Thanh toán</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody">
+                            @foreach (var item in detais)
+                            {
+                                var fee = item.Quantity * item.SellingPrice * (100 - item.Voucher) / 100;
+                                <tr>
+                                    <td class="td">@item.MerchandiseId</td>
+                                    <td class="td">@item.MerchandiseName</td>
+                                    <td class="td">@item.SellingPriceToVND</td>
+                                    <td class="td">@item.Quantity</td>
+                                    <td class="td">@item.Voucher %</td>
+                                    <td class="td">@item.SubTotalToVND</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="tfoot">
+                            <tr>
+                                <th class="th"></th>
+                                <th class="th" colspan="4">Totals</th>
+                                <td class="td">@invoice.TotalToVND </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+

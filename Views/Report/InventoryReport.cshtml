@@ -1,0 +1,44 @@
+﻿@model List<InventoryManagement.Models.ReportModels.InventoryReportViewModel>
+@{
+    ViewData["Title"] = "Báo cáo tồn kho";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+    <tr class="tr-view">
+        <td class="td-view-left d-flex align-items-center">
+            <a href="@Url.Action("InventoryReportToPdf", "Report")" class="button btn-add">In báo cáo</a>
+        </td>
+        <td class="td-view-right">
+        </td>
+    </tr>
+</table>
+
+@foreach (var model in Model)
+{
+    <div class="history-table-title">@Html.DisplayFor(modelItem => model.WarehouseName)</div>
+    <table class="table table-striped table-bordered dtgrView" cellspacing="0" cellpadding="3" align="Center" rules="all" border="1" style="border-style:None;width:100%;border-collapse:collapse;">
+        <thead>
+            <tr class="header" style="background-color:#F4F4F4;font-weight:bold;">
+                <td></td>
+                <td>Tên sản phẩm</td>
+                <td>Giá bán</td>
+                <td>Số lượng tồn trong kho</td>
+                <td>Đơn vị tính</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in model.products)
+            {
+                <tr>
+                    <td style="text-align: center;"><img style="width: 60px" src="@Html.DisplayFor(modelItem => item.Image)" /></td>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PriceToVND)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Unit)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

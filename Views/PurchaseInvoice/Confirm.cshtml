@@ -1,0 +1,122 @@
+﻿@using InventoryManagement.Commons.Enums
+@model InventoryManagement.Models.PurchaseInvoiceModels.CreatePurchaseInvoiceRequest
+@{
+    ViewData["Title"] = "Xác nhận thông tin hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var total = 0.0;
+}
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="UserId" value="F48CF82D-EE9E-4C82-2ACE-08DC5ADE8E8E" />
+    <table id="tblAdd" style="width:100%;" cellpadding="0" cellspacing="1">
+        <tbody>
+            <tr class="tr-view">
+                <td colspan="2" class="td-view-left">
+                    <input type="submit" name="btnAddU1" value="Ghi nhận" id="btnAddU1" class="button">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định">
+                </td>
+            </tr>
+            <tr>
+                <td class="td1"><div style="width:105px;">Đối tác:</div></td>
+                <td class="td2">
+                    <select class="select2" asp-for="PartnerId" style="width:200px;">
+                        <option value="null" selected disabled>Chọn đối tác..........</option>
+                        @{
+                            var partners = (List<InventoryManagement.Models.PartnerModels.PartnerViewModel>)ViewBag.Partners;
+
+                            foreach (var partner in partners)
+                            {
+                                var isSelect = partner.Id == Model.PartnerId;
+                                <option selected="@isSelect" value="@partner.Id">@partner.FullName</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Phương thức thanh toán: </td>
+                <td class="td2">
+                    <select asp-for="PaymentMethod" tabindex="1">
+                        @{
+                            var paymentMethods = Enum.GetValues(typeof(PaymentMethodEnum)).Cast<PaymentMethodEnum>();
+
+                            foreach (var paymentMethod in paymentMethods)
+                            {
+                                var isSelect = Model.PaymentMethod == paymentMethod;
+                                <option selected="@isSelect" value="@paymentMethod">@paymentMethod</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">Ghi chú:</td>
+                <td class="td2"><textarea rows="8" cols="20" asp-for="Note" class="textbox" style="width:98%;">@Model.Note</textarea></td>
+            </tr>
+            <tr>
+                <td class="td1">Danh sách sản phẩm: </td>
+                <td class="td2">
+                    <table id="merchandiseTable" class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th style="display: none"></th>
+                                <th class="th">Tên sản phẩm</th>
+                                <th class="th">Giá mua</th>
+                                <th class="th">Số lượng</th>
+                                <th class="th">Đơn vị tính</th>
+                                <th class="th">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody hide-first">
+                            @for (var index = 0; index < Model.MerchandisePurchaseInvoices.Count; index++)
+                            {
+                                var item = Model.MerchandisePurchaseInvoices[index];
+                                var fee = item.Quantity * item.PurchasePrice;
+                                total += fee;
+
+                                <tr>
+                                    <td class="td">
+                                        <input type="hidden" name="MerchandisePurchaseInvoices[@index].MerchandiseId" value="@item.MerchandiseId" />
+                                    </td>
+                                    <td class="td">
+                                        @item.Name
+                                        <input type="hidden" readonly name="MerchandisePurchaseInvoices[@index].Name" value="@item.Name" />
+                                    </td>
+                                    <td class="td">
+                                        @item.PurchasePrice
+                                        <input type="hidden" readonly name="MerchandisePurchaseInvoices[@index].PurchasePrice" value="@item.PurchasePrice" />
+                                    </td>
+                                    <td class="td">
+                                        @item.Quantity
+                                        <input type="hidden" readonly name="MerchandisePurchaseInvoices[@index].Quantity" value="@item.Quantity" />
+                                    </td>
+                                    <td class="td">
+                                        @item.Unit
+                                        <input type="hidden" readonly name="MerchandisePurchaseInvoices[@index].Unit" value="@item.Unit" />
+                                    </td>
+                                    <td class="td">@fee</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="tfoot">
+                            <tr>
+                                <th class="th">Totals</th>
+                                <td class="td total" colspan="3">@total</td>
+                                <td>VNĐ</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">&nbsp;</td>
+                <td class="td1" style="text-align:left;">
+                    <input type="submit" name="btnAddU2" value="Ghi nhận" oid="btnAddU2" class="button" style="width:100px;">
+                    <input type="reset" class="button" name="cmdReset" value="Mặc định" style="width:100px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
