@@ -38,7 +38,7 @@ namespace InventoryManagement.Controllers
             return View(response.data);
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> All()
         {
             var response = await _partnerService.All();

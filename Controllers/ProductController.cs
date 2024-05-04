@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
-    [Authorize(Policy = "warehouse")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -28,7 +27,6 @@ namespace InventoryManagement.Controllers
             _reportService = reportService;
         }
 
-        [Authorize(Policy = "productAccess")]
         public async Task<IActionResult> All()
         {
             var res = await _productService.All();
@@ -49,6 +47,7 @@ namespace InventoryManagement.Controllers
             return View(res.data);
         }
 
+        [Authorize(Policy = "warehouse")]
         [Breadcrumb("Thêm mới", "Sản phẩm")]
         public async Task<IActionResult> Create()
         {
@@ -91,6 +90,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "warehouse")]
         [Breadcrumb("Cập nhật", "Sản phẩm")]
         public async Task<IActionResult> Update(string id)
         {
